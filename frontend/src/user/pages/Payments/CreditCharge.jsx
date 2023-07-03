@@ -7,6 +7,7 @@ const ChargeComponent = () => {
   const [name, setName] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isChargeOpen, setChargeOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,6 +25,9 @@ const ChargeComponent = () => {
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
+  };
+  const handleChargeToggle = () => {
+    setChargeOpen(!isChargeOpen);
   };
 
   const handleButtonClick = (paymentType) => {
@@ -53,6 +57,9 @@ const ChargeComponent = () => {
         <div className="charge">
           <div className="charge__title">
             <h2>미리 충전하고<br />더욱 편리하게!</h2>
+          </div>
+          <div className="charge__back">
+            <div onClick={handleChargeToggle}>닫기</div>
           </div>
             <div className="charge__select">
               <p className="charge__select-title">충전할 금액</p>
@@ -177,17 +184,17 @@ const ChargeComponent = () => {
                 <p className="charge__select-desc">보유 캐시 0원</p>
               </div>
 
-              {errorMessage && <p style={{ color: 'red',textAlign:'center' }}>{errorMessage}</p>}
-              <div className="check-money">결제 수단 선택</div>
+              {errorMessage && <p className="payment-errorMessage" >{errorMessage}</p>}
+              <div className="check-money">결제 수단</div>
               <div className="payment-icon" >
                 <button onClick={() => handleButtonClick('kakaopay')} data-payment-type="kakaopay">
-                  <img src="https://github.com/hyoseoung/matchgetit/blob/dev/Document/logo/kakaopay/payment_icon_yellow_medium.png?raw=true" />
+                  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/NAVER_Pay_Logo/npay_78.png" />
                 </button>
                 <button onClick={() => handleButtonClick('toss')} data-payment-type="toss">
-                  <img src="https://github.com/hyoseoung/matchgetit/blob/dev/Document/logo/Toss_Logo_Secondary_Blue/Toss_Logo_Secondary_Blue.png?raw=true" />
+                  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/Toss_Logo_Secondary_Blue/Toss_Logo_Secondary_Blue.png" />
                 </button>
                 <button onClick={() => handleButtonClick('naverpay')} data-payment-type="naverpay">
-                  <img src="https://github.com/hyoseoung/matchgetit/blob/dev/Document/logo/NAVER_Pay_Logo/npay_78.png?raw=true" />
+                  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/kakaopay/payment_icon_yellow_large.png" />
                 </button>
               </div>
             </div>

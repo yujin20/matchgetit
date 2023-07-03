@@ -1,75 +1,61 @@
 package com.matchgetit.backend.config;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
-
+    private final JwtTokenProvider jwtTokenProvider;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        //restApi에서는 csrf 인증 필요x
         http
                 .authorizeRequests()
-                .requestMatchers(getRequestMatcher("/matchGetIt/login/**")).permitAll()
-                .requestMatchers(getRequestMatcher("/matchGetIt/logout")).permitAll() // Allow logout request
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
-                .csrf(csrf -> {
-                    csrf.csrfTokenRepository(csrfTokenRepository());
-                    csrf.requireCsrfProtectionMatcher(csrfProtectionMatcher());
-                });
-
+                .requestMatchers("/matchGetIt/auth/**").permitAll()
+                .requestMatchers("/matchGetIt/naver/**").permitAll()
+                .requestMatchers("/matchGetIt/stadium/**").permitAll()
+                .requestMatchers(("/matchGetIt/kakao/**")).permitAll()
+                .requestMatchers(("/matchGetIt/rank/**")).permitAll()
+                .requestMatchers("/css/**").permitAll()//예외 페이지 구성
+//                .anyRequest().access("@securityConfig.hasValidToken(request)");
+                .anyRequest().permitAll()
+//                .anyRequest().authenticated()
+                .and().csrf(csrf ->
+                        csrf.ignoringRequestMatchers(request -> !new AntPathRequestMatcher("/matchGetIt/admin/**").matches(request))
+                )
+//                .formLogin(form -> form
+//                        .loginPage("redirect:http://localhost:3000")
+//                        .failureUrl("redirect:http://localhost:3000")
+//                ).logout(logout -> logout
+//                        .logoutUrl("/matchGetIt/auth/logout")
+//                )
+        ;
         return http.build();
-    }
+    }//세션에 있는 토큰을 인증하는 로직
 
-    @Bean
-    public CsrfTokenRepository csrfTokenRepository() {
-        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        tokenRepository.setCookiePath("/");
-        return tokenRepository;
-    }
-
-    private RequestMatcher getRequestMatcher(String path) {
-        return new AntPathRequestMatcher(path);
-    }
-
-    private RequestMatcher csrfProtectionMatcher() {
-        return new RequestMatcher() {
-            private AntPathRequestMatcher[] requestMatchers = {
-                    new AntPathRequestMatcher("/matchGetIt/login/**"),
-                    new AntPathRequestMatcher("/matchGetIt/logout") // Add logout URL pattern
-            };
-
-            @Override
-            public boolean matches(HttpServletRequest request) {
-                for (AntPathRequestMatcher matcher : requestMatchers) {
-                    if (matcher.matches(request)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        };
-    }
-
-    @Bean
-    public Filter characterEncodingFilter() {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        return filter;
-    }
+    public boolean hasValidToken(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String token = (String) session.getAttribute("token");
+        String headerToken = request.getHeader("Authorization");
+        if(headerToken!=null){
+            headerToken = headerToken.substring(7);
+            return jwtTokenProvider.validateToken(headerToken);
+        }
+        if (token != null) {
+            System.out.println(jwtTokenProvider.validateToken(token));
+            return jwtTokenProvider.validateToken(token);
+        }else{
+            return false;
+        }
+    }//jwt 토큰 인증을 마쳐야 true가 뜨고 접근 가능함!
 }

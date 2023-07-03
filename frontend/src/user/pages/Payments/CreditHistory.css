@@ -1,0 +1,35 @@
+.calendar {
+    margin: 0 auto;
+}
+
+.CreditHistory_M, .CreditHistory{
+    text-align: center;
+}
+
+hr {
+    width: 80%;
+    max-width: 400px;
+}
+
+.highlight {
+    height: 8px !important;
+    width: 1% !important;
+    background-color: #f87171 !important;
+    border-radius: 50% !important;
+}
+
+
+
+.CreditHistory {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.CreditHistory p{
+    text-align: left;
+}
+
+.CreditHistory h3{
+    text-align: right;
+}

@@ -1,15 +1,21 @@
 import React, {useState} from "react";
 import "./Mypage.css";
-import axios from 'axios';
+import "./profile.css"
+import "../Payments/CreditCharge.css"
 import Profile from "./Profile";
 import CreditHistory from "../Payments/CreditCharge"
 import CreditCharge from "../Payments/CreditCharge";
 
-function Mypage() {
+
+function Mypage({session}) {
     const [isProfileOpen, setProfileOpen] = useState(false);
+    const [isChargeOpen, setChargeOpen] = useState(true);
 
     const handleProfileToggle = () => {
         setProfileOpen(!isProfileOpen);
+    };
+    const handleChargeToggle = (isChargeOpen) => {
+        setChargeOpen(!isChargeOpen);
     };
 
     return (
@@ -18,11 +24,11 @@ function Mypage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div className="my-profile">
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <h1 className="my-profile__name">이효성</h1>
+                            <h1 className="my-profile__name">{session.name}</h1>
                         </div>
                         <div className="my-account_type">
                             <p className="text-caption1">2752547203</p>
-                            <span className="badge badge-kakao sm">KAKAO</span>
+                            <span className="badge badge-kakao sm">{session.accountType}</span>
                         </div>
                     </div>
                 </div>
@@ -66,26 +72,37 @@ function Mypage() {
                             </div>
                         </a>
                     </li>
-                    <li className="my-status_item my-status_item-cash">
+
+
+                        {isChargeOpen && (
+                            <li className="my-status_item my-status_item-cash">
                         <div>
                             <p style={{ fontSize: '17px', fontWeight: "bold"}}>나의 캐시</p>
                             <p style={{ fontSize: '20px', fontWeight: '700' }}>0원</p>
                         </div>
-                        <a href="../Payments/CreditCharge.jsx">
+
                             <div className="my-cash">
-                                <span>충전하기</span>
+                                <span onClick={handleChargeToggle}> 충전하기 </span>
                             </div>
-                        </a>
-                    </li>
+                            </li>
+                        )}
+                            {!isChargeOpen && (
+                                <li className="my-status CreditCharge-settings">
+                                <div className="CreditCharge-settings">
+                                    <CreditCharge session={session}/>
+                                </div>
+                                </li>
+                            )}
+
                 </div>
-                <div className="profile-view">x
+                <div className="profile-view">
                     <button className="btn sm gray" onClick={handleProfileToggle}>
                         <p>프로필 보기</p>
                     </button>
                 </div>
                 {isProfileOpen && (
                     <div className="profile-settings">
-                        <Profile />
+                        <Profile session={session}/>
                     </div>
                 )}
             </section>

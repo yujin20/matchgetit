@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend.iml" filepath="$PROJECT_DIR$/frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/matchgetit.backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/matchgetit.backend.main.iml" />
     </modules>
   </component>
 </project>

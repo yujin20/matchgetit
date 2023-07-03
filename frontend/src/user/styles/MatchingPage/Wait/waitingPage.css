@@ -1,0 +1,30 @@
+.waitContainer{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.waitTitle{
+    font-size:80%;
+    font-weight: bold;
+    animation: moveAnimation 1s infinite;
+    margin-bottom: 10%;
+}
+.waitAddress{
+    font-size:16px;
+}
+.waitTime{
+    font-size:16px;
+}
+
+@keyframes moveAnimation {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(20px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}

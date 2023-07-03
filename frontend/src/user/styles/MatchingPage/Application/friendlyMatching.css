@@ -1,7 +1,10 @@
-.fContainer {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/first.jpg');
+.fContainer{
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), url('/public/images/first.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
-  .fButton{
+
+.fButton{
     background-color:rgb(146, 163, 243);
   }
 
@@ -10,14 +13,14 @@
     color:rgb(45, 175, 226);
 }
 .fTitle{
-  color: #344690;
+  color:white;
   text-shadow: 2px 2px 4px blue;
 }
 .fSubTitle{
   color:white;
   text-shadow: 2px 2px 4px blue;
 }
-.fInputAddress:hover{
+.fInputData:hover{
   border: 1px solid skyblue;
   color:rgb(74, 247, 247);
   background-color: rgb(145, 145, 240);
