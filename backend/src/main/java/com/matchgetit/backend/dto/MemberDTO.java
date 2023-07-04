@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.matchgetit.backend.constant.*;
 import java.util.Date;
+import java.util.List;
 
+import com.matchgetit.backend.entity.ManagerEntity;
+import com.matchgetit.backend.entity.ManagerSupportRecordEntity;
+import com.matchgetit.backend.entity.PaymentRecordEntity;
 import lombok.*;
 
 @Data
@@ -12,7 +16,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 public class MemberDTO {
-
         private Long userId;
         @JsonIgnore
         @JsonIgnoreProperties
@@ -43,8 +46,15 @@ public class MemberDTO {
         private Date lastConnectionDate;
         private String managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "NORMAL",  지원"WAITING"
         private PayState payState;
+
         private ManagerDTO managerDTO; // 매니저
+        private List<PaymentRecordEntity> paymentRecordEntityList; // 수정된 부분
+        private List<PaymentRecordDTO> paymentRecordDTO;
+
+
         private ManagerSupportRecordDTO managerSupportRecordDTO;
+        private ManagerSupportRecordEntity managerSupportRecordEntity;
+        private ManagerEntity managerEntity;
 
 
 

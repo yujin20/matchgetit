@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
+import java.util.List;
 
 //@Data
 @Entity
@@ -108,11 +109,24 @@ public class MemberEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "MANAGERSUPPORTSTATUS")
-    private ManagerSupportStatus managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "0",  지원"1"
+    private ManagerSupportStatus managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "0", 지원 "1"
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATE")
     private PayState payState;
+
+    @OneToOne(mappedBy = "user")
+    public ManagerEntity managerEntity; // 매니저
+
+    @OneToOne(mappedBy = "managerUser")
+    private ManagerSupportRecordEntity managerSupportRecordEntity;
+
+    @OneToMany(mappedBy = "member")
+    private List<PaymentRecordEntity> paymentRecordEntityList;
+
+    @Column(name = "RANK")
+    private String rank;
+
 
     public void updateProficiencyBasedOnRating() {
         if (rating >= 0 && rating <= 400) {
@@ -126,11 +140,6 @@ public class MemberEntity {
         }
     }
 
-    @OneToOne(mappedBy = "user")
-    public ManagerEntity managerEntity; // 매니저
-
-    @OneToOne(mappedBy = "managerUser")
-    private ManagerSupportRecordEntity managerSupportRecordEntity;
 
 
     // 관리자 페이지에서 유저 정보 수정할 때 사용

@@ -48,12 +48,12 @@
                 <td><button onclick="confirmDelete()" data-manager-id="${manager.userId}">삭제</button></td>
             </h2>
         </div>
-        <p>매니저 아이디: <span th:text="${managerId}"></span></p><br>
+        <p>매니저 아이디: <span th:text="${manager.managerDTO.managerId}"></span></p><br>
         <p>매니저 이름: <span th:text="${manager.name}"></span></p>
         <p>연락처: <span th:text="${manager.pn}"></span></p>
         <p>성별: <span th:text="${manager.gender}"></span></p><br>
-        <p>입사일: <span th:text="${registrationDate}"></span></p><br>
-        <p>상태: <span th:text="${employmentStatus}"></span></p><br>
+        <p>입사일: <span th:text="${manager.managerDTO.registrationDate}"></span></p><br>
+        <p>상태: <span th:text="${manager.managerDTO.employmentStatus}"></span></p><br>
         <!--    <p>현재 배치된 경기: <span th:text="${member.managerEntity.assignedGames}"></span></p><br>-->
 
     </div>

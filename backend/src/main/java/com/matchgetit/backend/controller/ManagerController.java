@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class ManagerController {
     public String getManagerList(HttpServletRequest request) {
         List<MemberEntity> managerList = memberRepository.findByLoginType(LogInType.MANAGER);
         List<MemberDTO> memberDTOList = new ArrayList<>();
-        System.out.println(managerList);
+
 
         for (MemberEntity memberEntity : managerList) {
             MemberDTO memberDTO = new MemberDTO();
@@ -69,9 +70,6 @@ public class ManagerController {
             }
             memberDTOList.add(memberDTO);
         }
-
-        System.out.println(managerList.size());
-        System.out.println("!");
 
         request.setAttribute("managerList", memberDTOList);
         return "admin/pages/Manage/Manager";
@@ -110,104 +108,114 @@ public class ManagerController {
         return ResponseEntity.ok("매니저 등록을 거절하였습니다.");
     }
 
-
     //매니저 정보수정 (휴직신청때 필요)
-    @PutMapping("/EditManager/updateManager/{managerId}")
+    @PutMapping("/manager/EditManager/updateManager/{managerId}")
     public ResponseEntity<String> updateManager(@PathVariable("managerId") Long managerId, @RequestBody ManagerDTO updatedManager) {
         ManagerDTO managerDTO = managerService.getManagerById(managerId);
-        System.out.println("@");
+        System.out.println("!");
+
         if (managerDTO != null) {
             // 수정된 매니저 정보 업데이트
             managerDTO.getUser().setName(updatedManager.getUser().getName());
             managerDTO.getUser().setPn(updatedManager.getUser().getPn());
             managerDTO.getUser().setGender(updatedManager.getUser().getGender());
             managerDTO.setEmploymentStatus(updatedManager.getEmploymentStatus());
-            managerDTO.setLeaveStartDate(updatedManager.getLeaveStartDate());
-            managerDTO.setLeaveEndDate(updatedManager.getLeaveEndDate());
-            managerDTO.setLeaveReason(updatedManager.getLeaveReason());
 
-            managerService.updateManager(managerId, managerDTO); // 변경된 매니저 정보 업데이트
-            System.out.println("!");
+            if (updatedManager.getEmploymentStatus().equals("leave")) {
+                managerDTO.setLeaveStartDate(updatedManager.getLeaveStartDate());
+                managerDTO.setLeaveEndDate(updatedManager.getLeaveEndDate());
+                managerDTO.setLeaveReason(updatedManager.getLeaveReason());
+            } else {
+                managerDTO.setLeaveStartDate(null);
+                managerDTO.setLeaveEndDate(null);
+                managerDTO.setLeaveReason(null);
+            }
+
+            // ManagerDTO를 Manager Entity로 변환
+            ManagerEntity managerEntity = convertToManagerEntity(managerDTO);
+
+            managerService.updateManager(managerId, updatedManager);
+
             return ResponseEntity.ok("success");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
+    private ManagerEntity convertToManagerEntity(ManagerDTO managerDTO) {
+        ManagerEntity managerEntity = new ManagerEntity();
+        managerEntity.setManagerId(managerDTO.getManagerId());
+        managerEntity.setUser(managerDTO.getUser());
+        managerEntity.setStadiumId(managerDTO.getStadiumId());
+        managerEntity.setPartyId(managerDTO.getPartyId());
+        managerEntity.setStartTime(managerDTO.getStartTime());
+        managerEntity.setTeam(managerDTO.getTeam());
+        managerEntity.setMatchType(managerDTO.getMatchType());
+        managerEntity.setManagerImage(managerDTO.getManagerImage());
+        managerEntity.setRegistrationDate(managerDTO.getRegistrationDate());
+        managerEntity.setEmploymentStatus(managerDTO.getEmploymentStatus());
+        managerEntity.setLeaveStartDate(managerDTO.getLeaveStartDate());
+        managerEntity.setLeaveEndDate(managerDTO.getLeaveEndDate());
+        managerEntity.setLeaveReason(managerDTO.getLeaveReason());
+
+        return managerEntity;
+    }
 
     //일반유저가 매니저 신청때 사용되는 메서드
-    @PostMapping("/submitForm")
-    public ResponseEntity<String> submitForm(@RequestBody ManagerSupportRecordDTO formDTO) {
-        // 매니저 지원 양식 제출 처리
-        ManagerSupportRecordEntity supportRecord = new ManagerSupportRecordEntity();
-        supportRecord.setActivityZone(formDTO.getActivityZone());
-        managerSupportRecordRepository.save(supportRecord);
+    @PostMapping("/submitForm/{userId}")
+    public ResponseEntity<String> submitForm(@PathVariable("userId") Long userId, @RequestBody ManagerSupportRecordDTO formDTO) {
+        MemberEntity memberEntity = memberRepository.findById(userId).orElse(null);
 
-        // MemberEntity 조회 및 값 업데이트
-        Long userId = formDTO.getUser().getUserId(); // 유저 아이디 가져오기
-        MemberEntity member = memberRepository.findByUserId(userId);
-        if (member != null) {
-            member.getManagerSupportRecordEntity().setActivityZone(formDTO.getActivityZone());
-            member.setManagerSupportStatus(ManagerSupportStatus.WAITING); // 매니저 지원 상태값 업데이트
-            memberRepository.save(member);
+        if (memberEntity != null) {
+            memberEntity.setManagerSupportStatus(ManagerSupportStatus.WAITING);
+            memberRepository.save(memberEntity);
+
         }
 
-        return ResponseEntity.ok("Form submitted successfully");
+        // 매니저 지원 양식 제출 처리
+        ManagerSupportRecordEntity supportRecord = new ManagerSupportRecordEntity();
+        supportRecord.setManagerUser(memberEntity);
+        supportRecord.setActivityZone(formDTO.getActivityZone());
+        supportRecord.setSubmissionDate(new Date()); // 현재 날짜와 시간으로 설정
+
+        // supportRecord를 DB에 저장
+        managerSupportRecordRepository.save(supportRecord);
+
+        return ResponseEntity.ok("매니저지원이 완료됬습니다.");
     }
 
     @GetMapping("/managerInfo/{userId}")
     public String viewManagerDetails(@PathVariable Long userId, Model model) {
         MemberDTO member = memberService.findMemberById(userId);
 
-        ManagerDTO managerDTO = member.getManagerDTO();
-        System.out.println(managerDTO);
-
-        if(managerDTO != null){
-            Long managerId = managerDTO.getManagerId();
-            LocalDateTime registrationDate = managerDTO.getRegistrationDate();
-            EmploymentStatus employmentStatus = managerDTO.getEmploymentStatus();
-
-            model.addAttribute("managerId",managerId);
-            model.addAttribute("registrationDate",registrationDate);
-            model.addAttribute("employmentStatus",employmentStatus);
-
+        ManagerDTO managerDTO = new ManagerDTO();
+        ManagerEntity managerEntity = member.getManagerEntity();
+        if (managerEntity != null){
+            managerDTO.setManagerId(managerEntity.getManagerId());
+            managerDTO.setEmploymentStatus(managerEntity.getEmploymentStatus());
+            managerDTO.setRegistrationDate(managerEntity.getRegistrationDate());
         }
+        member.setManagerDTO(managerDTO);
 
         model.addAttribute("manager", member);
         return "admin/pages/Manage/ManagerInfo";
     }
-
     @GetMapping("/EditManager/{userId}")
     public String editManager (@PathVariable Long userId, Model model){
-        MemberEntity memberEntity = memberRepository.findById(userId).orElse(null);
+        MemberDTO member = memberService.findMemberById(userId);
 
-        if (memberEntity != null) {
-            MemberDTO memberDTO = new MemberDTO();
-            memberDTO.setUserId(memberEntity.getUserId());
-            memberDTO.setName(memberEntity.getName());
-            memberDTO.setPn(memberEntity.getPn());
-            memberDTO.setGender(memberEntity.getGender());
-
-            ManagerEntity managerEntity = memberEntity.getManagerEntity();
-            if (managerEntity != null){
-                Long managerId = managerEntity.getManagerId();
-                EmploymentStatus employmentStatus = managerEntity.getEmploymentStatus();
-
-                ManagerDTO managerDTO = new ManagerDTO();
-                managerDTO.setManagerId(managerId);
-                managerDTO.setEmploymentStatus(employmentStatus);
-
-                memberDTO.setManagerDTO(managerDTO);
-            }
-
-            model.addAttribute("manager", memberDTO);
+        ManagerDTO managerDTO = new ManagerDTO();
+        ManagerEntity managerEntity = member.getManagerEntity();
+        if (managerEntity != null){
+            managerDTO.setManagerId(managerEntity.getManagerId());
+            managerDTO.setEmploymentStatus(managerEntity.getEmploymentStatus());
+            managerDTO.setRegistrationDate(managerEntity.getRegistrationDate());
+            System.out.println(managerEntity.getEmploymentStatus());
         }
+        member.setManagerDTO(managerDTO);
+        managerDTO.getEmploymentStatus().name();
+        model.addAttribute("manager", member);
+
         return "admin/pages/Manage/EditManager";
     }
-
-
-
-
-
-
 }

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import '../../styles/RankingBoard.css';
 import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
 
 function RankingBoard ({session}){
@@ -11,16 +12,14 @@ function RankingBoard ({session}){
     const gradeComp = (rating2) => {
         let grade = "";
         let rating3 = parseInt(rating2);
-        if(rating3>=1001) {
-            grade = "E";
-        } else if (rating3>=851){
-            grade = "D";
-        } else if (rating3>=501){
-            grade = "C";
-        } else if (rating3>=201){
-            grade = "B";
+        if(rating3>=1100) {
+            grade = "Professional";
+        } else if (rating3>=701){
+            grade = "Advanced";
+        } else if (rating3>=401){
+            grade = "Middle";
         } else {
-            grade = "A";
+            grade = "Beginner";
         }
         return grade;
     };
@@ -33,6 +32,7 @@ function RankingBoard ({session}){
     }
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const response = await axios.get('/matchGetIt/rank');
@@ -41,7 +41,6 @@ function RankingBoard ({session}){
                 console.error('Error:', error);
             }
         };
-
         console.log(data);
         fetchData();
     }, []);
@@ -78,55 +77,65 @@ function RankingBoard ({session}){
                 <h6>Ranking Board</h6>
             </div>
             <div className="please">
-            <div className="rank_table_wrap">
-                <div className="ranking_menu">
-                <ul>
-                    <li className={selectedGrade === "ALL" ? 'active' : ''}>
-                        <a href="#" onClick={() => setSelectedGrade("ALL")} className="Ranking_ALL">ALL</a>
-                    </li>
-                    <li className={selectedGrade === "A" ? 'active' : ''}>
-                        <a href="#" onClick={() => setSelectedGrade("A")} className="Ranking_A">A</a>
-                    </li>
-                    <li className={selectedGrade === "B" ? 'active' : ''}>
-                        <a href="#" onClick={() => setSelectedGrade("B")} className="Ranking_B">B</a>
-                    </li>
-                    <li className={selectedGrade === "C" ? 'active' : ''}>
-                        <a href="#" onClick={() => setSelectedGrade("C")} className="Ranking_C">C</a>
-                    </li>
-                    <li className={selectedGrade === "D" ? 'active' : ''}>
-                        <a href="#" onClick={() => setSelectedGrade("D")} className="Ranking_D">D</a>
-                    </li>
-                </ul>
-                </div>
-                <table className="rank_myRank">
-                    <caption></caption>
-                    <thead>
+                <div className="rank_table_wrap">
+                    <div className="ranking_menu">
+                        <ul>
+                            <li className={selectedGrade === "ALL" ? 'active' : ''}>
+                                <a href="#" onClick={() => setSelectedGrade("ALL")} className="Ranking_ALL">ALL</a>
+                            </li>
+                            <li className={selectedGrade === "Professional" ? 'active' : ''}>
+                                <a href="#" onClick={() => setSelectedGrade("Professional")} className="Ranking_A">Professional</a>
+                            </li>
+                            <li className={selectedGrade === "Advanced" ? 'active' : ''}>
+                                <a href="#" onClick={() => setSelectedGrade("Advanced")} className="Ranking_B">Advanced</a>
+                            </li>
+                            <li className={selectedGrade === "Middle" ? 'active' : ''}>
+                                <a href="#" onClick={() => setSelectedGrade("Middle")} className="Ranking_C">Middle</a>
+                            </li>
+                            <li className={selectedGrade === "Beginner" ? 'active' : ''}>
+                                <a href="#" onClick={() => setSelectedGrade("Beginner")} className="Ranking_D">Beginner</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <table className="rank_myRank">
+                        <caption></caption>
+                        <thead>
                         <tr className="rank_top">
                             <th>등급</th>
                             <th>순위</th>
                             <th>이름</th>
                             <th>포인트</th>
                             <th>승률</th>
-                            <th>최근 10경기</th>
+                            <th>승 패</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="rank01" >
-                            <td>
-                                <p className="ranking_grade">
-                                    {gradeComp(session.rating)}
-                                </p>
-                            </td>
-                            <td></td>
-                            <td>{session.name}</td>
-                            <td>{session.rating}</td>
-                            <td>{VicRatingComf(session.win,session.lose)}</td>
-                            <td>{session.win}승 {session.lose}패</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        {data.map((item) => {
+                            if (session.userId == item.userId) {
+                                return (
+                                    <tbody className="rank_tbody">
+                                    <tr className="rank01" key={item.rankId}>
+                                        <td>
+                                            <p className="ranking_grade">
+                                                {item.groupId}
+                                            </p>
+                                        </td>
+                                        <td>{item.rank}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.rating}</td>
+                                        <td>{item.vicRating}</td>
+                                        <td>{item.win}승 {item.lose}패</td>
+                                    </tr>
+                                    </tbody>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
 
-                <div className="tab-menu">
+                    </table>
+
+                    <div className="tab-menu">
 
                         <table className="rank_table" >
                             <caption></caption>
@@ -137,58 +146,58 @@ function RankingBoard ({session}){
                                 <th>이름</th>
                                 <th>포인트</th>
                                 <th>승률</th>
-                                <th>최근 10경기</th>
+                                <th>승 패</th>
                             </tr>
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                            <tbody className="rank_tbody">
-                                <tr className="rank01" key={item.rankId}>
-                                    <td>
-                                        <p className="ranking_grade">
-                                            {item.groupId}
-                                        </p>
-                                    </td>
-                                    <td>{item.rank}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.rating}</td>
-                                    <td>{item.vicRating}</td>
-                                    <td>{item.win}승 {item.lose}패</td>
-                                </tr>
-                            </tbody>
-                            ))}
+                                    <tbody className="rank_tbody">
+                                    <tr className="rank01" key={item.rankId}>
+                                        <td>
+                                            <p className="ranking_grade">
+                                                {item.groupId}
+                                            </p>
+                                        </td>
+                                        <td>{item.rank}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.rating}</td>
+                                        <td>{item.vicRating}</td>
+                                        <td>{item.win}승 {item.lose}패</td>
+                                    </tr>
+                                    </tbody>
+                                ))}
                         </table>
 
 
                         <table className="rank_table">
                             <caption></caption>
                             <thead>
-                                <tr>
-                                    <th>등급</th>
-                                    <th>순위</th>
-                                    <th>이름</th>
-                                    <th>포인트</th>
-                                    <th>승률</th>
-                                    <th>최근 10경기</th>
-                                </tr>
+                            <tr>
+                                <th>등급</th>
+                                <th>순위</th>
+                                <th>이름</th>
+                                <th>포인트</th>
+                                <th>승률</th>
+                                <th>승 패</th>
+                            </tr>
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                <tbody className="rank_tbody">
-                                <tr className="rank01" key={item.rankId}>
-                                    <td>
-                                        <p className="ranking_grade">
-                                            {item.groupId}
-                                        </p>
-                                    </td>
-                                    <td>{item.rankId}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.rating}</td>
-                                    <td>{item.vicRating}</td>
-                                    <td>{item.win}승 {item.lose}패</td>
-                                </tr>
-                                </tbody>
-                            ))}
+                                    <tbody className="rank_tbody">
+                                    <tr className="rank01" key={item.rankId}>
+                                        <td>
+                                            <p className="ranking_grade">
+                                                {item.groupId}
+                                            </p>
+                                        </td>
+                                        <td>{item.rank}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.rating}</td>
+                                        <td>{item.vicRating}</td>
+                                        <td>{item.win}승 {item.lose}패</td>
+                                    </tr>
+                                    </tbody>
+                                ))}
                         </table>
 
                         <table className="rank_table" style={{ display: activeTab === 0 ? 'table' : 'none' }}>
@@ -200,26 +209,26 @@ function RankingBoard ({session}){
                                 <th>이름</th>
                                 <th>포인트</th>
                                 <th>승률</th>
-                                <th>최근 10경기</th>
+                                <th>승 패</th>
                             </tr>
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                <tbody className="rank_tbody">
-                                <tr className="rank01" key={item.rankId}>
-                                    <td>
-                                        <p className="ranking_grade">
-                                            {item.groupId}
-                                        </p>
-                                    </td>
-                                    <td>{item.rankId}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.rating}</td>
-                                    <td>{item.vicRating}</td>
-                                    <td>{item.win}승 {item.lose}패</td>
-                                </tr>
-                                </tbody>
-                            ))}
+                                    <tbody className="rank_tbody">
+                                    <tr className="rank01" key={item.rankId}>
+                                        <td>
+                                            <p className="ranking_grade">
+                                                {item.groupId}
+                                            </p>
+                                        </td>
+                                        <td>{item.rank}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.rating}</td>
+                                        <td>{item.vicRating}</td>
+                                        <td>{item.win}승 {item.lose}패</td>
+                                    </tr>
+                                    </tbody>
+                                ))}
                         </table>
 
                         <table className="rank_table">
@@ -231,26 +240,26 @@ function RankingBoard ({session}){
                                 <th>이름</th>
                                 <th>포인트</th>
                                 <th>승률</th>
-                                <th>최근 10경기</th>
+                                <th>승 패</th>
                             </tr>
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                <tbody className="rank_tbody">
-                                <tr className="rank01" key={item.rankId}>
-                                    <td>
-                                        <p className="ranking_grade">
-                                            {item.groupId}
-                                        </p>
-                                    </td>
-                                    <td>{item.rankId}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.rating}</td>
-                                    <td>{item.vicRating}</td>
-                                    <td>{item.win}승 {item.lose}패</td>
-                                </tr>
-                                </tbody>
-                            ))}
+                                    <tbody className="rank_tbody">
+                                    <tr className="rank01" key={item.rankId}>
+                                        <td>
+                                            <p className="ranking_grade">
+                                                {item.groupId}
+                                            </p>
+                                        </td>
+                                        <td>{item.rank}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.rating}</td>
+                                        <td>{item.vicRating}</td>
+                                        <td>{item.win}승 {item.lose}패</td>
+                                    </tr>
+                                    </tbody>
+                                ))}
                         </table>
 
                         <table className="rank_table">
@@ -262,29 +271,29 @@ function RankingBoard ({session}){
                                 <th>이름</th>
                                 <th>포인트</th>
                                 <th>승률</th>
-                                <th>최근 10경기</th>
+                                <th>승 패</th>
                             </tr>
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                <tbody className="rank_tbody">
-                                <tr className="rank01" key={item.rankId}>
-                                    <td>
-                                        <p className="ranking_grade">
-                                            {item.groupId}
-                                        </p>
-                                    </td>
-                                    <td>{item.rankId}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.rating}</td>
-                                    <td>{item.vicRating}</td>
-                                    <td>{item.win}승 {item.lose}패</td>
-                                </tr>
-                                </tbody>
-                            ))}
+                                    <tbody className="rank_tbody">
+                                    <tr className="rank01" key={item.rankId}>
+                                        <td>
+                                            <p className="ranking_grade">
+                                                {item.groupId}
+                                            </p>
+                                        </td>
+                                        <td>{item.rank}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.rating}</td>
+                                        <td>{item.vicRating}</td>
+                                        <td>{item.win}승 {item.lose}패</td>
+                                    </tr>
+                                    </tbody>
+                                ))}
                         </table>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     );

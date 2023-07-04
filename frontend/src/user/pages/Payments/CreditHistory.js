@@ -11,7 +11,9 @@ function CreditHistory (){
 
     const marks = [
         "14-06-2023",
-        "15-06-2023"
+        "15-06-2023",
+        "01-07-2023",
+        "03-07-2023"
     ];
 
     const [selectedDateContent, setSelectedDateContent] = useState([]);
@@ -27,6 +29,9 @@ function CreditHistory (){
             { date: '15-06-2023', content: '6/21 경기 매칭', price: '-20,000원' },
             { date: '15-06-2023', content: '출석포인트', price: '+100원' },
             { date: '14-06-2023', content: '6/17 경기 매칭', price: '-20,000원'},
+            { date: '01-07-2023', content: '7/05 경기 매칭', price: '-20,000원'},
+            { date: '03-07-2023', content: '7/15 경기 매칭', price: '-20,000원'},
+            { date: '03-07-2023', content: '크레딧 충전', price: '100,000원'},
         ];
         return data.filter((item) => item.date === date);
     };
@@ -59,6 +64,7 @@ function CreditHistory (){
                             <p>{moment(content).format('YYYY.MM.DD HH:mm')}</p>
                             <p>{content.content}</p>
                             <h3>{content.price}</h3>
+                            <hr />
                         </div>
                     ))}
                 </>

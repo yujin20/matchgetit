@@ -1,139 +1,114 @@
-import React from 'react';
-import '../../styles/css/CommonFactor/menuBar.css';
-import '../../styles/css/CommonFactor/button.css';
-import '../../styles/css/CommonFactor/header.css';
-import '../../styles/css/swipePage.css';
-import '../../styles/css/rankBoardPage.css';
-import '../../styles/css/MatchingPage/matchingPage.css';
-//import '../../styles/css/thirdSlide.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './ManagerRecruitment.css';
 
-import '../../styles/css/LogIn/logInButton.css';
+function ManagerRecruitment({session}) {
+    const [showPopup, setShowPopup] = useState(false);
+    const [activityZone, setActivityZone] = useState(""); // 활동권역 상태값
 
-import './css/ManagerRecruitment.css';
+    const [showActivityZonePopup, setShowActivityZonePopup] = useState(false); // 활동권역 선택 안내 팝업 상태값
+    console.log(session);
+    const [userName, setUserName] = useState(session.name);
+    const [phoneNumber, setPhoneNumber] = useState(session.pn);
+    const [gender, setGender] = useState(session.gender);
 
-import rankIcon from '../../styles/img/rankIcon.svg';
-import BallIcon from '../../styles/img/BallIcon.svg';
-import ProfileIcon from '../../styles/img/ProfileIcon.svg';
-import PageLogo from '../../styles/img/PageLogo.png';
+    // 사용자 정보 및 매니저 지원 상태 업데이트 함수
+    const updateUserAndSubmitForm = async () => {
+        if (activityZone === "") {
+            setShowActivityZonePopup(true); // 활동권역 선택 안내 팝업 표시
+            return;
+        }
 
-import Swiper from 'swiper';
-import 'swiper/swiper-bundle.min.css';
+        try {
+            // 매니저 지원 양식 제출 API 호출
+            await axios.post(`/matchGetIt/manager/submitForm/${session.userId}`, { activityZone });
 
-function ManagerRecruitment() {
-  return (
-    <div>
-      {/* 좌상단 메뉴바 part */}
-      <div id="menu-bar">
-        {/* Menu Icon */}
-        <div className="menu-icon">
-          <span className="menu-icon__line menu-icon__line-left"></span>
-          <span className="menu-icon__line"></span>
-          <span className="menu-icon__line menu-icon__line-right"></span>
-        </div>
-        {/* Navigation */}
-        <div className="nav">
-          <div className="nav__content">
-            <div className="nav__list">
-              <div className="nav__list-item">홈페이지</div>
-              <div className="nav__list-item">게시판</div>
-              <div className="nav__list-item">마이페이지</div>
-              <div className="nav__list-item">로그인/회원가입</div>
+            setShowPopup(true); // 지원 완료 팝업 표시
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+
+    return (
+        <div>
+            {/* 지원서 폼 */}
+            <div className="ApplyManager">
+                <form onSubmit={updateUserAndSubmitForm}>
+                    <div style={{ marginBottom: '15px' }}>
+                        <h3 className="form-title">지원 양식</h3>
+                    </div>
+
+                    <div className="form-row">
+                        <label htmlFor="name">성함: </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={userName}
+                            readOnly
+                        />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="pn">연락처: </label>
+                        <input
+                            type="text"
+                            id="pn"
+                            name="pn"
+                            value={phoneNumber}
+                            readOnly
+                        />
+                    </div>
+                    <div className="form-row">
+                        <label htmlFor="gender">성별: </label>
+                        <input
+                            type="text"
+                            id="gender"
+                            name="gender"
+                            value={gender}
+                            readOnly
+                        />
+                    </div>
+
+                        <br />
+                    <div className="form-row">
+                        <label htmlFor="region">활동권역: </label>
+                        <select
+                            id="region"
+                            name="region"
+                            value={activityZone}
+                            onChange={(e) => setActivityZone(e.target.value)}
+                        >
+                            <option value="">선택하세요</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="인천">인천</option>
+                        </select>
+                        <br />
+                        <br />
+                    </div>
+                    <div className="form-row form-row-button">
+                        <input type="button" value="제출하기" onClick={updateUserAndSubmitForm} />
+                    </div>
+                </form>
             </div>
-          </div>
+
+            {/* 활동권역 선택 안내 팝업 */}
+            {showActivityZonePopup && (
+                <div className="popup">
+                    <p>활동권역이 선택되지 않았습니다. 선택해주세요.</p>
+                </div>
+            )}
+
+            {/* 지원 완료 팝업 */}
+            {showPopup && (
+                <div className="popup">
+                    <p>지원이 완료되었습니다. 합격자 한으로 추후에 개별 연락드리겠습니다. 감사합니다.</p>
+                </div>
+            )}
         </div>
-      </div>
-
-      {/* 로그아웃 버튼 */}
-      <div className="btnArea">
-        <button className="logOutBtn">Log In</button>
-      </div>
-
-      {/* 지원서 폼 */}
-      <div className="ApplyManager">
-        <form action="submit-form.php" method="POST">
-          <div style={{ marginBottom: '15px' }}>
-            <h1 className="form-title">지원 양식</h1>
-          </div>
-          <br />
-          <br />
-          <br />
-          <div className="form-row">
-            <label htmlFor="name">성함: </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value="(로그인된유저 이름)"
-              readOnly
-            />
-          </div>
-          <br />
-          <br />
-          <div className="form-row">
-            <label htmlFor="contact">연락처: </label>
-            <input
-              type="text"
-              id="contact"
-              name="contact"
-              value="(로그인된 유저의 연락처)"
-              readOnly
-            />
-          </div>
-          <br />
-          <br />
-          <div className="form-row">
-            <label htmlFor="gender">성별: </label>
-            <input
-              type="text"
-              id="gender"
-              name="gender"
-              value="(로그인된 유저의 성별)"
-              readOnly
-            />
-          </div>
-          <br />
-          <br />
-          <div className="form-row">
-            <label htmlFor="region">활동권역: </label>
-            <select id="region" name="region">
-              <option value="서울">서울</option>
-              <option value="경기">경기</option>
-              <option value="인천">인천</option>
-              {/* 여기에 다른 지역 옵션 추가 */}
-            </select>
-            <br />
-            <br />
-            <br />
-          </div>
-          <div className="form-row form-row-button">
-            <input type="submit" value="제출하기" />
-          </div>
-        </form>
-      </div>
-
-      <div className="menu">
-                <a href="./MainPage.html" className="link" data-slide="1">
-                  <span className="link-icon">
-                    <img src={rankIcon} alt="rankIcon" />
-                  </span>
-                  <span className="link-title">Rank</span>
-                </a>
-                <a href="#" className="link" data-slide="2">
-                  <span className="link-icon">
-                    <img src={BallIcon} alt="BallIcon" />
-                  </span>
-                  <span className="link-title">Match</span>
-                </a>
-                <a href="#" className="link" data-slide="3">
-                  <span className="link-icon">
-                    <img src={ProfileIcon} alt="ProfileIcon" />
-                  </span>
-                  <span className="link-title">Profile</span>
-                </a>
-              </div>
-
-    </div>
-  );
+    );
 }
 
 export default ManagerRecruitment;

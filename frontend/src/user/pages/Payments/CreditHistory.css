@@ -6,24 +6,39 @@
     text-align: center;
 }
 
-hr {
-    width: 80%;
+.CreditHistory hr{
+    width: 100%;
     max-width: 400px;
+    margin-bottom: 40px;
 }
 
 .highlight {
-    height: 8px !important;
-    width: 1% !important;
     background-color: #f87171 !important;
     border-radius: 50% !important;
+
 }
 
+.react-calendar__month-view__weekdays{
+    font-size: 15px !important;
+}
 
+.react-calendar__navigation{
+    margin-bottom: 0  !important;
+}
+
+.react-calendar__month-view__days{
+    margin-bottom: 10px !important;
+}
+
+.basicDiv{
+    margin-top: 30px !important;
+}
 
 .CreditHistory {
     width: 80%;
     max-width: 300px;
     margin: 0 auto;
+    font-size: 14px;
 }
 
 .CreditHistory p{
@@ -32,4 +47,8 @@ hr {
 
 .CreditHistory h3{
     text-align: right;
+}
+
+.CreditHistory_M h2{
+    font-size: 40px;
 }

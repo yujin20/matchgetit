@@ -59,5 +59,4 @@ public class ManagerEntity {
 
 //    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
 //    private List<GameEntity> assignedGames; //배정된 경기
-
 }

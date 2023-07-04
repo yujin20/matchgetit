@@ -64,6 +64,8 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final QPartyEntity party;
 
+    public final ListPath<PaymentRecordEntity, QPaymentRecordEntity> paymentRecordEntityList = this.<PaymentRecordEntity, QPaymentRecordEntity>createList("paymentRecordEntityList", PaymentRecordEntity.class, QPaymentRecordEntity.class, PathInits.DIRECT2);
+
     public final EnumPath<com.matchgetit.backend.constant.PayState> payState = createEnum("payState", com.matchgetit.backend.constant.PayState.class);
 
     public final StringPath pn = createString("pn");
@@ -71,6 +73,8 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
     public final EnumPath<com.matchgetit.backend.constant.Proficiency> prfcn = createEnum("prfcn", com.matchgetit.backend.constant.Proficiency.class);
 
     public final StringPath pw = createString("pw");
+
+    public final StringPath rank = createString("rank");
 
     public final NumberPath<Long> rating = createNumber("rating", Long.class);
 

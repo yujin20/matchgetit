@@ -33,6 +33,55 @@
           padding: 10px;
         }
     </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+    // 매니저 목록 검색 함수
+    function searchManagers() {
+      var searchText = $('#searchInput').val().toUpperCase();
+      var cards = $('.row .col-md-4');
+      var resultsFound = false; // 검색 결과가 있는지 확인하기 위한 변수
+
+      for (var i = 0; i < cards.length; i++) {
+        var card = cards[i];
+        var cardTitle = card.querySelector('.card-title');
+        var cardContact = card.querySelector('.card-text span');
+
+        // 카드의 텍스트 가져오기
+        var titleText = cardTitle.textContent.toUpperCase();
+        var contactText = cardContact.textContent.toUpperCase();
+
+        // 검색어와 일치하는 텍스트가 있는지 확인
+        if (titleText.includes(searchText) || contactText.includes(searchText)) {
+          card.style.display = "inline-block";
+          resultsFound = true; // 검색 결과가 있음을 표시
+        } else {
+          card.style.display = "none";
+        }
+      }
+
+      // 검색 결과가 없는 경우 팝업 표시
+      if (!resultsFound) {
+        var popup = document.createElement('div');
+        popup.textContent = '검색결과가 없습니다.';
+        popup.style.background = '#fff';
+        popup.style.border = '1px solid #ccc';
+        popup.style.padding = '10px';
+        popup.style.position = 'fixed';
+        popup.style.top = '50%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        document.body.appendChild(popup);
+
+        // 일정 시간 후 팝업 제거
+         setTimeout(function() {
+          popup.parentNode.removeChild(popup);
+        }, 3000);
+      }
+
+    }
+    </script>
 </head>
 
 <section layout:fragment="content">
@@ -61,7 +110,9 @@
 </section>
 
 <th:block layout:fragment="script">
-<script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
 function viewUserDetails(userId) {
   if (userId !== null) {
     const url = '/matchGetIt/manager/managerInfo/' + userId;
@@ -71,7 +122,7 @@ function viewUserDetails(userId) {
 
 $(document).ready(function() {
   // 페이지 로드 시 매니저 목록을 가져와서 테이블에 표시
-  // loadManagers();
+  loadManagers();
 
   // 매니저 목록을 가져오고 테이블에 렌더링하는 함수
   function loadManagers() {
@@ -111,29 +162,7 @@ $(document).ready(function() {
     }
   }
 
-  // 매니저 목록 검색 함수
-  function searchManagers() {
-    var searchText = $('#searchInput').val().toUpperCase();
-    var cards = $('.row .col-md-4');
-    for (var i = 0; i < cards.length; i++) {
-      var card = cards[i];
-      var cardTitle = card.querySelector('.card-title');
-      var cardContact = card.querySelector('.card-text span');
-      var cardAssignedGames = card.querySelector('.card-text:last-child span');
 
-      // 카드의 텍스트 가져오기
-      var titleText = cardTitle.textContent.toUpperCase();
-      var contactText = cardContact.textContent.toUpperCase();
-      var assignedGamesText = cardAssignedGames.textContent.toUpperCase();
-
-      // 검색어와 일치하는 텍스트가 있는지 확인
-      if (titleText.includes(searchText) || contactText.includes(searchText) || assignedGamesText.includes(searchText)) {
-        card.style.display = "inline-block";
-      } else {
-        card.style.display = "none";
-      }
-    }
-  }
 });
 </script>
 </th:block>

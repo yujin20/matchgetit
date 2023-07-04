@@ -3,8 +3,9 @@ import "./Mypage.css";
 import "./profile.css"
 import "../Payments/CreditCharge.css"
 import Profile from "./Profile";
-import CreditHistory from "../Payments/CreditCharge"
+import CreditHistory from "../Payments/CreditHistory";
 import CreditCharge from "../Payments/CreditCharge";
+import ApplyManager from "../ManagerRecruitment/ApplyManager"
 
 
 function Mypage({session}) {
@@ -12,7 +13,12 @@ function Mypage({session}) {
     const [isChargeOpen, setChargeOpen] = useState(true);
     // const [isAdmin, setIsAdmin] = useState(session && session.loginType.toUpperCase() === "ADMIN");
     const [isAdmin, setIsAdmin] = useState(true);
+    const [isApplyManager, setApplyManager] = useState(false);
+    const [isHistoryOpen, setHistoryOpen] = useState(false);
 
+    const handleApplyManagerToggle = () => {
+        setApplyManager(!isApplyManager);
+    };
 
     const handleProfileToggle = () => {
         setProfileOpen(!isProfileOpen);
@@ -23,6 +29,9 @@ function Mypage({session}) {
 
     const handleOpenadmin=(url)=>{
         window.open(url,"_blank","noopner,noreferrer");
+    };
+    const handleHistoryToggle = () => {
+        setHistoryOpen(!isHistoryOpen);
     };
 
     return (
@@ -113,15 +122,47 @@ function Mypage({session}) {
                         <Profile session={session}/>
                     </div>
                 )}
+                {/*<div className="profile-view">*/}
+                {/*    <button className="btn sm gray" onClick={handleApplyManagerToggle}>*/}
+                {/*        <p>매니저 지원하기</p>*/}
+                {/*    </button>*/}
+                {/*</div>*/}
+                {/*{isApplyManager && (*/}
+                {/*    <div className="ApplyManager">*/}
+                {/*        <ApplyManager session={session}/>*/}
+                {/*    </div>*/}
+                {/*)}*/}
+
             </section>
             <section>
                 <div>
                     <div className="my-content-title">my content</div>
-                        <div className="content-label"><img src="https://plab-football.s3.amazonaws.com/static/img/ic_myplab_color.svg" alt="신청 내역"/>
+                        <div className="content-label">
+                            <img src="https://plab-football.s3.amazonaws.com/static/img/ic_myplab_color.svg" alt="신청 내역"/>
                             <p>신청 내역</p>
                         </div>
-                        <div className="content-label"><img src="https://plab-football.s3.amazonaws.com/static/img/ic_point_color.svg" alt="결제 내역"/>
-                            <p>결제 내역</p>
+                        <div>
+                            <a className="content-label" onClick={handleHistoryToggle}>
+                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_point_color.svg" alt="결제 내역"/>
+                                <p>결제 내역</p>
+                            </a>
+                            {isHistoryOpen && (
+                                <div className="profile-settings">
+                                    <CreditHistory session={session}/>
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
+                            <a className="content-label" onClick={handleApplyManagerToggle}>
+                                <img src="https://plab-football.s3.amazonaws.com/static/img/explore_fire.svg" alt="결제 내역"/>
+                                <p>매니저 지원하기</p>
+                            </a>
+                            {isApplyManager && (
+                                <div className="ApplyManager">
+                                    <ApplyManager session={session}/>
+                                </div>
+                            )}
                         </div>
                     {isAdmin && (
                         <a href="http://localhost:8081/matchGetIt/manager/managers">
@@ -131,7 +172,6 @@ function Mypage({session}) {
                             </div>
                         </a>
                     )}
-
                 </div>
             </section>
         </div>

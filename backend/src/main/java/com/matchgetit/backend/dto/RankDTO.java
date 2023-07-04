@@ -1,30 +1,21 @@
 package com.matchgetit.backend.dto;
 
+import com.matchgetit.backend.entity.MemberEntity;
 import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
 public class RankDTO {
-    private String rankId;
-
-    private String  userId;
-
+    private Long userId;
     private String groupId;
-
     private String name;
-
-    private Integer rating;
-
-    private String win;
-
-    private String lose;
-
+    private Long rating;
+    private Long win;
+    private Long lose;
     private String vicRating;
+    private int rank;
 
-    private String rank;
-
-    public RankDTO(String rankId, String userId,String groupId, String name, Integer rating, String win , String lose, String vicRating, String rank){
-        this.rankId = rankId;
+    public RankDTO(Long userId,String groupId, String name, Long rating, Long win , Long lose, String vicRating, int rank){
         this.userId = userId;
         this.groupId = groupId;
         this.name = name;

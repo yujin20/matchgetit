@@ -1,23 +1,23 @@
 package com.matchgetit.backend.service;
 
 import com.matchgetit.backend.constant.PaymentStatus;
+import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.entity.PaymentRecordEntity;
+import com.matchgetit.backend.repository.MemberRepository;
 import com.matchgetit.backend.repository.PaymentRecordRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class PaymentHistoryService {
 
     private final PaymentRecordRepository paymentRecordRepository;
-
-    @Autowired
-    public PaymentHistoryService(PaymentRecordRepository paymentRecordRepository) {
-        this.paymentRecordRepository = paymentRecordRepository;
-    }
+    private final MemberRepository memberRepository;
 
     public List<PaymentRecordEntity> getPaymentRecords() {
         return paymentRecordRepository.findAll();
@@ -29,10 +29,23 @@ public class PaymentHistoryService {
 
     public List<PaymentRecordEntity> getPaymentRecordsBySearchCondition(String condition, String keyword) {
         if (condition.equals("name")) {
-            return paymentRecordRepository.findByUserNameContaining(keyword);
+            // 회원 이름으로 결제 기록 검색
+            List<MemberEntity> members = memberRepository.findByNameContaining(keyword);
+            List<PaymentRecordEntity> paymentRecords = new ArrayList<>();
+            for (MemberEntity member : members) {
+                List<PaymentRecordEntity> records = paymentRecordRepository.findByMemberContaining(member);
+                paymentRecords.addAll(records);
+            }
+            return paymentRecords;
         } else if (condition.equals("userId")) {
-            return paymentRecordRepository.findByUserId(Integer.valueOf(keyword));
+            // 회원 ID로 결제 기록 검색
+            Long userId = Long.valueOf(keyword);
+            MemberEntity member = memberRepository.findByUserId(userId);
+            if (member != null) {
+                return paymentRecordRepository.findByMemberContaining(member);
+            }
         } else if (condition.equals("gameNumber")) {
+            // 게임 번호로 결제 기록 검색
             return paymentRecordRepository.findByGameNumberContaining(keyword);
         }
         return null;

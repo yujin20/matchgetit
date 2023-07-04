@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 
 @Getter @Setter
 public class PaymentRecordDTO {
-
+    private MemberDTO userId;
     private Long paymentNumber;
     private LocalDateTime transactionDateTime;
     private LocalDateTime cancellationDateTime;
     private String gameNumber;
-    private String userName;
     private PaymentStatus paymentStatus;
+    private String userName;
 }

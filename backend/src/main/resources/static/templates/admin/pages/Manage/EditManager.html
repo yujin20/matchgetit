@@ -61,7 +61,8 @@
         <h2>매니저 정보 수정</h2>
       </div>
       <form id="editForm">
-        <p>매니저 번호: <span th:text="${managerId}"></span></p><br>
+        <p>매니저 번호: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span th:text="${manager.managerDTO.managerId}"></span></p><br>
 
         <label>
           <span>매니저 이름:</span>
@@ -82,8 +83,8 @@
         <label for="status">
           <span>상태:</span>
           <select id="status" name="status" required>
-            <option value="active" th:selected="${manager.managerDTO.employmentStatus == 'active'}">활동 중</option>
-            <option value="leave" th:selected="${manager.managerDTO.employmentStatus == 'leave'}">휴직</option>
+            <option value="active" th:selected="${manager.managerDTO.employmentStatus.name() == 'active'}">활동 중</option>
+            <option value="leave" th:selected="${manager.managerDTO.employmentStatus.name() == 'leave'}">휴직</option>
           </select>
         </label>
 
@@ -117,8 +118,16 @@
 
 <th:block layout:fragment="script">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="../../components/js/loadAdminNB.js"></script>
   <script>
+  $(document).ready(function () {
+  if ('[[${manager.gender}]]' === 'MALE') {
+    $('input[name="gender"][value="남자"]').prop('checked', true);
+  } else {
+    $('input[name="gender"][value="여자"]').prop('checked', true);
+  }
+});
+
+
   $(document).ready(function () {
   // 폼 제출 이벤트 리스너 추가
   $('#editForm').on('submit', function (event) {
@@ -138,10 +147,10 @@
     };
 
     // 서버로 수정된 매니저 정보 전송
-    var managerId = [[${manager.userId}]];
+    var managerId = [[${manager.managerDTO.managerId}]];
     $.ajax({
       type: 'PUT',
-      url: '/EditManager/updateManager/' + managerId,
+      url: '/matchGetIt/manager/EditManager/updateManager/' + managerId,
       data: JSON.stringify(updatedManager),
       contentType: 'application/json',
       success: function (response) {
@@ -153,6 +162,10 @@
       error: function (xhr, status, error) {
         console.error(error);
         alert("수정사항 저장 중 오류가 발생했습니다.");
+
+        console.log(xhr);
+        console.log(status);
+        console.log(error);
       }
     });
   });
@@ -162,22 +175,31 @@ $(document).ready(function () {
   var statusSelect = $('#status');
   var leaveInfoContainer = $('#leave-info');
 
-  // 초기 휴직 정보 표시 여부
-  if (statusSelect.val() === 'leave') {
-    leaveInfoContainer.show();
-  } else {
-    leaveInfoContainer.hide();
-  }
+  // 초기 휴직 정보 표시 여부 설정
+  updateLeaveInfoDisplay();
 
   // 상태 변경 시 휴직 정보 표시 여부 업데이트
   statusSelect.on('change', function () {
-    if ($(this).val() === 'leave') {
+    updateLeaveInfoDisplay();
+  });
+
+  function updateLeaveInfoDisplay() {
+    if (statusSelect.val() === 'leave') {
       leaveInfoContainer.show();
     } else {
       leaveInfoContainer.hide();
     }
+  }
+
+  // 페이지 로드 시에도 초기 휴직 정보 표시 여부 설정
+  $(window).on('load', function() {
+    updateLeaveInfoDisplay();
   });
 });
+
+console.log(statusSelect.val());
+console.log(leaveInfoContainer.is(":visible"));
+
 
 // 뒤로가기
 function goBack() {

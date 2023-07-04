@@ -14,6 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +31,6 @@ public class MemberService {
         if (memberRepository.findByEmail(email) != null) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
-
         MemberEntity member = new MemberEntity();
         member.setEmail(email);
         member.setPw(passwordEncoder.encode(password)); // 비밀번호 암호화
@@ -39,23 +42,21 @@ public class MemberService {
         member.setAccountType(accountType);
         member.setLoginType(LogInType.NORMAL);
         member.setPayState(PayState.POINT);
-
-        if(proficiency == Proficiency.ADVANCED) member.setRating(800L);
-        else if(proficiency == Proficiency.MIDDLE) member.setRating(500L);
+        member.setManagerSupportStatus(ManagerSupportStatus.BASIC);
+        if(proficiency == Proficiency.ADVANCED)member.setRating(800L);
+        else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
         else member.setRating(300L);
-
         member.setRegDate(new Date());
         member.setLastConnectionDate(new Date());
         member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
 
-    public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency, AccountType accountType, LogInType logInType) {
+    public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency,AccountType accountType,LogInType logInType) {
         // 이미 존재하는 사용자인지 확인
         if (memberRepository.findByEmail(email) != null) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
-
         MemberEntity member = new MemberEntity();
         member.setEmail(email);
         member.setName(name);
@@ -64,16 +65,39 @@ public class MemberService {
         member.setGender(gender);
         member.setPrfcn(proficiency);
         member.setAccountType(accountType);
+        member.setRegDate(new Date());
         member.setLoginType(logInType);
         member.setPayState(PayState.POINT);
-
+        member.setManagerSupportStatus(ManagerSupportStatus.BASIC);
         if(proficiency == Proficiency.ADVANCED)member.setRating(800L);
         else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
         else member.setRating(300L);
-
-        member.setRegDate(new Date());
         member.setLastConnectionDate(new Date());
         member.setAccountState(AccountState.ACTIVE);
+        memberRepository.save(member);
+    }
+    public void googleSignUp(String email, String name,String pn, String birthday, Gender gender, Proficiency proficiency, AccountType accountType, LogInType logInType) {
+        // 이미 존재하는 사용자인지 확인
+        if (memberRepository.findByEmail(email) != null) {
+            throw new RuntimeException("이미 존재하는 이메일입니다.");
+        }
+        MemberEntity member = new MemberEntity();
+        member.setEmail(email);
+        member.setName(name);
+        member.setGender(gender);
+        member.setBDay(FormatDate.parseDate(birthday));
+        member.setPn(pn);
+        member.setPrfcn(proficiency);
+        member.setAccountType(accountType);
+        member.setRegDate(new Date());
+        member.setLoginType(logInType);
+        member.setPayState(PayState.POINT);
+        if (gender == Gender.MALE) member.setGender(Gender.MALE);
+        else member.setGender(Gender.FEMALE);
+        if (proficiency == Proficiency.ADVANCED) member.setRating(800L);
+        else if (proficiency == Proficiency.MIDDLE) member.setRating(500L);
+        else member.setRating(300L);
+
         memberRepository.save(member);
     }
 
@@ -87,7 +111,6 @@ public class MemberService {
         if (!passwordEncoder.matches(password, member.getPw())) {
             throw new RuntimeException("계정 정보가 일치하지 않습니다");
         }
-
         return new ModelMapper().map(member, MemberDTO.class);
     }
 
@@ -140,4 +163,51 @@ public class MemberService {
         member.setOwnedCrd(member.getOwnedCrd()!=null?member.getOwnedCrd():0+value);
         memberRepository.save(member);
     }//결제 시 사용하는 메소드
+
+
+    public List<MemberDTO> getAllMembers() {
+        List<MemberEntity> memberEntities = memberRepository.findAll();
+        return memberEntities.stream()
+                .map(memberEntity -> modelMapper.map(memberEntity, MemberDTO.class))
+                .collect(Collectors.toList());
+    }
+    @Transactional
+    public void updateProfile(Long id, String name, String email, String pn) {
+        System.out.println(email);
+        MemberEntity member = memberRepository.findByUserId(id);
+        System.out.println("member = " + member);
+        System.out.println(pn);
+        System.out.println(name);
+        if (member != null) {
+            member.setEmail(email);
+            member.setName(name);
+            member.setPn(pn);
+            memberRepository.save(member);
+
+        }else{
+            throw new RuntimeException("프로필 업데이트에 실패했습니다.");
+        }
+    }
+    @Transactional
+    public void deleteProfile(Long id, HttpSession session){
+        memberRepository.deleteById(id);
+        session.removeAttribute("member");
+    }
+
+    @Transactional
+    public void updatePw(Long id, String password){
+        MemberEntity member = memberRepository.findByUserId(id);
+        if (member != null) {
+            member.setPw(passwordEncoder.encode(password));
+            memberRepository.save(member);
+
+        }else{
+            throw new RuntimeException("프로필 업데이트에 실패했습니다.");
+        }
+    }
+
+
+
+
+
 }
