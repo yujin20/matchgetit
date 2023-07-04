@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
 
-//@Data
+@Data
 @Entity
 @Table(name = "member")
 @Getter

@@ -1,7 +1,6 @@
 package com.matchgetit.backend.controller;
 import com.matchgetit.backend.config.JwtTokenProvider;
 import com.matchgetit.backend.constant.AccountType;
-import com.matchgetit.backend.constant.LogInType;
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.request.SignUpRequest;
 import com.matchgetit.backend.service.MemberService;
@@ -12,15 +11,12 @@ import com.matchgetit.backend.request.LoginRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/matchGetIt/auth")
@@ -56,30 +52,23 @@ public class AuthController {
             );
             if(member!=null){
                 String token = jwtTokenProvider.generateToken(member.getEmail());
-                System.out.println("토큰>>>>>>>"+token);
+                System.out.println("토큰>>>>>>>ㄴ"+token);
                 session.setAttribute("jwtToken",token);
                 session.setAttribute("member",member);
-//                if (member.getLoginType() == LogInType.ADMIN) {
-//                    URI redirectUri = new URI("http://localhost:8081/matchGetIt/admin");
-//                    HttpHeaders httpHeaders = new HttpHeaders();
-//                    httpHeaders.setLocation(redirectUri);
-//                    return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-//                }
                 return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("로그인 실패", HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
-
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
         session.removeAttribute("member");
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
-
     @PostMapping("/signUp")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

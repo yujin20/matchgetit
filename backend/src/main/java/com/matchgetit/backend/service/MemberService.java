@@ -77,7 +77,6 @@ public class MemberService {
         if (!passwordEncoder.matches(password, member.getPw())) {
             throw new RuntimeException("계정 정보가 일치하지 않습니다");
         }
-
         return new ModelMapper().map(member, MemberDTO.class);
     }
     public MemberDTO findMemberById(Long userId){

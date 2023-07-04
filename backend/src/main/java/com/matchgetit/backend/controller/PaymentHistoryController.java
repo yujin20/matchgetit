@@ -53,7 +53,6 @@ public class PaymentHistoryController {
         }
 
         model.addAttribute("paymentRecords", paymentRecordEntities);
-//        return "PaymentHistory";
-        return "admin/pages/PaymentHistory/PaymentHistory2";
+        return "PaymentHistory";
     }
 }

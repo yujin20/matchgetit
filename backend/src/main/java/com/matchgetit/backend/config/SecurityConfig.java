@@ -20,6 +20,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //restApi에서는 csrf 인증 필요x
         http
+                .csrf(csrf ->
+                        csrf.ignoringRequestMatchers(request -> !new AntPathRequestMatcher("/matchGetIt/admin/**").matches(request))
+                )
                 .authorizeRequests()
                 .requestMatchers("/matchGetIt/auth/**").permitAll()
                 .requestMatchers("/matchGetIt/naver/**").permitAll()
@@ -28,18 +31,7 @@ public class SecurityConfig {
                 .requestMatchers(("/matchGetIt/rank/**")).permitAll()
                 .requestMatchers("/css/**").permitAll()//예외 페이지 구성
 //                .anyRequest().access("@securityConfig.hasValidToken(request)");
-                .anyRequest().permitAll()
-//                .anyRequest().authenticated()
-                .and().csrf(csrf ->
-                        csrf.ignoringRequestMatchers(request -> !new AntPathRequestMatcher("/matchGetIt/admin/**").matches(request))
-                )
-//                .formLogin(form -> form
-//                        .loginPage("redirect:http://localhost:3000")
-//                        .failureUrl("redirect:http://localhost:3000")
-//                ).logout(logout -> logout
-//                        .logoutUrl("/matchGetIt/auth/logout")
-//                )
-        ;
+                .anyRequest().permitAll();
         return http.build();
     }//세션에 있는 토큰을 인증하는 로직
 
