@@ -41,7 +41,7 @@ public class AdminInquiryController {
 
         Pageable pageable = PageRequest.of(page.orElse(0), pageSize);
         Page<InquiryDTO> inquiryList = inquiryService.getPageableInquiryList(searchInquiryDTO, pageable);
-        System.out.println(inquiryList.getContent().get(0));
+//        System.out.println(inquiryList.getContent().get(0));
 
 //        List<InquiryDTO> inquiryList = inquiryService.getInquiryList();
         model.addAttribute("inquiryList", inquiryList);

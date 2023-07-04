@@ -143,4 +143,21 @@ public class MemberEntity {
         this.rating = Long.valueOf(userDto.getScore());
     }
 
+
+    // 관리자 페이지에서 유저 계정 정지할 때 사용
+    public void banUser(Date banDateStart, Date banDateEnd, String banReason) {
+        this.banDateStart = banDateStart;
+        this.banDateEnd = banDateEnd;
+        this.banReason = banReason;
+        this.accountState = AccountState.BANNED;
+    }
+
+    // 계정 정지 취소
+    public void cancelBan() {
+        this.banDateStart = null;
+        this.banDateEnd = null;
+        this.banReason = null;
+        this.accountState = AccountState.ACTIVE;
+    }
+
 }

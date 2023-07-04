@@ -39,17 +39,23 @@ public class MemberService {
         member.setAccountType(accountType);
         member.setLoginType(LogInType.NORMAL);
         member.setPayState(PayState.POINT);
-        if(proficiency == Proficiency.ADVANCED)member.setRating(800L);
-        else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
+
+        if(proficiency == Proficiency.ADVANCED) member.setRating(800L);
+        else if(proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
+
         member.setRegDate(new Date());
+        member.setLastConnectionDate(new Date());
+        member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
-    public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency,AccountType accountType,LogInType logInType) {
+
+    public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency, AccountType accountType, LogInType logInType) {
         // 이미 존재하는 사용자인지 확인
         if (memberRepository.findByEmail(email) != null) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
+
         MemberEntity member = new MemberEntity();
         member.setEmail(email);
         member.setName(name);
@@ -58,12 +64,16 @@ public class MemberService {
         member.setGender(gender);
         member.setPrfcn(proficiency);
         member.setAccountType(accountType);
-        member.setRegDate(new Date());
         member.setLoginType(logInType);
         member.setPayState(PayState.POINT);
+
         if(proficiency == Proficiency.ADVANCED)member.setRating(800L);
         else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
         else member.setRating(300L);
+
+        member.setRegDate(new Date());
+        member.setLastConnectionDate(new Date());
+        member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
 
@@ -77,23 +87,30 @@ public class MemberService {
         if (!passwordEncoder.matches(password, member.getPw())) {
             throw new RuntimeException("계정 정보가 일치하지 않습니다");
         }
+
         return new ModelMapper().map(member, MemberDTO.class);
     }
+
+
     public MemberDTO findMemberById(Long userId){
         MemberEntity memberEntity= memberRepository.findByUserId(userId);
         if(memberEntity ==null) return null;
         else return modelMapper.map(memberEntity,MemberDTO.class);
     }
+
     public MemberDTO findMemberByEmail(String email){
         MemberEntity memberEntity= memberRepository.findByEmail(email);
         if(memberEntity ==null) return null;
         else return modelMapper.map(memberEntity,MemberDTO.class);
     }
+
     public MemberDTO findMemberByPhoneNumber(String pn){
         MemberEntity memberEntity= memberRepository.findByPn(pn);
         if(memberEntity ==null) return null;
         else return modelMapper.map(memberEntity,MemberDTO.class);
     }
+
+
     public void updateParty(Long userId, PartyDTO partyDTO) {
         MemberEntity member = memberRepository.findByUserId(userId);
         if (member == null) {
@@ -107,6 +124,7 @@ public class MemberService {
         member.setParty(partyEntity);
         memberRepository.save(member);
     }
+
     public void deleteParty(Long userId) {
         MemberEntity member = memberRepository.findByUserId(userId);
         if (member == null) {
@@ -115,6 +133,7 @@ public class MemberService {
         member.setParty(null);
         memberRepository.save(member);
     }
+
 
     public void updateCredit(Long userId, int value) {
         MemberEntity member = memberRepository.findByUserId(userId);

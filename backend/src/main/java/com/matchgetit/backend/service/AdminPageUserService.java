@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -103,6 +104,17 @@ public class AdminPageUserService {
     public void deleteUser(Long userId) {
         MemberEntity member = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         userRepository.delete(member);
+    }
+
+
+    public void banUser(Long userId, java.util.Date banDateStart, java.util.Date banDateEnd, String banReason) {
+        MemberEntity member = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        member.banUser(banDateStart, banDateEnd, banReason);
+    }
+
+    public void cancelBan(Long userId) {
+        MemberEntity member = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        member.cancelBan();
     }
 
 }

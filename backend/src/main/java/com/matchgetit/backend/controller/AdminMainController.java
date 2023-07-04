@@ -23,7 +23,7 @@ public class AdminMainController {
     }
 
 
-    @GetMapping(value = {"/matchGetIt/admin", ""})
+    @GetMapping(value = {"/matchGetIt/admin", "/"})
     public String mainPage(Model model) {
         Map<String, Long> userCounts = dashboardService.getUserCounts();
         model.addAttribute("userCounts", userCounts);
