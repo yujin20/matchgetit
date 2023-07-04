@@ -24,8 +24,6 @@ const HeaderContainer = styled.div`
 `;
 
 const ChatbotHeader = ({chatbotVisible}) => {
-    console.log(chatbotVisible);
-
     return (
         <HeaderContainer>
             <i className="ri-arrow-left-s-line">Match get it</i>

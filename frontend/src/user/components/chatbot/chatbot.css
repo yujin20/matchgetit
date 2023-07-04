@@ -1,8 +1,8 @@
 /* 커스텀 스타일링 */
 .chatbot-icon {
     position: absolute;
-    right: 8%;
-    bottom: 20%;
+    right: 3%;
+    bottom: 3%;
     width: 50px; /* Adjust the size as desired */
     height: 50px; /* Adjust the size as desired */
     background-image: url("../../../assets/bot.png"); /* Replace 'path-to-your-icon-image' with the actual path to your icon image */

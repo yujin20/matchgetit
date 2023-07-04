@@ -22,14 +22,11 @@ const SocialLogIn = () => {
 
     return (
         <>
-            <button className="socialButton kakaoButton" onClick={handleKakaoButtonClick} >
-                <img src="images/kakao_login_medium.png" alt="kakaobtn" className="buttonImage"/>
+            <button className="socialButton kakaoButton" onClick={handleKakaoButtonClick} >Kakao
             </button>
-            <button className="socialButton googleButton">
-                <img src="images/btn_google_signin.png" alt="googlebtn" className="buttonImage"/>
+            <button className="socialButton googleButton">Google
             </button>
-            <button className="socialButton naverButton" onClick={handleNaverButtonClick}>
-                <img src="images/btn_naver.png" alt="naverbtn"  className="buttonImage"/>
+            <button className="socialButton naverButton" onClick={handleNaverButtonClick}>Naver
             </button>
         </>
     );

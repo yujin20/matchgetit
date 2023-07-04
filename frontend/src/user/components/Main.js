@@ -182,7 +182,7 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
         axiosInstance
             .post('/matchGetIt/auth/logout')
             .then(() => {
-                sessionStorage.removeItem('X-XSRF-TOKEN');
+                sessionStorage.removeItem('JwtToken');
                 onLogout();
                 setIsLoginSlide(true);
                 if (swiperRef.current) {
@@ -192,7 +192,6 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
                 window.location.reload();
             })
             .catch((error) => {
-                // handle error
                 onLogout();
             });
     };
@@ -206,13 +205,17 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
     const handlePartyMenuToggle = () => {
         setIsPartyMenuOpen(!isPartyMenuOpen);
     };
+    const pay1000 = () =>{
+        window.location.href='http://localhost:8081/matchGetIt/pay/payStart/1000';
+    }
+
 
     return (
         <>
             <div className="logInOutBtnArea">
                 {isLoggedIn ? (
                     <>
-                        <span>{session.userId} : {session.name}</span>
+                        <span className="sessionIdArea">{session.userId} : {session.name}</span>
                         <span><button className="popUpBtn" onClick={handlePartyMenuToggle}>파티 메뉴</button></span>
                         <span>
 
@@ -272,7 +275,9 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
                 <div className="swiper-pagination"></div>
             </div>
             <Chatbot />
-            <MenuBar isLoggedIn={isLoggedIn} onSlideChange={handleSlideChange} />
+            {isLoggedIn ? <MenuBar isLoggedIn={isLoggedIn} onSlideChange={handleSlideChange} /> : null}
+
+
         </>
     );
 }

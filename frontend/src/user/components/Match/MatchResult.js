@@ -1,5 +1,6 @@
 import React from 'react';
-import '../../styles/MatchingPage/Wait/waitingPage.css';
+import '../../styles/MatchingPage/MatchingResult/matchingResult.css';
+import '../../styles/CommonFactor/grade.css';
 import axiosInstance from "../axiosInstance";
 
 const MatchResult = ({ session, matchWaitData, setIsMatch, setMatchWaitData, party }) => {
@@ -39,45 +40,82 @@ const MatchResult = ({ session, matchWaitData, setIsMatch, setMatchWaitData, par
         axiosInstance.post("/matchGetIt/match/cancelMatchWait", null, { params: { id: session.userId } })
             .then(response => {
                 console.log('취소 성공');
+                window.location.reload();
             }).catch(error => {
             console.log('취소 실패');
         });
     };
 
     const renderTeamMembers = (team) => {
-        const members = matchWaitData.filter(m => m.team===team);
-        return members.map((item, index) => (
-            <li key={index}>
-                <div className="MatchTeamMember">{item.member.name}</div>
-            </li>
-        ));
+        const members = matchWaitData.filter(m => m.team === team);
+        return members.map((item, index) => {
+            let iconUrl = '';
+
+            switch (item.member.prfcn) {
+                case 'BEGINNER':
+                    iconUrl = process.env.PUBLIC_URL + '/images/beginner.png';
+                    break;
+                case 'MIDDLE':
+                    iconUrl = process.env.PUBLIC_URL + '/images/middle.png';
+                    break;
+                case 'ADVANCED':
+                    iconUrl = process.env.PUBLIC_URL + '/images/advanced.png';
+                    break;
+                case 'PROFESSIONAL':
+                    iconUrl = process.env.PUBLIC_URL + '/images/professional.png';
+                    break;
+                default:
+                    break;
+            }
+
+            return (
+                <div key={index} className={`grade`}>
+                    <img src={iconUrl} alt={item.member.prfcn} className={`icon ${item.member.prfcn}`} />
+                    <div className={`matchTeamMember gradeMember ${item.member.prfcn}`}>
+                        <div className="gradeName">{item.member.name}</div>
+                    </div>
+                </div>
+            );
+        });
     };
 
     return (
-        <div className="resultContainer">
-            <div className="resultStatiumimg">
+        <div className={`applicationContainer resultContainer ${matchWaitData[0].party.gameType}`}>
+            <div className="resultStatiumimg">구장 이미지
                 {/*<img src={matchWaitData.stadium.stdImgUrl} alt="Stadium" />*/}
             </div>
-            <div className="resultTime">{applicationTimeText}</div>
-            <div className="resultStadium">매칭구장: {matchWaitData[0].stadium.stdName}</div>
-            <div className="lineUp">LINE_UP</div>
-            <div className="aTeam">
-                <div className="uniform">
-                    <img src="public/images/uniformA.png" alt="Ateam" />
+            <div className="resultInformationContainer">
+            <div className="resultInformationTitle">경기날짜</div>
+                <div className="resultTitleSub">{matchWaitData[0].party?.applicationDate}</div>
+                <div className="resultInformationTitle">경기시간</div>
+                <div className="resultTitleSub">{applicationTimeText}</div>
+
+            <div className="resultInformationTitle">매칭구장</div>
+                <div className="resultTitleSub">{matchWaitData[0].stadium.stdName}</div>
+            <div className="lineUpTitle">LINE_UP</div>
+                <div className="uniformContainer">
+                    <div className="uniform">
+                        <img src="images/uniformA.png" alt="Ateam" />
+                    </div>
+                    <div className="uniform">
+                        <img src="images/uniformB.png" alt="Bteam" />
+                    </div>
                 </div>
-                <div className="resultMember">
-                    <ul>{renderTeamMembers("A")}</ul>
+                <div className="teamContainer">
+                    <div className="aTeam">
+                        <div className="aTeam resultMember">
+                            <ul>{renderTeamMembers("A")}</ul>
+                        </div>
+                    </div>
+                    <div className="bTeam">
+                        <div className="bTeam resultMember">
+                            <ul>{renderTeamMembers("B")}</ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="bTeam">
-                <div className="uniform">
-                    <img src="public/images/uniformB.png" alt="Bteam" />
-                </div>
-                <div className="resultMember">
-                    <ul>{renderTeamMembers("B")}</ul>
-                </div>
-                <button type="button" onClick={cancelMatch}>경기 취소</button>
-            </div>
+                <button type="button" className="button cancelButton" onClick={cancelMatch}>경기 취소</button>
+
+        </div>
         </div>
     );
 };

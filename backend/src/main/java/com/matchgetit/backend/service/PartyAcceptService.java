@@ -81,4 +81,10 @@ public class PartyAcceptService {
         MemberEntity partyLeader= memberRepository.findByUserId(partyLeaderId);
         partyAcceptRepository.deleteByPartyLeader(partyLeader);
     }//파티 테이블에 추가 시 일괄 삭제
+    @Transactional
+    public void deletePartyAcceptByPartyLeaderIdAndPartyMemberId(Long partyLeaderId,Long userId) {
+        MemberEntity partyLeader= memberRepository.findByUserId(partyLeaderId);
+        MemberEntity partyMember=memberRepository.findByUserId(userId);
+        partyAcceptRepository.deleteByPartyLeaderAndUser(partyLeader,partyMember);
+    }
 }

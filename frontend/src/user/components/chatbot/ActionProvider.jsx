@@ -20,6 +20,13 @@ class ActionProvider {
                 } )
         this.addMessageToState(message);
     };
+    handleclose = () => {
+        const botName="매치기";
+        const message = this.createChatBotMessage(
+                `챗봇을 닫으시려면 `+`\n`+`챗봇을 한번더 클릭해주세요!`,{
+                } )
+        this.addMessageToState(message);
+    };
 
     // handleUnknow = () => {
     //     const message = this.createChatBotMessage(
@@ -193,10 +200,6 @@ class ActionProvider {
 
         this.addMessageToState(message);
     };
-
-
-
-
 
 }
 

@@ -32,7 +32,10 @@
    padding: 10px;
    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
  }
- [type="text"], [type="password"], [type="email"], [type="tel"]{
+.profile-settings [type="text"],
+.profile-settings [type="password"],
+.profile-settings [type="email"],
+.profile-settings [type="tel"]{
      border: 1px solid #d9e0e6;
      background-color: #f8fafb;
      width: 100%;
@@ -120,7 +123,7 @@
      color: #FFFFFF;
      border: none;
      transition: background-color 0.3s ease;
-     margin-bottom: 5px;
+     margin: 5px 5px 50px 5px;
  }
  .button2{
     margin-right: 10px;

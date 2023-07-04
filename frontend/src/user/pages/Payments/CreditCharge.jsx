@@ -7,7 +7,7 @@ const ChargeComponent = () => {
   const [name, setName] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isChargeOpen, setChargeOpen] = useState(false);
+  const [isChargeOpen, setChargeOpen] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -26,9 +26,10 @@ const ChargeComponent = () => {
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
   };
-  const handleChargeToggle = () => {
-    setChargeOpen(!isChargeOpen);
-  };
+  const pay = (amount) =>{
+    window.location.href=`http://localhost:8081/matchGetIt/pay/payStart/`+{amount};
+  }
+
 
   const handleButtonClick = (paymentType) => {
     if (!amount) {
@@ -42,7 +43,7 @@ const ChargeComponent = () => {
         window.location.href = `https://example.com/kakaopay?amount=${amount}`;
       } else if (paymentType === 'toss') {
         // 토스 페이지로 이동
-        window.location.href = `https://example.com/toss?amount=${amount}`;
+        window.location.href = `http://localhost:8081/matchGetIt/pay/payStart/`+amount;
       } else if (paymentType === 'naverpay') {
         // 네이버페이 페이지로 이동
         window.location.href = `https://example.com/naverpay?amount=${amount}`;
@@ -58,9 +59,6 @@ const ChargeComponent = () => {
           <div className="charge__title">
             <h2>미리 충전하고<br />더욱 편리하게!</h2>
           </div>
-          <div className="charge__back">
-            <div onClick={handleChargeToggle}>닫기</div>
-          </div>
             <div className="charge__select">
               <p className="charge__select-title">충전할 금액</p>
               <div className="input">
@@ -71,8 +69,8 @@ const ChargeComponent = () => {
                         id="item_2"
                         name="item"
                         className="radio-gnb"
-                        value="2,000원"
-                        checked={amount === '2,000원'}
+                        value="2000"
+                        checked={amount === '2000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_2" className="checkLabel">
@@ -85,8 +83,8 @@ const ChargeComponent = () => {
                         id="item_3"
                         name="item"
                         className="radio-gnb"
-                        value="5,000원"
-                        checked={amount === '5,000원'}
+                        value="5000"
+                        checked={amount === '5000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_3" className="checkLabel">
@@ -100,8 +98,8 @@ const ChargeComponent = () => {
                         id="item_4"
                         name="item"
                         className="radio-gnb"
-                        value="20,000원"
-                        checked={amount === '20,000원'}
+                        value="20000"
+                        checked={amount === '20000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_4" className="checkLabel">
@@ -115,8 +113,8 @@ const ChargeComponent = () => {
                         id="item_5"
                         name="item"
                         className="radio-gnb"
-                        value="30,000원"
-                        checked={amount === '30,000원'}
+                        value="30000"
+                        checked={amount === '30000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_5" className="checkLabel">
@@ -129,8 +127,8 @@ const ChargeComponent = () => {
                         id="item_6"
                         name="item"
                         className="radio-gnb"
-                        value="50,000원"
-                        checked={amount === '50,000원'}
+                        value="50000"
+                        checked={amount === '50000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_6" className="checkLabel">
@@ -143,8 +141,8 @@ const ChargeComponent = () => {
                         id="item_7"
                         name="item"
                         className="radio-gnb"
-                        value="80,000원"
-                        checked={amount === '80,000원'}
+                        value="80000"
+                        checked={amount === '80000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_7" className="checkLabel">
@@ -157,8 +155,8 @@ const ChargeComponent = () => {
                         id="item_9"
                         name="item"
                         className="radio-gnb"
-                        value="90,000원"
-                        checked={amount === '90,000원'}
+                        value="90000"
+                        checked={amount === '90000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_9" className="checkLabel">
@@ -172,8 +170,8 @@ const ChargeComponent = () => {
                         id="item_10"
                         name="item"
                         className="radio-gnb"
-                        value="100,000원"
-                        checked={amount === '100,000원'}
+                        value="100000"
+                        checked={amount === '100000'}
                         onChange={handleAmountChange}
                     />
                     <label htmlFor="item_10" className="checkLabel">
@@ -185,18 +183,18 @@ const ChargeComponent = () => {
               </div>
 
               {errorMessage && <p className="payment-errorMessage" >{errorMessage}</p>}
-              <div className="check-money">결제 수단</div>
-              <div className="payment-icon" >
-                <button onClick={() => handleButtonClick('kakaopay')} data-payment-type="kakaopay">
-                  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/NAVER_Pay_Logo/npay_78.png" />
-                </button>
-                <button onClick={() => handleButtonClick('toss')} data-payment-type="toss">
-                  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/Toss_Logo_Secondary_Blue/Toss_Logo_Secondary_Blue.png" />
-                </button>
-                <button onClick={() => handleButtonClick('naverpay')} data-payment-type="naverpay">
-                  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/kakaopay/payment_icon_yellow_large.png" />
-                </button>
-              </div>
+              <div className="check-money" onClick={()=>handleButtonClick('toss')}>결제 하기</div>
+              {/*<div className="payment-icon" >*/}
+                {/*<button onClick={() => handleButtonClick('kakaopay')} data-payment-type="kakaopay">*/}
+                {/*  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/NAVER_Pay_Logo/npay_78.png" />*/}
+                {/*</button>*/}
+                {/*<button onClick={()=>handleButtonClick('toss')}>*/}
+                {/*  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/Toss_Logo_Secondary_Blue/Toss_Logo_Secondary_Blue.png" />*/}
+                {/*</button>*/}
+                {/*<button onClick={() => handleButtonClick('kakaopay')} data-payment-type="kakaopay">*/}
+                {/*  <img src="https://raw.githubusercontent.com/hyoseoung/matchgetit/8869a02909547f0f2c3d06aca29b111a41c3e830/Document/logo/kakaopay/payment_icon_yellow_large.png" />*/}
+                {/*</button>*/}
+              {/*</div>*/}
             </div>
         </div>
       </div>

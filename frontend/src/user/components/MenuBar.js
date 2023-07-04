@@ -34,7 +34,7 @@ function MenuBar({ isLoggedIn, onSlideChange }) {
           <span className="link-icon">
             <img src={process.env.PUBLIC_URL + '/images/loginIcon.svg'} alt="LoginIcon" />
           </span>
-                    <span className="link-title">로그인이 필요합니다</span>
+                    <span className="link-title">로그인 필요합니다</span>
                 </button>
             )}
         </div>

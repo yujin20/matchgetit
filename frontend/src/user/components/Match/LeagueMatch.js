@@ -7,15 +7,56 @@ import AddressSearch from "./AddressSearch";
 
 const LeagueMatch = ({ session }) => {
   const [party, setParty] = useState([]);
+  const [submitStatus, setSubmitStatus] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
   const [addressVisible, setAddressVisible] = useState(false);
+  const [partyopenStatus, setpartyopenStatus] = useState(false);
   const [id, setId] = useState('');
   const [address, setAddress] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('A');
+  const [selectedTime, setSelectedTime] = useState('');
   const [x,setX]=useState('');
   const [y,setY]=useState('');
   const datePickerRef = useRef(null);
+  const [showTimePopup, setShowTimePopup] = useState(false);
+  const toggleTimePopup = () => {
+    setShowTimePopup((prevState) => !prevState);
+  };
+  const handleTimeSelection = (time) => {
+    setSelectedTime(time);
+    setShowTimePopup(false);
+  };
+
+  useEffect( ()=>{
+    const today = new Date();
+    today.setDate(today.getDate() + 3);
+    const formattedDate = today.toISOString().substr(0, 10);
+
+    datePickerRef.current.min = formattedDate;
+  })
+
+  const handllepartyopen = () => {
+    setpartyopenStatus(!partyopenStatus)
+  };
+  const getTimeLabel = (time) => {
+    switch (time) {
+      case "A":
+        return "A 타임 : 오전 10시~오후 12시";
+      case "B":
+        return "B 타임 : 오후 12시~오후 2시";
+      case "C":
+        return "C 타임 : 오후 2시~오후 4시";
+      case "D":
+        return "D 타임 : 오후 4시~오후 6시";
+      case "E":
+        return "E 타임 : 오후 6시~오후 8시";
+      case "F":
+        return "F 타임 : 오후 8시~오후 10시";
+      default:
+        return "시간 선택";
+    }
+  };
+
   useEffect( ()=>{
     const today = new Date();
     today.setDate(today.getDate() + 3);
@@ -95,28 +136,32 @@ const LeagueMatch = ({ session }) => {
             .post('/matchGetIt/match/start', requestData)
             .then((response) => {
               window.location.reload();
-              setSearchStatus('성공');
+              setSubmitStatus('성공');
               setTimeout(() => {
-                setSearchStatus('');
+                setSubmitStatus('');
               }, 3000);
               console.log('성공');
             })
             .catch((error) => {
-              setSearchStatus('실패');
+              if (error.response && error.response.status === 400) {
+                setSubmitStatus(error.response.data);
+              } else {
+                setSubmitStatus('매칭 실패');
+              }
               setTimeout(() => {
-                setSearchStatus('');
+                setSubmitStatus('');
               }, 3000);
             });
       }else{
-        setSearchStatus('입력하지 않은 정보가 존재(재확인)');
+        setSubmitStatus('입력하지 않은 정보가 존재(재확인)');
         setTimeout(() => {
-          setSearchStatus('');
+          setSubmitStatus('');
         }, 3000);
       }
     }else{
-      setSearchStatus('수락하지 않은 파티원이 있습니다');
+      setSubmitStatus('수락하지 않은 파티원이 있습니다');
       setTimeout(() => {
-        setSearchStatus('');
+        setSubmitStatus('');
       }, 3000);
     }
   };
@@ -125,7 +170,6 @@ const LeagueMatch = ({ session }) => {
     setX(x);
     setY(y);
     console.log(address+'위도:'+x+'경도:'+y);
-
   };
 
   const deleteId = (index) => {
@@ -134,13 +178,14 @@ const LeagueMatch = ({ session }) => {
     setParty(updatedParty);
   };
 
+
   return (
       <>
         <div className="applicationContainer lContainer">
-          <div className="matchingTitle lTitle">League Match</div>
           <form>
+            <div className="matchingTitle lTitle">리 그 경 기</div>
             <div className="address">
-              <div className="lSubTitle subTitle addressTitle">선택한 지역</div>
+              <div className="lSubTitle subTitle addressTitle"></div>
               <input
                   type="text"
                   className="lInputData inputData"
@@ -153,7 +198,6 @@ const LeagueMatch = ({ session }) => {
               <AddressSearch visible={addressVisible} setVisible={setAddressVisible} onSelect={onSelectAddress} />
             </div>
             <div className="time">
-              <div className="lSubTitle subTitle timeTitle">선택 시간</div>
               <input
                   type="date"
                   className="timeSelect mDate"
@@ -161,63 +205,89 @@ const LeagueMatch = ({ session }) => {
                   onChange={(event) => setSelectedDate(event.target.value)}
                   ref={datePickerRef}
               />
-              <select
-                  className="mTime"
-                  value={selectedTime}
-                  onChange={(event) => setSelectedTime(event.target.value)}
-              >
-                <option value="A">오전 10시~오후 12시</option>
-                <option value="B">오후 12시~오후 2시</option>
-                <option value="C">오후 2시~오후 4시</option>
-                <option value="D">오후 4시~오후 6시</option>
-                <option value="E">오후 6시~오후 8시</option>
-                <option value="F">오후 8시~오후 10시</option>
-              </select>
-            </div>
-            <div className="party">
-              <div className="lSubTitle subTitle partyTitle">같이 할 파티원</div>
-
               <input
                   type="text"
-                  className="lInputData inputMatchData"
-                  value={id}
-                  onChange={handleInputChange}
-                  placeholder="같이 할 유저의 id 입력!"
+                  placeholder="시간 선택"
+                  onClick={toggleTimePopup}
+                  className="mTime"
+                  value={selectedTime ? getTimeLabel(selectedTime) : ""}
+                  onChange={(event) => setSelectedTime(event.target.value)}
+
               />
-              <span className="systemMessage">{searchStatus}</span>
-              <button className="mBtn lButton pBtn" type="button" onClick={searchId}>
-                파티원 추가
-              </button>
-              <div className="partyList">
-                {party.filter(member=> member.agreement=='AGREE').map((member, index) => (
-                    <div key={index}>
-                      <div className="Pname">{member.name}</div>
-                      <div className="deleteBtnArea">
-                        <button
-                            className="mBtn lButton deleteBtn"
-                            type="button"
-                            onClick={() => deleteId(index)}
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    </div>
-                ))}
-              </div>
-              <button className="mBtn lButton pBtn" type="button" onClick={renewData}>
-                수락여부 갱신
-              </button>
+              {showTimePopup && (
+                  <div className="timepopUp-box timeselectContainer">
+                    <div className="closeButton" onClick={toggleTimePopup}>x</div>
+                    <div onClick={() => handleTimeSelection("A")}>A타임 : 오전 10시~오후 12시</div>
+                    <div onClick={() => handleTimeSelection("B")}>B타임 : 오후 12시~오후 2시</div>
+                    <div onClick={() => handleTimeSelection("C")}>C타임 : 오후 2시~오후 4시</div>
+                    <div onClick={() => handleTimeSelection("D")}>D타임 : 오후 4시~오후 6시</div>
+                    <div onClick={() => handleTimeSelection("E")}>E타임 : 오후 6시~오후 8시</div>
+                    <div onClick={() => handleTimeSelection("F")}>F타임 : 오후 8시~오후 10시</div>
+                  </div>
+              )}
             </div>
-            <button className="mBtn lButton pointBtn" type="button">
-              {session.name}님 잔여 포인트 : {session.ownedPoint}
-            </button>
-            <button className="mBtn lButton mSubBtn" type="button" onClick={submitMatch}>
-              매칭
-            </button>
+            <div className="party">
+              <button className="mBtn lButton pBtn" type="button" onClick={handllepartyopen}>
+                파티 생성
+              </button>
+              {partyopenStatus && (
+                  <div className="party">
+                    <div className="inputWithButton">
+                      <input
+                          type="text"
+                          className="lInputData inputMatchData"
+                          value={id}
+                          onChange={handleInputChange}
+                          placeholder="같이 할 유저의 id 입력!"
+                      />
+                      <button className="mBtn lButton pBtn" type="button" onClick={searchId}>
+                        파티원 추가
+                      </button>
+                    </div>
+
+                    <button className="mBtn lButton pBtn" type="button" onClick={renewData}>
+                      수락여부 갱신
+                      <div><span className="systemMessage">{searchStatus}</span></div>
+                    </button>
+
+                    <div className="partyList">
+                      {party.map((member, index) => (
+                          <div key={index}>
+                            <div className="Pname">{member.user.name}
+                              <div className="Pstate">{member.agreement === 'AGREE' ? (
+                                  <div>수락</div>
+                              ) : member.agreement === 'DISAGREE' ? (
+                                  <div>거절</div>
+                              ) : (
+                                  <div>대기
+                                    <button
+                                        className="mBtn lButton deleteBtn"
+                                        type="button"
+                                        onClick={() => deleteId(index)}
+                                    >
+                                      삭제
+                                    </button>
+                                  </div>
+                              )}</div>
+                            </div>
+                          </div>
+                      ))}
+                    </div>
+                  </div>
+              )}
+            </div>
+            <div className="pointContainer">
+              <div className="mBtn lButton pointBtn" type="button">
+                {session.name}님 잔여 포인트 : {session.ownedPoint}
+                <button className="mBtn lButton mSubBtn" type="button" onClick={submitMatch}>
+                  매칭
+                </button>
+              </div>
+            </div>
           </form>
         </div>
-      </>
+        </>
   );
-};
+}
 
 export default LeagueMatch;

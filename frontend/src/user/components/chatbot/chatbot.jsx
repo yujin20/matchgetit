@@ -10,10 +10,10 @@ import './chatbot.css'
 
 const ChatbotComponent = () => {
     const [chatbotVisible, setChatbotVisible] = useState(false);
-    console.log(chatbotVisible);
-    const toggleChatbot = () => {
+    // console.log(chatbotVisible);
+    const toggleChatbot = (z) => {
         setChatbotVisible(!chatbotVisible);
-        console.log('누름');
+        // console.log('누름');
     };
 
     return (

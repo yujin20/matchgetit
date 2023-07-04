@@ -64,7 +64,7 @@
   .link:hover,
   .link:active {
     outline: 0;
-    width: 50%;
+    width: 150px;
   }
   
   .link:hover .link-icon:before,
@@ -75,6 +75,7 @@
     opacity: 1;
     white-space: nowrap;
     font-size: 20px;
+    display: block;
   }
   
   .link-icon {

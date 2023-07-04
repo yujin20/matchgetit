@@ -10,10 +10,6 @@ import com.matchgetit.backend.util.FormatDate;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Date;
@@ -21,7 +17,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
@@ -47,10 +43,8 @@ public class MemberService implements UserDetailsService {
         else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
         else member.setRating(300L);
         member.setRegDate(new Date());
-        member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
-
     public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency,AccountType accountType,LogInType logInType) {
         // 이미 존재하는 사용자인지 확인
         if (memberRepository.findByEmail(email) != null) {
@@ -83,31 +77,23 @@ public class MemberService implements UserDetailsService {
         if (!passwordEncoder.matches(password, member.getPw())) {
             throw new RuntimeException("계정 정보가 일치하지 않습니다");
         }
-
         return new ModelMapper().map(member, MemberDTO.class);
     }
-
-
-
     public MemberDTO findMemberById(Long userId){
         MemberEntity memberEntity= memberRepository.findByUserId(userId);
         if(memberEntity ==null) return null;
         else return modelMapper.map(memberEntity,MemberDTO.class);
     }
-
     public MemberDTO findMemberByEmail(String email){
         MemberEntity memberEntity= memberRepository.findByEmail(email);
         if(memberEntity ==null) return null;
         else return modelMapper.map(memberEntity,MemberDTO.class);
     }
-
     public MemberDTO findMemberByPhoneNumber(String pn){
         MemberEntity memberEntity= memberRepository.findByPn(pn);
         if(memberEntity ==null) return null;
         else return modelMapper.map(memberEntity,MemberDTO.class);
     }
-
-
     public void updateParty(Long userId, PartyDTO partyDTO) {
         MemberEntity member = memberRepository.findByUserId(userId);
         if (member == null) {
@@ -121,7 +107,6 @@ public class MemberService implements UserDetailsService {
         member.setParty(partyEntity);
         memberRepository.save(member);
     }
-
     public void deleteParty(Long userId) {
         MemberEntity member = memberRepository.findByUserId(userId);
         if (member == null) {
@@ -131,17 +116,9 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(member);
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        MemberEntity member = memberRepository.findByEmail(email);
-        if (member == null) {
-            throw new UsernameNotFoundException(email);
-        }
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPw())
-                .roles(member.getLoginType().getAuthority())
-                .build();
-    }
+    public void updateCredit(Long userId, int value) {
+        MemberEntity member = memberRepository.findByUserId(userId);
+        member.setOwnedCrd(member.getOwnedCrd()!=null?member.getOwnedCrd():0+value);
+        memberRepository.save(member);
+    }//결제 시 사용하는 메소드
 }

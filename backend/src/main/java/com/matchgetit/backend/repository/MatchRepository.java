@@ -1,5 +1,6 @@
 package com.matchgetit.backend.repository;
 
+import com.matchgetit.backend.constant.GameType;
 import com.matchgetit.backend.entity.MatchEntity;
 import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.entity.PartyEntity;
@@ -17,6 +18,6 @@ public interface MatchRepository extends JpaRepository<MatchEntity,Long> {
 
     MatchEntity findByMember(MemberEntity member);
 
-    List<MatchEntity> findByStadiumAndParty_ApplicationTimeAndParty_ApplicationDate(
-            StadiumEntity stadium, String applicationTime, Date applicationDate);
+    List<MatchEntity> findByStadiumAndParty_ApplicationTimeAndParty_ApplicationDate_AndParty_GameType(
+            StadiumEntity stadium, String applicationTime, Date applicationDate, String gameType);
 }

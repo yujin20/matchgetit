@@ -27,6 +27,9 @@
     background-position: 100%;
     background-size: 400%;
     transition: background 300ms ease-in-out;
+    margin: 10px;
+    padding: 0.5em 1.0em;
+    font-size: 0.9rem;
 }
 .popUpBtn:hover {
     background-position: 0;
@@ -201,7 +204,7 @@ agreeBtn:hover{
 }
 @media (max-width: 767px) {
     .popUp-box {
-        width:80%;
+        width:60%;
         height:60%;
     }
     .popUpCloseBtn {

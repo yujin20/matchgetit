@@ -15,4 +15,5 @@ public interface PartyAcceptRepository extends JpaRepository<PartyAcceptEntity, 
     PartyAcceptEntity findByUserAndPartyLeader(MemberEntity user,MemberEntity partyLeader);
 
     void deleteByPartyLeader(MemberEntity partyLeader);
+    void deleteByPartyLeaderAndUser(MemberEntity partyLeader,MemberEntity user);
 }

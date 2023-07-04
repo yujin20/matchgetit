@@ -67,7 +67,6 @@ const LogIn = ({ onLogin }) => {
                 type="email"
                 placeholder="이메일"
                 value={email}
-                name="email"
                 onChange={handleEmailChange}
             />
             <input
@@ -75,7 +74,6 @@ const LogIn = ({ onLogin }) => {
                 type="password"
                 placeholder="비밀번호"
                 value={password}
-                name="password"
                 onChange={handlePasswordChange}
             />
           </div>

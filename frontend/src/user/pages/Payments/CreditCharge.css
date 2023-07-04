@@ -5,10 +5,23 @@
     border-radius: 25px;
     background-color: #FFFFFF;
 }
-.charge__back{
-    position: absolute;
-    z-index: 10;
+.my-status.CreditCharge-settings {
+    position: relative;
 }
+
+.charge__back {
+    position: absolute;
+    top: 10%; /* 원하는 상단 위치로 조정하세요 */
+    right: 5%; /* 원하는 우측 위치로 조정하세요 */
+    cursor: pointer; /* 이 속성을 추가하여 버튼 위로 마우스를 올렸을 때 포인터 모양으로 변경합니다 */
+    background-color: #FFCF0A;
+    color: #282B33;
+    font-size: 14px;
+    border-radius: 6px;
+    padding: 10px 10px;
+}
+
+
 .charge__title{
     font-size: 20px;
     margin-left: 5px;
@@ -17,6 +30,7 @@
 .CreditCharge-settings{
     /*background-color: #FFFFFF;*/
     border-radius: 25px;
+    position: relative;
 }
 
 .CreditCharge-settings h2{
@@ -196,6 +210,11 @@ li .radio-gnb+label {
     text-align: center;
     border-radius:10px;
     padding: 5px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    width: 60%;
+    margin-left: 20%;
+
 }
 .payment-errorMessage{
     font-size: 14px;

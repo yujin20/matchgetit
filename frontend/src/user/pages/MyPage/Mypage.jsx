@@ -10,12 +10,19 @@ import CreditCharge from "../Payments/CreditCharge";
 function Mypage({session}) {
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [isChargeOpen, setChargeOpen] = useState(true);
+    // const [isAdmin, setIsAdmin] = useState(session && session.loginType.toUpperCase() === "ADMIN");
+    const [isAdmin, setIsAdmin] = useState(true);
+
 
     const handleProfileToggle = () => {
         setProfileOpen(!isProfileOpen);
     };
-    const handleChargeToggle = (isChargeOpen) => {
+    const handleChargeToggle = () => {
         setChargeOpen(!isChargeOpen);
+    };
+
+    const handleOpenadmin=(url)=>{
+        window.open(url,"_blank","noopner,noreferrer");
     };
 
     return (
@@ -39,7 +46,7 @@ function Mypage({session}) {
                 </div>
                 <div className="my-status">
                     <li className="my-status_item my-status_item-double">
-                        <a href="/mypage/mymanner/">
+                        {/*<a href="/mypage/mymanner/">*/}
                             <div className="my-status_label">
                                 <p style={{ fontSize: '12px' }}>매너</p>
                             </div>
@@ -47,14 +54,14 @@ function Mypage({session}) {
                                 <img src="https://plab-football.s3.amazonaws.com/static/img/ic_manner_card.svg" alt="매너" />
                                 좋아요
                             </div>
-                        </a>
+                        {/*</a>*/}
                     </li>
                     <li className="my-status_item my-status_item-double">
                         <div className="my-status_label">
                             <a href="/magazine/1/" style={{ fontSize: '12px' }}>레벨</a>
                             <img src="https://plab-football.s3.amazonaws.com/static/img/ic_level_show.svg" alt="레벨" />
                         </div>
-                        <a href="/mypage/mylevel/">
+                        {/*<a href="/mypage/mylevel/">*/}
                             <div className="my-status_content">
                                 <div className="lv-system_title">
                                     <div>
@@ -70,31 +77,32 @@ function Mypage({session}) {
                                     </div>
                                 </div>
                             </div>
-                        </a>
+                        {/*</a>*/}
                     </li>
-
-
-                        {isChargeOpen && (
-                            <li className="my-status_item my-status_item-cash">
+                </div>
+                {isChargeOpen && (
+                    <li className="my-status_item my-status_item-cash">
                         <div>
                             <p style={{ fontSize: '17px', fontWeight: "bold"}}>나의 캐시</p>
                             <p style={{ fontSize: '20px', fontWeight: '700' }}>0원</p>
                         </div>
 
-                            <div className="my-cash">
-                                <span onClick={handleChargeToggle}> 충전하기 </span>
+                        <div className="my-cash">
+                            <span onClick={handleChargeToggle}>충전하기</span>
+                        </div>
+                    </li>
+                )}
+                {!isChargeOpen && (
+                    <li className="my-status CreditCharge-settings">
+                        <div className="CreditCharge-settings">
+                            <CreditCharge session={session} />
+                            <div className="charge__back" onClick={handleChargeToggle}>
+                                닫기
                             </div>
-                            </li>
-                        )}
-                            {!isChargeOpen && (
-                                <li className="my-status CreditCharge-settings">
-                                <div className="CreditCharge-settings">
-                                    <CreditCharge session={session}/>
-                                </div>
-                                </li>
-                            )}
+                        </div>
+                    </li>
+                )}
 
-                </div>
                 <div className="profile-view">
                     <button className="btn sm gray" onClick={handleProfileToggle}>
                         <p>프로필 보기</p>
@@ -109,16 +117,20 @@ function Mypage({session}) {
             <section>
                 <div>
                     <div className="my-content-title">my content</div>
-                    <a href="/mypage/myplab/">
                         <div className="content-label"><img src="https://plab-football.s3.amazonaws.com/static/img/ic_myplab_color.svg" alt="신청 내역"/>
                             <p>신청 내역</p>
                         </div>
-                    </a>
-                    <a href="/cash/charge/history">
                         <div className="content-label"><img src="https://plab-football.s3.amazonaws.com/static/img/ic_point_color.svg" alt="결제 내역"/>
                             <p>결제 내역</p>
                         </div>
-                    </a>
+                    {isAdmin && (
+                        <a href="http://localhost:8081/matchGetIt/manager/managers">
+                            <div className="content-label">
+                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_myplab_color.svg" alt="신청 내역" />
+                                <p>어드민 페이지 이동</p>
+                            </div>
+                        </a>
+                    )}
 
                 </div>
             </section>

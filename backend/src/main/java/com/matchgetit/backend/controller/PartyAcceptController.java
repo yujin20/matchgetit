@@ -62,6 +62,15 @@ public class PartyAcceptController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/deleteInvite")//파티 제외 메소드
+    public ResponseEntity<String> deleteAcceptData(@RequestParam String partyLeaderId,@RequestParam String userId){
+        try {
+            partyAcceptService.deletePartyAcceptByPartyLeaderIdAndPartyMemberId(Long.parseLong(partyLeaderId),Long.parseLong(userId));
+            return new ResponseEntity<>("삭제 성공", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PutMapping("/accept/{partyAcceptId}")
     public ResponseEntity<String> acceptParty(@PathVariable Long partyAcceptId) {
         try {
