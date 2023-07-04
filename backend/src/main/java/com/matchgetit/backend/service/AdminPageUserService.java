@@ -107,7 +107,7 @@ public class AdminPageUserService {
     }
 
 
-    public void banUser(Long userId, java.util.Date banDateStart, java.util.Date banDateEnd, String banReason) {
+    public void banUser(Long userId, Date banDateStart, Date banDateEnd, String banReason) {
         MemberEntity member = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         member.banUser(banDateStart, banDateEnd, banReason);
     }
