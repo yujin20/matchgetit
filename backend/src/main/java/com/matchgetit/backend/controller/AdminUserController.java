@@ -29,7 +29,7 @@ public class AdminUserController {
 
     @PostConstruct
     public void createUsers() {
-        userService.createUsers();
+//        userService.createUsers();
     }
 
 //    @GetMapping(value = "")

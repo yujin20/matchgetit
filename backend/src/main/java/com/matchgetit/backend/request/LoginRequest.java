@@ -13,8 +13,8 @@ public class LoginRequest {
     @Email(message = "유효한 이메일 주소를 입력해주세요.")
     private String email;
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "비밀번호 규칙이 \n 옳바르지 \n 않습니다")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&#^_])[\\w@$!%*?&#^]{8,}$",
+            message = "비밀번호 규칙이 \n 올바르지 \n 않습니다")
     private String password;
 
 }

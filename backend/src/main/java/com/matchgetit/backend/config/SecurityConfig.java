@@ -5,9 +5,12 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -20,9 +23,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //restApi에서는 csrf 인증 필요x
         http
-                .csrf(csrf ->
-                        csrf.ignoringRequestMatchers(request -> !new AntPathRequestMatcher("/matchGetIt/admin/**").matches(request))
-                )
                 .authorizeRequests()
                 .requestMatchers("/matchGetIt/auth/**").permitAll()
                 .requestMatchers("/matchGetIt/naver/**").permitAll()
@@ -31,7 +31,20 @@ public class SecurityConfig {
                 .requestMatchers(("/matchGetIt/rank/**")).permitAll()
                 .requestMatchers("/css/**").permitAll()//예외 페이지 구성
 //                .anyRequest().access("@securityConfig.hasValidToken(request)");
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+//                .anyRequest().authenticated()
+                .and().csrf(csrf ->
+                        csrf.ignoringRequestMatchers(request -> !new AntPathRequestMatcher("/matchGetIt/admin/**").matches(request))
+                )
+                .formLogin(form -> form
+//                        .loginPage("redirect:http://localhost:3000")
+                        .usernameParameter("email")
+                        .defaultSuccessUrl("/matchGetIt/auth/loginResult")
+                        .failureUrl("/matchGetIt/auth/loginResult")
+                ).logout(logout -> logout
+                        .logoutUrl("/matchGetIt/auth/logout")
+                )
+        ;
         return http.build();
     }//세션에 있는 토큰을 인증하는 로직
 
@@ -50,4 +63,10 @@ public class SecurityConfig {
             return false;
         }
     }//jwt 토큰 인증을 마쳐야 true가 뜨고 접근 가능함!
+
+    @Bean
+    AuthenticationManager getAuthManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
 }
