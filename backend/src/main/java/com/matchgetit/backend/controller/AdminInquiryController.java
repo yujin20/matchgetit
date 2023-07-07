@@ -27,10 +27,10 @@ public class AdminInquiryController {
     private final String path = "admin/pages/Inquiry/";
     private final String alertViewPath = "admin/components/Utils/alert";
 
-//    @PostConstruct
-//    public void createInquiries() {
-//        inquiryService.createInquiries();
-//    }
+    @PostConstruct
+    public void createInquiries() {
+        inquiryService.createInquiries();
+    }
 
 
     // 문의 게시판

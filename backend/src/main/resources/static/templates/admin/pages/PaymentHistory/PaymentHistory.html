@@ -5,83 +5,8 @@
 
 <head>
   <title>PaymentHistory</title>
-
-
-  <style>
-
-    .payment-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    }
-
-    .search-container a:last-child {
-    margin-left: 50px;
-    }
-
-    table {
-    border-collapse: collapse;
-    width: 100%;
-    }
-
-    th, td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-
-    }
-    .search-container {
-    margin-bottom:15px;
-    }
-
-    .buttons-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-    }
-    .container {
-    margin-bottom: 10px;
-    }
-
-    .button-label {
-    margin-left: 70px;
-    }
-
-    .status-label {
-    margin-left: 90px;
-    }
-    .buttons-container {
-    display: flex;
-    justify-content: center;
-    }
-
-    .search-button, .reset-button {
-    background-color: #A3EDAA;
-    color: #000000;
-    font-size: 18px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    }
-
-    .search-button {
-    margin-right: 10px;
-    }
-    .download-button {
-    display: inline-block;
-    background-color: #14841F;
-    color: #000000;
-    font-size: 18px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    cursor: pointer;
-    margin-bottom:15px;
-    }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/PaymentHistory.css}" type="text/css">
+  <!--  <link rel="stylesheet" th:href="@{/css/PaymentHistory2.css}" type="text/css">-->
 </head>
 
 <section layout:fragment="content">
@@ -99,7 +24,7 @@
           <input type="date" id="checkStartDate" name="checkStartDate">
           ~
           <input type="date" id="checkEndDate" name="checkEndDate">
-          <a >기록 검색</a>
+          <a>기록 검색</a>
         </label>
 
         <select name="searchCondition">
@@ -160,35 +85,36 @@
         <th>거래 상태</th>
       </tr>
       </thead>
+
       <tbody>
       <tr th:each="user : ${userList}" onclick="viewUserDetails('${user.userId}')">
         <td><input type="checkbox" name="selectedPayment" value="" /></td>
         <td>
-      <span th:each="payment : ${user.paymentRecordDTO}">
-        <span th:text="${payment.paymentNumber}"></span><br>
-      </span>
+          <span th:each="payment : ${user.paymentRecordDTO}">
+            <span th:text="${payment.paymentNumber}"></span><br>
+          </span>
         </td>
         <td>
-      <span th:each="payment : ${user.paymentRecordDTO}">
-        <span th:text="${payment.transactionDateTime}"></span><br>
-      </span>
+          <span th:each="payment : ${user.paymentRecordDTO}">
+            <span th:text="${payment.transactionDateTime}"></span><br>
+          </span>
         </td>
         <td>
-      <span th:each="payment : ${user.paymentRecordDTO}">
-        <span th:text="${payment.cancellationDateTime}"></span><br>
-      </span>
+          <span th:each="payment : ${user.paymentRecordDTO}">
+            <span th:text="${payment.cancelDateTime}"></span><br>
+          </span>
         </td>
         <td>
-      <span th:each="payment : ${user.paymentRecordDTO}">
-        <span th:text="${payment.gameNumber}"></span><br>
-      </span>
+          <span th:each="payment : ${user.paymentRecordDTO}">
+            <span th:text="${payment.gameNumber}"></span><br>
+          </span>
         </td>
         <td th:text="${user.userId}"></td>
         <td th:text="${user.name}"></td>
         <td>
-      <span th:each="payment : ${user.paymentRecordDTO}">
-        <span th:text="${payment.paymentStatus}"></span><br>
-      </span>
+          <span th:each="payment : ${user.paymentRecordDTO}">
+            <span th:text="${payment.paymentStatus}"></span><br>
+          </span>
         </td>
       </tr>
       </tbody>
@@ -202,7 +128,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
-  function setDateRange(days) {
+    function setDateRange(days) {
       var endDate = new Date();
       var startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
@@ -222,103 +148,103 @@
     }
 
     function searchPaymentHistory() {
-  var checkStartDate = document.getElementById("checkStartDate").value;
-  var checkEndDate = document.getElementById("checkEndDate").value;
-  var searchCondition = document.querySelector('select[name="searchCondition"]').value;
-  var searchKeyword = document.querySelector('input[name="searchKeyword"]').value.toUpperCase();
-  var paymentStatuses = document.querySelectorAll('input[name="paymentStatus"]:checked');
-  var selectedStatuses = Array.from(paymentStatuses).map(function (status) {
-    return status.value;
-  });
+      var checkStartDate = document.getElementById("checkStartDate").value;
+      var checkEndDate = document.getElementById("checkEndDate").value;
+      var searchCondition = document.querySelector('select[name="searchCondition"]').value;
+      var searchKeyword = document.querySelector('input[name="searchKeyword"]').value.toUpperCase();
+      var paymentStatuses = document.querySelectorAll('input[name="paymentStatus"]:checked');
+      var selectedStatuses = Array.from(paymentStatuses).map(function (status) {
+        return status.value;
+      });
 
-  var table = document.querySelector("table");
-  var rows = table.getElementsByTagName("tr");
-  var hasVisibleRows = false;
+      var table = document.querySelector("table");
+      var rows = table.getElementsByTagName("tr");
+      var hasVisibleRows = false;
 
-  for (var i = 1; i < rows.length; i++) {
-    var row = rows[i];
-    var paymentNumber = row.cells[1].textContent.toUpperCase();
-    var gameNumber = row.cells[4].textContent.toUpperCase();
-    var userId = row.cells[5].textContent.toUpperCase();
-    var paymentStatus = row.cells[7].textContent.toUpperCase();
-    var transactionDateTime = row.cells[2].textContent;
+      for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var paymentNumber = row.cells[1].textContent.toUpperCase();
+        var gameNumber = row.cells[4].textContent.toUpperCase();
+        var userId = row.cells[5].textContent.toUpperCase();
+        var paymentStatus = row.cells[7].textContent.toUpperCase();
+        var transactionDateTime = row.cells[2].textContent;
 
-    var isVisible = true;
+        var isVisible = true;
 
-    if (checkStartDate && checkEndDate) {
-      var startDate = new Date(checkStartDate);
-      var endDate = new Date(checkEndDate);
-      var transactionDate = new Date(transactionDateTime);
+        if (checkStartDate && checkEndDate) {
+          var startDate = new Date(checkStartDate);
+          var endDate = new Date(checkEndDate);
+          var transactionDate = new Date(transactionDateTime);
 
-      if (transactionDate < startDate || transactionDate > endDate) {
-        isVisible = false;
+          if (transactionDate < startDate || transactionDate > endDate) {
+            isVisible = false;
+          }
+        }
+
+        if (searchKeyword && searchCondition) {
+          var targetValue = "";
+
+          switch (searchCondition) {
+            case "name":
+              targetValue = row.cells[6].textContent.toUpperCase();  // 회원 이름
+              break;
+            case "userNumber":
+              targetValue = userId;
+              break;
+            case "gameNumber":
+              targetValue = gameNumber;
+              break;
+          }
+
+          if (!targetValue.includes(searchKeyword)) {
+            isVisible = false;
+          }
+        }
+
+        if (selectedStatuses.length > 0) {
+          if (!selectedStatuses.includes(paymentStatus.toLowerCase())) {
+            isVisible = false;
+          }
+        }
+
+        if (isVisible) {
+          row.style.display = "table-row";
+        } else {
+          row.style.display = "none";
+        }
       }
     }
 
-    if (searchKeyword && searchCondition) {
-      var targetValue = "";
+    function resetForm() {
+      var searchCondition = document.querySelector('select[name="searchCondition"]');
+      searchCondition.selectedIndex = 0;
 
-      switch (searchCondition) {
-        case "name":
-          targetValue = row.cells[6].textContent.toUpperCase();  // 회원 이름
-          break;
-        case "userNumber":
-          targetValue = userId;
-          break;
-        case "gameNumber":
-          targetValue = gameNumber;
-          break;
-      }
+      var searchKeyword = document.querySelector('input[name="searchKeyword"]');
+      searchKeyword.value = "";
 
-      if (!targetValue.includes(searchKeyword)) {
-        isVisible = false;
-      }
+      var startDateInput = document.getElementById("checkStartDate");
+      var endDateInput = document.getElementById("checkEndDate");
+
+      startDateInput.value = "";
+      endDateInput.value = "";
+
+      var paymentStatuses = document.querySelectorAll('input[name="paymentStatus"]:checked');
+      Array.from(paymentStatuses).forEach(function(status) {
+        status.checked = false;
+      });
+
+      searchPaymentHistory();
     }
 
-    if (selectedStatuses.length > 0) {
-      if (!selectedStatuses.includes(paymentStatus.toLowerCase())) {
-        isVisible = false;
-      }
-    }
-
-    if (isVisible) {
-      row.style.display = "table-row";
-    } else {
-      row.style.display = "none";
-    }
-  }
-}
-
-  function resetForm() {
-    var searchCondition = document.querySelector('select[name="searchCondition"]');
-    searchCondition.selectedIndex = 0;
-
-    var searchKeyword = document.querySelector('input[name="searchKeyword"]');
-    searchKeyword.value = "";
-
-    var startDateInput = document.getElementById("checkStartDate");
-    var endDateInput = document.getElementById("checkEndDate");
-
-    startDateInput.value = "";
-    endDateInput.value = "";
-
-    var paymentStatuses = document.querySelectorAll('input[name="paymentStatus"]:checked');
-    Array.from(paymentStatuses).forEach(function(status) {
-      status.checked = false;
+    document.querySelector("form").addEventListener("submit", function(event) {
+      event.preventDefault();
+      searchPaymentHistory();
     });
 
-    searchPaymentHistory();
-  }
-
-  document.querySelector("form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    searchPaymentHistory();
-  });
-
-  document.querySelector(".reset-button").addEventListener("click", function() {
-    resetForm();
-  });
-</script>
+    document.querySelector(".reset-button").addEventListener("click", function() {
+      resetForm();
+    });
+  </script>
 
 </th:block>
 

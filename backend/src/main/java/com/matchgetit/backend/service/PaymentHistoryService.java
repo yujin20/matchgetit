@@ -1,11 +1,14 @@
 package com.matchgetit.backend.service;
 
 import com.matchgetit.backend.constant.PaymentStatus;
+import com.matchgetit.backend.dto.MemberDTO;
+import com.matchgetit.backend.dto.PaymentRecordDTO;
 import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.entity.PaymentRecordEntity;
 import com.matchgetit.backend.repository.MemberRepository;
 import com.matchgetit.backend.repository.PaymentRecordRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ public class PaymentHistoryService {
 
     private final PaymentRecordRepository paymentRecordRepository;
     private final MemberRepository memberRepository;
+    private final ModelMapper modelMapper;
 
     public List<PaymentRecordEntity> getPaymentRecords() {
         return paymentRecordRepository.findAll();
@@ -54,4 +58,32 @@ public class PaymentHistoryService {
     public List<PaymentRecordEntity> getPaymentRecordsByStatus(List<PaymentStatus> statuses) {
         return paymentRecordRepository.findByTransactionStatusIn(statuses);
     }
+
+
+    public List<PaymentRecordDTO> getPaymentRecordDTOList() {
+        List<PaymentRecordEntity> paymentList = paymentRecordRepository.findAll();
+        List<PaymentRecordDTO> paymentDTOList = new ArrayList<>();
+
+        modelMapper.typeMap(PaymentRecordEntity.class, PaymentRecordDTO.class)
+                .addMappings(mapping -> {
+                    mapping.map(PaymentRecordEntity::getTransactionDate, PaymentRecordDTO::setTransactionDateTime);
+                    mapping.map(PaymentRecordEntity::getCancelDate, PaymentRecordDTO::setCancelDateTime);
+                    mapping.map(PaymentRecordEntity::getTransactionStatus, PaymentRecordDTO::setPaymentStatus);
+                });
+
+        modelMapper.typeMap(MemberEntity.class, MemberDTO.class)
+                .addMappings(mapping -> {
+                    mapping.skip(MemberDTO::setPaymentRecordDTO);
+                    mapping.skip(MemberDTO::setPaymentRecordEntityList);
+                });
+
+        for (PaymentRecordEntity payment: paymentList) {
+            PaymentRecordDTO paymentDTO = modelMapper.map(payment, PaymentRecordDTO.class);
+            paymentDTO.setUserId(modelMapper.map(payment.getMember(), MemberDTO.class));
+            paymentDTOList.add(paymentDTO);
+        }
+
+        return paymentDTOList;
+    }
+
 }

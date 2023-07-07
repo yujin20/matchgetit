@@ -46,12 +46,16 @@
             border-radius: 4px;
         }
 
-        /* 링크 스타일 */
+        input[type="submit"] {
+            padding: 6px 10px;
+        }
+
+        /* 링크 스타일
         a {
             color: #4CAF50;
             text-decoration: none;
             cursor: pointer;
-        }
+        } */
 
         /* 입력 필드 스타일 */
         input[type="search"], select, input[type="date"] {
@@ -67,7 +71,24 @@
 
         /* 페이지 링크 스타일 */
         #bottom a, #bottom span {
-            margin-right: 5px;
+            /*margin-right: 5px;*/
+        }
+
+        label {
+            margin-right: 3px;
+        }
+
+
+        #bottom {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        #bottom div {
+            padding: 5px 10px;
+            border: 1px solid lightgray;
+            cursor: pointer;
         }
     </style>
 
@@ -199,7 +220,9 @@
 
             <tbody>
             <tr th:if="${inquiryList.isEmpty()}">
-                <td colspan="8">등록된 문의가 없습니다.</td>
+                <td colspan="8" style="text-align: center;">
+                    등록된 문의가 없습니다.
+                </td>
             </tr>
 
             <tr th:each="post: ${inquiryList.getContent()}">
@@ -226,39 +249,40 @@
              th:with="currPageText=${currPageNum}+1, max=${inquiryList.getTotalPages() + 1}, pageSizeHalf=5/2">
             <!--            <a href="/matchGetIt/admin/userList">[first]</a>-->
 
-            <th:block th:each="page2: ${#numbers.sequence(pageSizeHalf, 1)}" th:if="${currPageText - page2 > 0}">
-                <a th:text="${currPageText - page2}" th:onclick="|page(${currPageNum - page2})|"></a>
-            </th:block>
+            <div th:each="page2: ${#numbers.sequence(pageSizeHalf, 1)}" th:if="${currPageText - page2 > 0}" th:onclick="|page(${currPageNum - page2})|">
+                <a th:text="${currPageText - page2}"></a>
+            </div>
 
-            <span th:text="${currPageText}"></span>
+            <div>
+                <span th:text="${currPageText}"></span>
+            </div>
 
-            <th:block th:each="page2: ${#numbers.sequence(1, pageSizeHalf)}" th:if="${currPageText + page2 < max}">
-                <a th:text="${currPageText + page2}" th:onclick="|page(${currPageNum + page2})|"></a>
-            </th:block>
+            <div th:each="page2: ${#numbers.sequence(1, pageSizeHalf)}" th:if="${currPageText + page2 < max}" th:onclick="|page(${currPageNum + page2})|">
+                <a th:text="${currPageText + page2}"></a>
+            </div>
         </div>
     </form>
 
-    <br>
-
+    <br><hr><br>
     <form method="get" name="search-form" id="search-form" th:object="${searchInquiryDTO}">
         <div>
             <div id="search-regdate">
-<!--                <label>가입일:</label>-->
+                <label>작성일</label>
                 <input type="date" th:field="*{regDateStart}" /> ~
                 <input type="date" th:field="*{regDateEnd}" />
-            </div>
-            <br>
 
-            <div id="search-div">
-                <label for="state">처리 상황:</label>
+                <label for="state" style="margin-left: 10px">처리 상황</label>
                 <select id="state" th:field="*{state}">
                     <option value="">전체</option>
                     <option value="접수 대기">접수 대기</option>
                     <option value="처리 중">처리 중</option>
                     <option value="처리 완료">처리 완료</option>
                 </select>
+            </div>
+            <br>
 
-                <label for="category">카테고리:</label>
+            <div id="search-div">
+                <label for="category">카테고리</label>
                 <select id="category" th:field="*{category}">
                     <option value="">전체</option>
                     <option value="계정">계정</option>
@@ -267,7 +291,7 @@
                     <option value="기타">기타</option>
                 </select>
 
-                <label for="searchType">검색 유형:</label>
+                <label for="searchType">검색 유형</label>
                 <select id="searchType" th:field="*{searchType}">
 <!--                    <option value="userId">번호</option>-->
                     <option value="title">제목</option>
@@ -275,13 +299,13 @@
                     <option value="writedBy">작성자</option>
                 </select>
 
-                <label for="searchValue">검색어:</label>
+                <label for="searchValue">검색어</label>
                 <input type="search" id="searchValue" th:field="*{searchValue}" />
                 <input type="submit" value="검색" />
             </div>
             <br>
             <div id="paging">
-                <label for="pageSize">한 페이지에 보여줄 게시물 수:</label>
+                <label for="pageSize">한 페이지에 보여줄 게시물 수</label>
                 <select id="pageSize" th:field="*{pageSize}">
                     <option value="5">5</option>
                     <option value="10">10</option>

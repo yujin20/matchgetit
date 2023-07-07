@@ -179,7 +179,9 @@
 
             <tbody>
             <tr :if="${userList.isEmpty()}">
-                <td colspan="8">등록된 경기가 없습니다.</td>
+                <td colspan="8" style="text-align: center;">
+                    등록된 경기가 없습니다.
+                </td>
             </tr>
 
             <tr :each="game: ${userList.getContent()}">
@@ -207,15 +209,17 @@
              th:with="currPageText=${currPageNum}+1, max=${userList.getTotalPages() + 1}, pageSizeHalf=5/2">
             <!-            <a href="/matchGetIt/admin/userList">[first]</a>->
 
-            <th:block th:each="page2: ${#numbers.sequence(pageSizeHalf, 1)}" th:if="${currPageText - page2 > 0}">
-                <a th:text="${currPageText - page2}" th:onclick="|page(${currPageNum - page2})|"></a>
-            </th:block>
+            <div th:each="page2: ${#numbers.sequence(pageSizeHalf, 1)}" th:if="${currPageText - page2 > 0}" th:onclick="|page(${currPageNum - page2})|">
+                <a th:text="${currPageText - page2}"></a>
+            </div>
 
-            <span th:text="${currPageText}"></span>
+            <div>
+                <span th:text="${currPageText}"></span>
+            </div>
 
-            <th:block th:each="page2: ${#numbers.sequence(1, pageSizeHalf)}" th:if="${currPageText + page2 < max}">
-                <a th:text="${currPageText + page2}" th:onclick="|page(${currPageNum + page2})|"></a>
-            </th:block>
+            <div th:each="page2: ${#numbers.sequence(1, pageSizeHalf)}" th:if="${currPageText + page2 < max}" th:onclick="|page(${currPageNum + page2})|">
+                <a th:text="${currPageText + page2}"></a>
+            </div>
         </div>
         -->
     </form>

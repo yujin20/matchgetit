@@ -11,7 +11,7 @@ public class PaymentRecordDTO {
     private MemberDTO userId;
     private Long paymentNumber;
     private LocalDateTime transactionDateTime;
-    private LocalDateTime cancellationDateTime;
+    private LocalDateTime cancelDateTime;
     private String gameNumber;
     private PaymentStatus paymentStatus;
     private String userName;
