@@ -1,18 +1,22 @@
 package com.matchgetit.backend.dto;
 
 import com.matchgetit.backend.constant.PaymentStatus;
+import com.matchgetit.backend.entity.MemberEntity;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter @Setter
 public class PaymentRecordDTO {
-    private MemberDTO userId;
     private Long paymentNumber;
-    private LocalDateTime transactionDateTime;
-    private LocalDateTime cancelDateTime;
-    private String gameNumber;
-    private PaymentStatus paymentStatus;
-    private String userName;
+    private MemberEntity member;
+    private int price;
+    private Date transactionDate; // 거래 일시
+    private Date cancelDate; // 취소 일시
+    private String gameNumber; // 경기 번호
+    private PaymentStatus transactionStatus; // 거래 상태
 }

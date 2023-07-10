@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './ApplyManager.css';
 import ManagerRecruitment from './ManagerRecruitment';
 
-function ApplyManager(props) {
-  const { session } = props;
+function ApplyManager({session}) {
   const [showManagerRecruitment, setShowManagerRecruitment] = useState(false);
 
   const handleApplyBtnClick = () => {

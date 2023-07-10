@@ -1,0 +1,182 @@
+.detailsContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    box-sizing: border-box; /* optional: include padding in the total height */
+}
+.details-title{
+    margin-top: 5%;
+    font-weight: bold;
+}
+.match-information, .match_place, .match_note_container, .match_note, .match_note_filling_column{
+    margin-top: 10%;
+    flex-shrink: 0;
+}
+.Team_A, .Team_B{
+    border: 1px solid #000000;
+    border-radius: 10px;
+    margin: 10px auto;
+    overflow: auto;
+}
+.Team-information{
+    width: 100%;
+}
+
+.match-information{
+    display: flex;
+    margin-bottom: 10%;
+}
+.match_note_container{
+
+}
+.input_score{
+    width: 50px;
+}
+.input_note{
+    border-radius: 5px;
+    height: 80px;
+    width: 90%;
+}
+.match_note_container{
+    width: 100%;
+}
+.details-wrap {
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    content: "";
+    background: transparent;
+}
+
+.details-box {
+    width: 120%;
+    height:80%;
+    padding: 70px;
+    transform: translate(-50%, -50%) scale(0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    overflow:auto;
+    font-size: 1rem;
+}
+
+.details-box::-webkit-scrollbar {
+    width: 10px;
+    display: none;
+}
+.details-box .signUpTitle{
+    margin-top: 5%;
+}
+.details-box h2 {
+    color: #1a1a1a;
+}
+.details-box h3 {
+    color: #888;
+}
+.details-box .closeBtn3 {
+    position: absolute;
+    top: 10px; /* Adjust the top position as per your requirement */
+    right: 10px; /* Adjust the right position as per your requirement */
+    width: 35px;
+    cursor: pointer;
+}
+.details-box .inner {
+    width: inherit;
+    text-align: center;
+}
+
+.details-box .inner label {
+    font-size: 150%;
+    line-height: 4em;
+    text-transform: uppercase;
+    color: rgb(150, 150, 245);
+    transition: all .3s ease-in;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.details-box .inner:before,.details-box .inner:after {
+    position: absolute;
+    content: '';
+    height: 1px;
+    width: inherit;
+    background: rgb(150, 215, 241);
+    left: 0;
+    transition: all .3s ease-in;
+}
+
+.details-box .inner:before {
+    top: 50%;
+    transform: rotate(45deg);
+}
+
+.details-box .inner:after {
+    bottom: 50%;
+    transform: rotate(-45deg);
+}
+
+.details-box .closeBtn3:hover label {
+    opacity: 1;
+}
+
+.closeBtn3:hover .inner:before,
+.closeBtn3:hover .inner:after {
+    transform: rotate(0);
+}
+
+.details-box .closeBtn3:hover .inner:before {
+    top: 0;
+}
+
+.closeBtn3 {
+    width: 40px;
+}
+
+.closeBtn3 .inner label {
+    line-height: 2em;
+}
+.closeBtn3:hover .inner:after {
+    bottom: 0;
+}
+
+.transform-in, .transform-out {
+    display: block;
+    -webkit-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+}
+
+.transform-in {
+    -webkit-transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.transform-out {
+    -webkit-transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(-50%, -50%) scale(0.5);
+}
+.enter_button{
+    margin-top: 10%;
+    border-radius: 5px;
+}
+@media (max-width: 767px) {
+    .details-box {
+        width:100%;
+        height:90%;
+    }
+    .closeBtn3 {
+        width: 40px;
+    }
+
+    .closeBtn3 .inner label {
+        line-height: 2em;
+    }
+}

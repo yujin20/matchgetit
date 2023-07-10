@@ -14,4 +14,8 @@ public interface MatchWaitRepository extends JpaRepository<MatchWaitEntity, Long
 
     List<MatchWaitEntity> findByStadiumAndParty_ApplicationTimeAndParty_ApplicationDate(
             StadiumEntity stadium, String applicationTime, Date applicationDate);
+    List<MatchWaitEntity> findByStadiumAndParty_ApplicationTime(
+            StadiumEntity stadium, String applicationTime);
+    List<MatchWaitEntity> findByStadium(
+            StadiumEntity stadium);
 }

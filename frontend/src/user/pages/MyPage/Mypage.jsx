@@ -1,20 +1,31 @@
 import React, {useState} from "react";
 import "./Mypage.css";
-import "./profile.css"
-import "../Payments/CreditCharge.css"
+import "./profile.css";
+import "../Payments/CreditCharge.css";
 import Profile from "./Profile";
 import CreditHistory from "../Payments/CreditHistory";
 import CreditCharge from "../Payments/CreditCharge";
-import ApplyManager from "../ManagerRecruitment/ApplyManager"
+import ApplyManager from "../ManagerRecruitment/ApplyManager";
+import axiosInstance from "../../components/axiosInstance";
+import QABoard from "../QABoard/QABoard";
+import ManagerMatchPage from "../ManagerPage/ManagerMatchPage";
+import '../../styles/ManagerPage/ManagerGameMg.css';
+import '../../styles/CommonFactor/grade.css';
+
 
 
 function Mypage({session}) {
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [isChargeOpen, setChargeOpen] = useState(true);
     // const [isAdmin, setIsAdmin] = useState(session && session.loginType.toUpperCase() === "ADMIN");
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isMng, setIsMng] = useState(true);
+
+    //임의로 매니저 true로 해놨음 원래로직대로면 매니저신청 >> 관리자 등록 >> role체크 후 true로 바뀌어야 함
     const [isApplyManager, setApplyManager] = useState(false);
     const [isHistoryOpen, setHistoryOpen] = useState(false);
+    const [isQABoardOpen, setQABoardOpen] = useState(false);
+    const [isMngMenuOpen, setIsMngMenuOpen] = useState(false);
 
     const handleApplyManagerToggle = () => {
         setApplyManager(!isApplyManager);
@@ -27,12 +38,29 @@ function Mypage({session}) {
         setChargeOpen(!isChargeOpen);
     };
 
-    const handleOpenadmin=(url)=>{
-        window.open(url,"_blank","noopner,noreferrer");
-    };
     const handleHistoryToggle = () => {
         setHistoryOpen(!isHistoryOpen);
     };
+    const handleQABoardToggle = () => {
+        setQABoardOpen(!isQABoardOpen);
+    };
+
+    const handleMngMenuToggle = () => {
+        setIsMngMenuOpen(!isMngMenuOpen);
+    };
+    const getRole = () => {
+axiosInstance.post("matchGetIt/auth/getRole")
+    .then(res=>{
+        if(res.data=='manager')setIsMng(true);
+        else if(res.data=='admin')setIsAdmin(true);
+        else{
+            setIsMng(false);
+            setIsAdmin(false);
+        }
+    }).catch(err=>{
+        console.log('서버 오류');
+})//해당 유저의 권한을 가져오는 함수
+    }
 
     return (
         <div className="content-body_left-wrap">
@@ -43,7 +71,7 @@ function Mypage({session}) {
                             <h1 className="my-profile__name">{session.name}</h1>
                         </div>
                         <div className="my-account_type">
-                            <p className="text-caption1">2752547203</p>
+                            <p className="text-caption1">{session.userId}</p>
                             <span className="badge badge-kakao sm">{session.accountType}</span>
                         </div>
                     </div>
@@ -67,7 +95,7 @@ function Mypage({session}) {
                     </li>
                     <li className="my-status_item my-status_item-double">
                         <div className="my-status_label">
-                            <a href="/magazine/1/" style={{ fontSize: '12px' }}>레벨</a>
+                            <a href="/magazine/1/" style={{ fontSize: '12px' }}>숙련도</a>
                             <img src="https://plab-football.s3.amazonaws.com/static/img/ic_level_show.svg" alt="레벨" />
                         </div>
                         {/*<a href="/mypage/mylevel/">*/}
@@ -93,7 +121,7 @@ function Mypage({session}) {
                     <li className="my-status_item my-status_item-cash">
                         <div>
                             <p style={{ fontSize: '17px', fontWeight: "bold"}}>나의 캐시</p>
-                            <p style={{ fontSize: '20px', fontWeight: '700' }}>0원</p>
+                            <p style={{ fontSize: '20px', fontWeight: '700' }}>{session.ownedCrd!=null?session.ownedCrd:0}원</p>
                         </div>
 
                         <div className="my-cash">
@@ -104,7 +132,7 @@ function Mypage({session}) {
                 {!isChargeOpen && (
                     <li className="my-status CreditCharge-settings">
                         <div className="CreditCharge-settings">
-                            <CreditCharge session={session} />
+                            <CreditCharge session={session}/>
                             <div className="charge__back" onClick={handleChargeToggle}>
                                 닫기
                             </div>
@@ -152,7 +180,18 @@ function Mypage({session}) {
                                 </div>
                             )}
                         </div>
-
+                        <div>
+                            <a className="content-label" onClick={handleQABoardToggle}>
+                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_faq_color.svg" alt="문의 게시판" />
+                                <p>문의 게시판</p>
+                            </a>
+                            {isQABoardOpen && (
+                                <div className="profile-settings">
+                                    <QABoard session={session}/>
+                                </div>
+                            )}
+                        </div>
+                    {!isMng && (
                         <div>
                             <a className="content-label" onClick={handleApplyManagerToggle}>
                                 <img src="https://plab-football.s3.amazonaws.com/static/img/explore_fire.svg" alt="결제 내역"/>
@@ -164,6 +203,7 @@ function Mypage({session}) {
                                 </div>
                             )}
                         </div>
+                    )}
                     {isAdmin && (
                         <a href="http://localhost:8081/matchGetIt/manager/managers">
                             <div className="content-label">
@@ -172,6 +212,16 @@ function Mypage({session}) {
                             </div>
                         </a>
                     )}
+                    {isMng && (
+                        <>
+                            <div className="content-label mngMenu" onClick={handleMngMenuToggle}>
+                                <p>매니저 페이지 이동</p>
+                            </div>
+                            {isMngMenuOpen && (
+                                <ManagerMatchPage session={session} isMngOpen={isMngMenuOpen} handleMngMenuToggle={handleMngMenuToggle}/>
+                            )}
+                        </>
+                        )}
                 </div>
             </section>
         </div>

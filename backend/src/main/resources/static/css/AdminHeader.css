@@ -13,7 +13,7 @@
 
 .admin-info a {
     color: #333;
-    text-decoration: none;
+    /*text-decoration: none;*/
 }
 
 .logo {
@@ -27,8 +27,6 @@
     display: flex;
     align-items: center;
 }
-
-/*.logo h3 a*/
 
 .logo-a {
     /*text-decoration: none;*/

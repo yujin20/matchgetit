@@ -72,7 +72,7 @@ public class PartyService {
         PartyEntity party = partyRepository.findByPartyId(partyId);
         party = partyRepository.findPartyWithMembers(party);
         if (party == null) {
-            throw new IllegalArgumentException("해당 파티가 존재하지 않습니다.");
+            System.out.println("파티 존재 하지 않음");
         }
         List<MemberDTO> memberList= party.getMembers().stream().map(m->modelMapper.map(m,MemberDTO.class)).toList();
         memberList.forEach(m->memberService.deleteParty(m.getUserId()));

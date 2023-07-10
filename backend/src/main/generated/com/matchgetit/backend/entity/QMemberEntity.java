@@ -58,13 +58,11 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final StringPath nameEdit = createString("nameEdit");
 
-    public final NumberPath<Long> ownedCrd = createNumber("ownedCrd", Long.class);
+    public final NumberPath<Integer> ownedCrd = createNumber("ownedCrd", Integer.class);
 
-    public final NumberPath<Long> ownedPoint = createNumber("ownedPoint", Long.class);
+    public final NumberPath<Integer> ownedPoint = createNumber("ownedPoint", Integer.class);
 
     public final QPartyEntity party;
-
-    public final ListPath<PaymentRecordEntity, QPaymentRecordEntity> paymentRecordEntityList = this.<PaymentRecordEntity, QPaymentRecordEntity>createList("paymentRecordEntityList", PaymentRecordEntity.class, QPaymentRecordEntity.class, PathInits.DIRECT2);
 
     public final EnumPath<com.matchgetit.backend.constant.PayState> payState = createEnum("payState", com.matchgetit.backend.constant.PayState.class);
 

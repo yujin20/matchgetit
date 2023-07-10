@@ -18,6 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -43,10 +46,13 @@ public class UserController {
 
     // 매니저 지원한 사용자의 정보를 가져오는 엔드포인트
     @GetMapping("/getSupportedUsers")
-    public String getSupportedUsers(HttpServletRequest request) {
-        List<MemberEntity> supportedUsers = memberRepository.findByManagerSupportStatus(ManagerSupportStatus.WAITING);
+    public String getSupportedUsers(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 10; // 한 페이지에 보여줄 항목 수
+
+        Pageable pageable = PageRequest.of(page - 1, pageSize); // 페이지 번호를 0부터 시작하도록 조정
+        Page<MemberEntity> userPage = memberRepository.findByManagerSupportStatus(ManagerSupportStatus.WAITING, pageable);
+        List<MemberEntity> supportedUsers = userPage.getContent();
         List<MemberDTO> memberDTOList = new ArrayList<>();
-        System.out.println(supportedUsers.size());
 
         for (MemberEntity memberEntity : supportedUsers) {
             MemberDTO memberDTO = new MemberDTO();
@@ -66,7 +72,12 @@ public class UserController {
             }
             memberDTOList.add(memberDTO);
         }
-        request.setAttribute("list", memberDTOList);
+
+        model.addAttribute("list", memberDTOList);
+        model.addAttribute("currentPage", page); // 현재 페이지 번호를 모델에 추가
+        model.addAttribute("totalPages", userPage.getTotalPages()); // 전체 페이지 수를 모델에 추가
+
+
         return "admin/pages/Manage/ManagerApplicantsList";
     }
 
@@ -85,12 +96,12 @@ public class UserController {
         memberEntity.setManagerSupportStatus(ManagerSupportStatus.BASIC);
         memberEntity.setLoginType(LogInType.MANAGER);
         memberRepository.save(memberEntity);
-        System.out.println("로긴타입 매니저로바낌");
         // ManagerEntity에 필요한 값들 설정
         ManagerEntity managerEntity = new ManagerEntity();
         managerEntity.setUser(memberEntity);
         managerEntity.setRegistrationDate(LocalDateTime.now()); // 매니저 등록 날짜를 설정하세요
         managerEntity.setEmploymentStatus(EmploymentStatus.active);
+
 
         // ManagerEntity를 ManagerDTO로 변환
         ManagerDTO managerDTO = modelMapper.map(managerEntity, ManagerDTO.class);
@@ -120,24 +131,22 @@ public class UserController {
 
     @GetMapping("/ManagerApplicantDetailsView/{userId}")
     public String viewManagerApplicantDetails(@PathVariable Long userId, Model model) {
-        MemberDTO member = memberService.findMemberById(userId);
+        MemberDTO member = memberService.findMemberByIdManagerSupportRecord(userId);
 
-
-        // managerSupportRecordDTO가 null인지 확인합니다.
-        ManagerSupportRecordDTO managerSupportRecordDTO = member.getManagerSupportRecordDTO();
-
+        ManagerSupportRecordDTO managerSupportRecordDTO = new ManagerSupportRecordDTO();
         if (managerSupportRecordDTO != null) {
-            // managerSupportRecordDTO에서 값을 가져옵니다.
-            Date submissionDate = managerSupportRecordDTO.getSubmissionDate();
-            String activityZone = managerSupportRecordDTO.getActivityZone();
-
-            // 모델에 값들을 추가합니다.
-            model.addAttribute("submissionDate", submissionDate);
-            model.addAttribute("activityZone", activityZone);
+            managerSupportRecordDTO.setActivityZone(member.getManagerSupportRecordDTO().getActivityZone());
+            managerSupportRecordDTO.setSubmissionDate(member.getManagerSupportRecordDTO().getSubmissionDate());
         }
+
+        member.setManagerSupportRecordDTO(managerSupportRecordDTO);
 
         model.addAttribute("member", member);
         return "admin/pages/Manage/ManagerApplicantDetailsView";
     }
+
+
+
+
 
 }

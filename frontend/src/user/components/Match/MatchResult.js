@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../styles/MatchingPage/Wait/waitingPage.css';
 import '../../styles/MatchingPage/MatchingResult/matchingResult.css';
 import '../../styles/CommonFactor/grade.css';
 import axiosInstance from "../axiosInstance";
@@ -80,42 +81,35 @@ const MatchResult = ({ session, matchWaitData, setIsMatch, setMatchWaitData, par
     };
 
     return (
-        <div className={`applicationContainer resultContainer ${matchWaitData[0].party.gameType}`}>
-            <div className="resultStatiumimg">구장 이미지
-                {/*<img src={matchWaitData.stadium.stdImgUrl} alt="Stadium" />*/}
-            </div>
-            <div className="resultInformationContainer">
-            <div className="resultInformationTitle">경기날짜</div>
-                <div className="resultTitleSub">{matchWaitData[0].party?.applicationDate}</div>
-                <div className="resultInformationTitle">경기시간</div>
-                <div className="resultTitleSub">{applicationTimeText}</div>
+        <div className="backgroundArea" id={`${matchWaitData[0].party?.gameType}`}>
+            <div className='resultContainer'>
 
-            <div className="resultInformationTitle">매칭구장</div>
-                <div className="resultTitleSub">{matchWaitData[0].stadium.stdName}</div>
-            <div className="lineUpTitle">LINE_UP</div>
-                <div className="uniformContainer">
-                    <div className="uniform">
-                        <img src="images/uniformA.png" alt="Ateam" />
-                    </div>
-                    <div className="uniform">
-                        <img src="images/uniformB.png" alt="Bteam" />
-                    </div>
+                <div className="resultStatiumimg">
+                    {/*<img src={matchWaitData.stadium.stdImgUrl} alt="Stadium" />*/}
                 </div>
-                <div className="teamContainer">
+                <div className="result resultTime">매칭된 시간:{applicationTimeText}</div>
+                <div className="result resultStadium">매칭 구장: {matchWaitData[0].stadium.stdName}</div>
+                <div className="result lineUp">Line Up</div>
+                <div className="teamView">
                     <div className="aTeam">
-                        <div className="aTeam resultMember">
-                            <ul>{renderTeamMembers("A")}</ul>
+                        <div className="uniform">
+                            <img className="uniformImg uniformImgA" src="/images/uniformA.png" alt="Ateam" />
+                        </div>
+                        <div className="resultMember">
+                            <div className="teamlist">{renderTeamMembers("A")}</div>
                         </div>
                     </div>
                     <div className="bTeam">
-                        <div className="bTeam resultMember">
-                            <ul>{renderTeamMembers("B")}</ul>
+                        <div className="uniform">
+                            <img className="uniformImg uniformImgB" src="/images/uniformB.png" alt="Bteam" />
+                        </div>
+                        <div className="resultMember">
+                            <div className="teamlist">{renderTeamMembers("B")}</div>
                         </div>
                     </div>
                 </div>
                 <button type="button" className="button cancelButton" onClick={cancelMatch}>경기 취소</button>
-
-        </div>
+            </div>
         </div>
     );
 };

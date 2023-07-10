@@ -1,0 +1,14 @@
+
+.QAInForm {
+    max-width: 500px;
+}
+
+.QAIn-wrap, .QAIn-box{
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.bulletin-board, .QAIn-wrap{
+    border: none;
+}
+

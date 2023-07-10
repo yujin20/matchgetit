@@ -1,12 +1,16 @@
 package com.matchgetit.backend.service;
 
+import com.matchgetit.backend.constant.MatchState;
 import com.matchgetit.backend.dto.MatchWaitDTO;
 import com.matchgetit.backend.dto.StadiumDTO;
 import com.matchgetit.backend.entity.*;
 import com.matchgetit.backend.repository.*;
+import com.matchgetit.backend.util.FormatDate;
 import com.matchgetit.backend.util.NearStadium;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.config.YamlProcessor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,6 +24,9 @@ public class MatchWaitService{
     private final ModelMapper modelMapper;
     private final StadiumRepository stadiumRepository;
     private final MatchRepository matchRepository;
+    private final MatchRecRepository matchRecRepository;
+    private final PartyRepository partyRepository;
+    private final PartyService partyService;
     public List<MatchWaitDTO> findMatchListByMemberId(Long userId){
         MemberEntity member =memberRepository.findByUserId(userId);
         MatchWaitEntity matchWait = matchWaitRepository.findByMember(member);
@@ -65,6 +72,55 @@ public class MatchWaitService{
                 .forEach(this::convertReverse);
 
     }
+
+    public MatchWaitDTO getMatchWait(Long userId){
+        MemberEntity member = memberRepository.findByUserId(userId);
+        MatchWaitEntity matchWait = matchWaitRepository.findByMember(member);
+        return modelMapper.map(matchWait, MatchWaitDTO.class);
+    }
+
+    public List<String> getMatchWaitByManagerIdAndDate(String managerId,String date) {
+        StadiumEntity stadium = stadiumRepository.findByMngId(managerId).get(0);
+        System.out.println(stadium.getStdId());
+        List<MatchWaitEntity> matchList=matchWaitRepository.findByStadium(stadium);
+        return matchList.stream().filter(m-> date.equals(FormatDate.formatDateToString(m.getParty().getApplicationDate())))
+                .map(t->t.getParty().getApplicationTime())
+                .distinct()
+                .toList();
+    }
+    public List<MatchWaitDTO> getMatchWaitByManagerIdAndDateAndTime(String managerId,String date,String time) {
+        StadiumEntity stadium = stadiumRepository.findByMngId(managerId).get(0);
+        System.out.println(stadium.getStdId());
+        List<MatchWaitEntity> matchWaitList=matchWaitRepository.findByStadiumAndParty_ApplicationTime(stadium,time);
+        return matchWaitList.stream().filter(m->FormatDate.formatDateToString(m.getParty().getApplicationDate()).equals(date)).map(m->modelMapper.map(m,MatchWaitDTO.class)).toList();
+    }
+
+    public void matchEnd(List<MatchWaitDTO> match,String score,String etc) {
+        match.forEach(m->convertMatchRec(modelMapper.map(m,MatchWaitEntity.class),score,etc));
+    }
+    @Transactional
+    public void convertMatchRec(MatchWaitEntity matchWaitEntity,String score,String etc){
+        MatchRecEntity matchRecEntity = new MatchRecEntity();
+        matchRecEntity.setPartyLeaderId(matchWaitEntity.getParty().getPartyLeader().getUserId());
+        matchRecEntity.setMatchScore(score);
+        matchRecEntity.setMatchState((score.equals(":"))? MatchState.CANCEL :MatchState.COMPLETE);
+        matchRecEntity.setTeam(matchWaitEntity.getTeam());
+        matchRecEntity.setStadium(matchWaitEntity.getStadium());
+        matchRecEntity.setMatchSearchStr(matchWaitEntity.getSearchStart());
+        matchRecEntity.setMatchSearchEnd(matchWaitEntity.getSearchEnd());
+        matchRecEntity.setCrd(matchRecEntity.getCrd());
+        matchRecEntity.setPoint(matchWaitEntity.getPoint());
+        matchRecEntity.setApplicationDate(matchWaitEntity.getParty().getApplicationDate());
+        matchRecEntity.setApplicationTime(matchWaitEntity.getParty().getApplicationTime());
+        matchRecEntity.setEtc(etc);
+        MemberEntity member = matchWaitEntity.getMember();
+        Long partyId = member.getParty().getPartyId();
+        memberRepository.save(member);
+        matchWaitRepository.delete(matchWaitEntity);
+        //파티가 있으면 없애는 작업
+        matchRecRepository.save(matchRecEntity);
+        partyService.deleteParty(partyId);
+    }
     public void convertReverse(MatchWaitEntity matchWaitEntity) {
         MatchEntity matchEntity = new MatchEntity();
         int cycle = matchWaitEntity.getCycle();
@@ -82,9 +138,4 @@ public class MatchWaitService{
         matchRepository.save(matchEntity);
         matchWaitRepository.delete(matchWaitEntity);
     }//매치웨이트 테이블에서 다시 매치테이블로 튕겨 나오는 메소드
-    public MatchWaitDTO getMatchWait(Long userId){
-        MemberEntity member = memberRepository.findByUserId(userId);
-        MatchWaitEntity matchWait = matchWaitRepository.findByMember(member);
-        return modelMapper.map(matchWait, MatchWaitDTO.class);
-    }
 }

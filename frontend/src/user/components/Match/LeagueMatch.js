@@ -278,7 +278,7 @@ const LeagueMatch = ({ session }) => {
             </div>
             <div className="pointContainer">
               <div className="mBtn lButton pointBtn" type="button">
-                {session.name}님 잔여 포인트 : {session.ownedPoint}
+                {session.name}님 잔여 포인트 : {session.ownedCrd}
                 <button className="mBtn lButton mSubBtn" type="button" onClick={submitMatch}>
                   매칭
                 </button>

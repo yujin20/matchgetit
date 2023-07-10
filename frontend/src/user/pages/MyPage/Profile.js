@@ -9,6 +9,7 @@ function MyPage({session}) {
     const [password, setPassword] = useState('');
     const [gender, setGender] = useState((session.gender === 'MALE') ? '1' : '2');
     const [prfcn, setProficiency] = useState(session.prfcn || '');
+    const isAccountTypeNormal = session.accountType === 'NORMAL';
 
     const handleEdit = () => {
         if (window.confirm("수정하시겠습니까?")) {
@@ -81,6 +82,7 @@ function MyPage({session}) {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="example@email.com"
+                                            readOnly={!isAccountTypeNormal}
                                         />
                                     </div>
                                 </div>
@@ -93,6 +95,7 @@ function MyPage({session}) {
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             placeholder="김 풋살"
+                                            readOnly={!isAccountTypeNormal}
                                         />
                                     </div>
                                 </div>
@@ -106,6 +109,7 @@ function MyPage({session}) {
                                                 value={pn}
                                                 onChange={(e) => setPn(e.target.value)}
                                                 placeholder="010-5678-1234"
+                                                readOnly={!isAccountTypeNormal}
                                             />
                                         </div>
                                     </div>
@@ -120,10 +124,12 @@ function MyPage({session}) {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="********"
+                                                readOnly={!isAccountTypeNormal}
                                             />
                                             <button onClick={passwordEdit}
                                                     type="button"
                                                     className="button"
+                                                    disabled={!isAccountTypeNormal}
                                             >비밀번호 변경
                                             </button>
                                         </div>
@@ -225,12 +231,16 @@ function MyPage({session}) {
                                         <button
                                             type="button"
                                             className="button2"
-                                            onClick={handleEdit}>회원정보 저장
+                                            onClick={handleEdit}
+                                            disabled={!isAccountTypeNormal}
+                                        >회원정보 저장
                                         </button>
                                         <button
                                             type="button"
                                             className="button2"
-                                            onClick={handleDelete}>회원 탈퇴
+                                            onClick={handleDelete}
+                                            disabled={!isAccountTypeNormal}
+                                        >회원 탈퇴
                                         </button>
                                     </div>
                                 </div>

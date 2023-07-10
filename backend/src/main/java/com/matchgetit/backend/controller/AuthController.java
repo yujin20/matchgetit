@@ -5,6 +5,7 @@ import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.request.SignUpRequest;
 import com.matchgetit.backend.request.UpdateRequest;
 import com.matchgetit.backend.service.MemberService;
+import com.matchgetit.backend.service.PaymentHistoryService;
 import com.matchgetit.backend.service.StadiumService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,8 +27,6 @@ public class AuthController {
     private MemberService memberService;
     private final StadiumService stadiumService;
 
-
-    private final JdbcTemplate jdbcTemplate;
     @PostMapping("/insert")
     @ResponseBody
     public String insertDummyData() {
@@ -52,7 +51,7 @@ public class AuthController {
             );
             if(member!=null){
                 String token = jwtTokenProvider.generateToken(member.getEmail());
-                System.out.println("토큰>>>>>>>ㄴ"+token);
+                System.out.println("토큰>>>>>>>"+token);
                 session.setAttribute("jwtToken",token);
                 session.setAttribute("member",member);
                 return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
@@ -98,6 +97,7 @@ public class AuthController {
     @PostMapping("/session")
     public ResponseEntity<MemberDTO> getUserProfile(HttpSession session) {
         MemberDTO member = (MemberDTO) session.getAttribute("member");
+        
         if (member != null) {
             return ResponseEntity.ok(member);
         } else {
@@ -151,7 +151,7 @@ public class AuthController {
         }
     }
     @PutMapping("/update")
-    public ResponseEntity<String> updateProfile(@RequestParam Long id , @RequestBody UpdateRequest updateRequest,  BindingResult bindingResult){
+    public ResponseEntity<String> updateProfile(@RequestParam Long id , @Valid @RequestBody UpdateRequest updateRequest,  BindingResult bindingResult, HttpServletRequest request){
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있는 경우 처리
             StringBuilder errorReason = new StringBuilder();
@@ -161,19 +161,27 @@ public class AuthController {
             return new ResponseEntity<>(errorReason.toString(), HttpStatus.BAD_REQUEST);
         }
         try {
+            HttpSession session = request.getSession(false);
+            MemberDTO member = (MemberDTO) session.getAttribute("member");
+            System.out.println(member.getAccountType());
+            if (member.getAccountType() == AccountType.NORMAL) {
+                memberService.updateProfile(
+                        id,
+                        updateRequest.getName(),
+                        updateRequest.getEmail(),
+                        updateRequest.getPn(),
+                        session
+                );
 
-            memberService.updateProfile(
-                    id,
-                    updateRequest.getName(),
-                    updateRequest.getEmail(),
-                    updateRequest.getPn()
-            );
-
-            return new ResponseEntity<>("프로필이 수정되었습니다.",HttpStatus.OK);
+                return new ResponseEntity<>("프로필이 수정되었습니다.", HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("권한이 없습니다.", HttpStatus.UNAUTHORIZED);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteProfile(@RequestParam Long id, HttpSession session){
         try {
@@ -184,7 +192,7 @@ public class AuthController {
         }
     }
     @PutMapping("/updatePw")
-    public ResponseEntity<String> updatePw(@RequestParam Long id , @RequestBody UpdateRequest updateRequest, BindingResult bindingResult){
+    public ResponseEntity<String> updatePw(@RequestParam Long id , @RequestBody UpdateRequest updateRequest,  BindingResult bindingResult, HttpServletRequest request){
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있는 경우 처리
             StringBuilder errorReason = new StringBuilder();
@@ -194,11 +202,14 @@ public class AuthController {
             return new ResponseEntity<>(errorReason.toString(), HttpStatus.BAD_REQUEST);
         }
         try {
-            memberService.updatePw(
-                    id,
-                    updateRequest.getPassword()
-            );
-
+            HttpSession session = request.getSession(false);
+            MemberDTO member = (MemberDTO) session.getAttribute("member");
+            if (member.getAccountType() == AccountType.NORMAL) {
+                memberService.updatePw(
+                        id,
+                        updateRequest.getPassword()
+                );
+            }
             return new ResponseEntity<>("프로필이 수정되었습니다.",HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

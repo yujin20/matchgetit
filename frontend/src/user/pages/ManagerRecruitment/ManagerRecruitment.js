@@ -7,26 +7,27 @@ function ManagerRecruitment({session}) {
     const [activityZone, setActivityZone] = useState(""); // 활동권역 상태값
 
     const [showActivityZonePopup, setShowActivityZonePopup] = useState(false); // 활동권역 선택 안내 팝업 상태값
-    console.log(session);
+    console.log(">>>>>>>>>>>세션", session);
     const [userName, setUserName] = useState(session.name);
     const [phoneNumber, setPhoneNumber] = useState(session.pn);
     const [gender, setGender] = useState(session.gender);
 
     // 사용자 정보 및 매니저 지원 상태 업데이트 함수
-    const updateUserAndSubmitForm = async () => {
-        if (activityZone === "") {
-            setShowActivityZonePopup(true); // 활동권역 선택 안내 팝업 표시
-            return;
-        }
+    const updateUserAndSubmitForm = () => {
 
-        try {
-            // 매니저 지원 양식 제출 API 호출
-            await axios.post(`/matchGetIt/manager/submitForm/${session.userId}`, { activityZone });
+    const formData = {
+      activityZone: activityZone
+    };
 
-            setShowPopup(true); // 지원 완료 팝업 표시
-        } catch (error) {
-            console.error(error);
-        }
+    axios.post(`/matchGetIt/manager/submitForm/${session.userId}`, formData)
+      .then(response => {
+        console.log('Form submitted:', response.data);
+
+      })
+      .catch(error => {
+        console.error('Failed to submit form:', error);
+
+      });
     };
 
 

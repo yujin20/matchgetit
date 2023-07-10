@@ -41,6 +41,18 @@ const SignUp = () => {
                         setIsFailure(false);
                         setTimeout(() => {
                             setIsSuccess(false);
+                            setEmail('');
+                            setPassword('');
+                            setPwCheck('');
+                            setName('');
+                            setPn('');
+                            setGender('');
+                            setProficiency('');
+                            setBirthDay('');
+                            setIsValidate(false);
+                            setIsPwCk(false);
+                            setValidateStatus(null);
+                            setErrorReason('');
                         }, 3000);
                     })
                     .catch((error) => {

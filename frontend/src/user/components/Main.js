@@ -135,6 +135,7 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
                     onLogin();
                     setIsLoginSlide(false);
                     setSession(response.data);
+                    console.log(response.data);
                 } else {
                 }
             })
@@ -174,6 +175,9 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
                     }, 3000);
                 } else {
                     setStatus('서버 오류!');
+                    errorTimerRef.current = setTimeout(() => {
+                        setStatus('');
+                    }, 3000);
                 }
             });
     };
@@ -205,9 +209,6 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
     const handlePartyMenuToggle = () => {
         setIsPartyMenuOpen(!isPartyMenuOpen);
     };
-    const pay1000 = () =>{
-        window.location.href='http://localhost:8081/matchGetIt/pay/payStart/1000';
-    }
 
 
     return (

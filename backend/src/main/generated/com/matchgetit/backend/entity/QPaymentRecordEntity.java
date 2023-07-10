@@ -22,7 +22,7 @@ public class QPaymentRecordEntity extends EntityPathBase<PaymentRecordEntity> {
 
     public static final QPaymentRecordEntity paymentRecordEntity = new QPaymentRecordEntity("paymentRecordEntity");
 
-    public final DateTimePath<java.time.LocalDateTime> cancelDate = createDateTime("cancelDate", java.time.LocalDateTime.class);
+    public final DatePath<java.util.Date> cancelDate = createDate("cancelDate", java.util.Date.class);
 
     public final StringPath gameNumber = createString("gameNumber");
 
@@ -30,7 +30,9 @@ public class QPaymentRecordEntity extends EntityPathBase<PaymentRecordEntity> {
 
     public final NumberPath<Long> paymentNumber = createNumber("paymentNumber", Long.class);
 
-    public final DateTimePath<java.time.LocalDateTime> transactionDate = createDateTime("transactionDate", java.time.LocalDateTime.class);
+    public final NumberPath<Integer> price = createNumber("price", Integer.class);
+
+    public final DatePath<java.util.Date> transactionDate = createDate("transactionDate", java.util.Date.class);
 
     public final EnumPath<com.matchgetit.backend.constant.PaymentStatus> transactionStatus = createEnum("transactionStatus", com.matchgetit.backend.constant.PaymentStatus.class);
 

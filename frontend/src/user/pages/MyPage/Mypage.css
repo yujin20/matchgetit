@@ -16,6 +16,9 @@
     width: 90%;
 
 }
+.content-body_left-wrap::-webkit-scrollbar {
+    display: none;
+}
 .my-status {
     padding-top: 20px;
     display: flex;

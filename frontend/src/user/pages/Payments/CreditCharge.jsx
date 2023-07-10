@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './CreditCharge.css';
 
-const ChargeComponent = () => {
+const ChargeComponent = ({session}) => {
   const [amount, setAmount] = useState('');
   const [isPayment, setIsPayment] = useState(false);
   const [name, setName] = useState('');
@@ -179,7 +179,7 @@ const ChargeComponent = () => {
                     </label>
                   </li>
                 </ul>
-                <p className="charge__select-desc">보유 캐시 0원</p>
+                <p className="charge__select-desc">보유 캐시 {session.ownedCrd}원</p>
               </div>
 
               {errorMessage && <p className="payment-errorMessage" >{errorMessage}</p>}

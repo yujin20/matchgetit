@@ -1,25 +1,20 @@
 .grade{
     display: flex;
     width:100%;
-    justify-content: center;
-    margin : 3% 0% 3% 0%;
 }
 .icon{
-    /*margin-left:10%;*/
-    width:7%;
-    height:7%;
+    margin-left:10%;
+    width:10%;
+    height:10%;
     border-radius: 100%;
-    margin-right: 1%;
+    margin-right: 15%;
 }
 .gradeName{
-    /*margin-left:100%;*/
+    margin-left:100%;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight:bolder;
-    margin-top: 1%;
-    white-space: nowrap;
-
 }
 .BIGINNER {
     /* BIGINNER 레벨에 대한 스타일 */
@@ -28,23 +23,23 @@
 
 .MIDDLE {
     /* MIDDLE 레벨에 대한 스타일 */
-    color: #cea000;
+    color: #f1cb8c;
 }
 
 .ADVANCED {
     /* ADVANCED 레벨에 대한 스타일 */
-    color: #6600c5;
+    color: #d0a8f5;
 }
 
 .PROFESSIONAL {
     /* PROFESSIONAL 레벨에 대한 스타일 */
-    color: #0076c7;
+    color: #174464;
 }
 /*여러색상 줄줄이 넘어가는 효과*/
 @media (max-width: 767px) {
     .icon{
-        width:7%;
-        height:7%;
-        margin-right:1%;
+        width:15%;
+        height:15%;
+        margin-right:5%;
     }
 }

@@ -2,6 +2,7 @@ package com.matchgetit.backend.controller;
 
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.service.MemberService;
+import com.matchgetit.backend.service.PaymentHistoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/matchGetIt/pay")
 @AllArgsConstructor
 public class PayController {
-    private MemberService memberService;
+    private final MemberService memberService;
+    private final PaymentHistoryService paymentHistoryService;
 
     @GetMapping("/payStart/{payment}")
     public String startPay(@PathVariable int payment, HttpServletRequest request, Model model) {
@@ -35,9 +37,11 @@ public class PayController {
         HttpSession session = request.getSession();
         MemberDTO member = (MemberDTO) session.getAttribute("member");
         int value =(Integer) session.getAttribute("pay");
-        memberService.updateCredit(member.getUserId(),value);
         System.out.println(value);
+        paymentHistoryService.insertData(member,value);
         session.removeAttribute("pay");
+        member.setOwnedCrd(memberService.updateCredit(member.getUserId(),value));
+        session.setAttribute("member",member);
         return "redirect:http://localhost:3000";
     }
     @GetMapping("/fail")

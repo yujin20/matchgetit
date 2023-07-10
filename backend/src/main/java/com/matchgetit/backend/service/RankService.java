@@ -41,29 +41,40 @@ public class RankService {
         List<MemberEntity> rankEntityList = memberRepository.findAll(Sort.by(Sort.Direction.DESC,"rating"));
         List<RankDTO> rankDTOList = new ArrayList<>();
 
+
+        int currentRank = 1;
+        int sameRankCount = 1;
+        Long prevRating = null;
+
         for(int i=0; i<rankEntityList.size();i++){
             MemberEntity rE = rankEntityList.get(i);
             String grade = gradeComf(Math.toIntExact(rE.getRating()));
             Long win = rE.getWin();
             Long lose = rE.getLose();
+
+            if (prevRating != null && !prevRating.equals(rE.getRating())) {
+                currentRank = i + 1;
+            }
+            prevRating = rE.getRating();
+
             if (win == null || lose == null) {
                 if(win == null && lose == null){
                     RankDTO rankDTO = new RankDTO(rE.getUserId(), grade, rE.getName(),
-                            rE.getRating(), 0L, 0L,"0%",i+1);
+                            rE.getRating(), 0L, 0L,"0%",currentRank);
                     rankDTOList.add(rankDTO);
                 } else if(lose == null) {
                     RankDTO rankDTO = new RankDTO(rE.getUserId(), grade, rE.getName(),
-                            rE.getRating(), rE.getWin(), 0L,"0%",i+1);
+                            rE.getRating(), rE.getWin(), 0L,"0%",currentRank);
                     rankDTOList.add(rankDTO);
                 } else if (win == null) {
                     RankDTO rankDTO = new RankDTO(rE.getUserId(), grade, rE.getName(),
-                            rE.getRating(), 0L, rE.getLose(), "0%",i+1);
+                            rE.getRating(), 0L, rE.getLose(), "0%",currentRank);
                     rankDTOList.add(rankDTO);
                 }
             } else {
                 RankDTO rankDTO = new RankDTO(rE.getUserId(), grade, rE.getName(),
                         rE.getRating(), rE.getWin(), rE.getLose(), VicRatingComf(rE.getWin(),
-                        rE.getLose())+"%",i+1);
+                        rE.getLose())+"%",currentRank);
                 rankDTOList.add(rankDTO);
             }
         }

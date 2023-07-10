@@ -1,4 +1,4 @@
-h3 {
+.ApplyManager h3 {
   font-size: 20px;
 }
 
@@ -39,8 +39,8 @@ h3 {
   text-align: left;
 }
 
-.button,
-.applyBtn {
+.ApplyManager button,
+.ApplyManager applyBtn {
   display: flex;
   padding: 12px 24px;
   font-size: 12px;

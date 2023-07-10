@@ -17,5 +17,7 @@ public interface PartyRepository extends JpaRepository<PartyEntity, Integer> {
     @EntityGraph(attributePaths = "members")
     @Query("SELECT p FROM PartyEntity p WHERE p = :party")
     PartyEntity findPartyWithMembers(@Param("party") PartyEntity party);
+
+    void deleteByPartyId(Long partyId);
 }
 

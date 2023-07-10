@@ -4,13 +4,11 @@ import com.matchgetit.backend.constant.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "payments")
-@Getter @Setter @ToString
+@Getter @Setter
 public class PaymentRecordEntity {
 
     @Id
@@ -18,15 +16,20 @@ public class PaymentRecordEntity {
     @Column(name = "paymentNumber")
     private Long paymentNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private MemberEntity member;
 
     @Column
-    private LocalDateTime transactionDate; // 거래 일시
+    private int price;
 
     @Column
-    private LocalDateTime cancelDate; // 취소 일시
+    @Temporal(TemporalType.DATE)
+    private Date transactionDate; // 거래 일시
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date cancelDate; // 취소 일시
 
     @Column
     private String gameNumber; // 경기 번호

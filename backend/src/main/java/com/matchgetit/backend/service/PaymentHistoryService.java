@@ -7,6 +7,7 @@ import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.entity.PaymentRecordEntity;
 import com.matchgetit.backend.repository.MemberRepository;
 import com.matchgetit.backend.repository.PaymentRecordRepository;
+import com.matchgetit.backend.util.FormatDate;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -64,26 +65,43 @@ public class PaymentHistoryService {
         List<PaymentRecordEntity> paymentList = paymentRecordRepository.findAll();
         List<PaymentRecordDTO> paymentDTOList = new ArrayList<>();
 
-        modelMapper.typeMap(PaymentRecordEntity.class, PaymentRecordDTO.class)
-                .addMappings(mapping -> {
-                    mapping.map(PaymentRecordEntity::getTransactionDate, PaymentRecordDTO::setTransactionDateTime);
-                    mapping.map(PaymentRecordEntity::getCancelDate, PaymentRecordDTO::setCancelDateTime);
-                    mapping.map(PaymentRecordEntity::getTransactionStatus, PaymentRecordDTO::setPaymentStatus);
-                });
-
-        modelMapper.typeMap(MemberEntity.class, MemberDTO.class)
-                .addMappings(mapping -> {
-                    mapping.skip(MemberDTO::setPaymentRecordDTO);
-                    mapping.skip(MemberDTO::setPaymentRecordEntityList);
-                });
+//        modelMapper.typeMap(PaymentRecordEntity.class, PaymentRecordDTO.class)
+//                .addMappings(mapping -> {
+//                    mapping.map(PaymentRecordEntity::getTransactionDate, PaymentRecordDTO::setTransactionDateTime);
+//                    mapping.map(PaymentRecordEntity::getCancelDate, PaymentRecordDTO::setCancelDateTime);
+//                    mapping.map(PaymentRecordEntity::getTransactionStatus, PaymentRecordDTO::setPaymentStatus);
+//                });
+//
+//        modelMapper.typeMap(MemberEntity.class, MemberDTO.class)
+//                .addMappings(mapping -> {
+//                    mapping.skip(MemberDTO::setPaymentRecordDTO);
+//                    mapping.skip(MemberDTO::setPaymentRecordEntityList);
+//                });
 
         for (PaymentRecordEntity payment: paymentList) {
             PaymentRecordDTO paymentDTO = modelMapper.map(payment, PaymentRecordDTO.class);
-            paymentDTO.setUserId(modelMapper.map(payment.getMember(), MemberDTO.class));
+            //paymentDTO.setMember(modelMapper.map(payment.getMember(), MemberDTO.class)); //오류납니다 이 파트도
             paymentDTOList.add(paymentDTO);
         }
 
         return paymentDTOList;
     }
 
+
+    public List<PaymentRecordDTO> findByMemberAndDate(Long userId,Date selectDate){
+        MemberEntity member = memberRepository.findByUserId(userId);
+        System.out.println(member.getName());
+        List<PaymentRecordEntity> paymentEnList = paymentRecordRepository.findByMember(member);
+        return paymentEnList.stream().filter(pm->FormatDate.formatDateToString(pm.getTransactionDate()).equals(FormatDate.formatDateToString(selectDate)))
+                .map(p->modelMapper.map(p, PaymentRecordDTO.class)).toList();
+    }
+    public void insertData(MemberDTO member, int price) {
+        PaymentRecordEntity paymentRecordEntity = new PaymentRecordEntity();
+        paymentRecordEntity.setMember(modelMapper.map(member,MemberEntity.class));
+        paymentRecordEntity.setTransactionDate(new Date());
+        System.out.println(paymentRecordEntity.getTransactionDate());
+        paymentRecordEntity.setTransactionStatus(PaymentStatus.COMPLETED);
+        paymentRecordEntity.setPrice(price);
+        paymentRecordRepository.save(paymentRecordEntity);
+    }
 }

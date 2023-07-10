@@ -27,22 +27,22 @@ public class PaymentHistoryController {
         List<MemberDTO> userList = memberService.getAllMembers();
         List<PaymentRecordDTO> paymentRecordDTOList = new ArrayList<>();
 
-        for (MemberDTO user : userList) {
-            List<PaymentRecordEntity> paymentRecordEntityList = user.getPaymentRecordEntityList();
-            if (paymentRecordEntityList != null && !paymentRecordEntityList.isEmpty()) {
-                PaymentRecordEntity paymentRecordEntity = paymentRecordEntityList.get(0);
-                PaymentRecordDTO paymentRecordDTO = new PaymentRecordDTO();
-
-                paymentRecordDTO.setPaymentNumber(paymentRecordEntity.getPaymentNumber());
-                paymentRecordDTO.setGameNumber(paymentRecordEntity.getGameNumber());
-
-                paymentRecordDTO.setTransactionDateTime(paymentRecordEntity.getTransactionDate());
-                paymentRecordDTO.setCancelDateTime(paymentRecordEntity.getCancelDate());
-                paymentRecordDTO.setPaymentStatus(paymentRecordEntity.getTransactionStatus());
-
-                paymentRecordDTOList.add(paymentRecordDTO);
-            }
-        }
+//        for (MemberDTO user : userList) {
+//            List<PaymentRecordEntity> paymentRecordEntityList = user.getPaymentRecordEntityList();
+//            if (paymentRecordEntityList != null && !paymentRecordEntityList.isEmpty()) {
+//                PaymentRecordEntity paymentRecordEntity = paymentRecordEntityList.get(0);
+//                PaymentRecordDTO paymentRecordDTO = new PaymentRecordDTO();
+//
+//                paymentRecordDTO.setPaymentNumber(paymentRecordEntity.getPaymentNumber());
+//                paymentRecordDTO.setGameNumber(paymentRecordEntity.getGameNumber());
+//
+//                paymentRecordDTO.setTransactionDateTime(paymentRecordEntity.getTransactionDate());
+//                paymentRecordDTO.setCancelDateTime(paymentRecordEntity.getCancelDate());
+//                paymentRecordDTO.setPaymentStatus(paymentRecordEntity.getTransactionStatus());
+//
+//                paymentRecordDTOList.add(paymentRecordDTO);
+//            }
+//        }
 
         model.addAttribute("userList", userList);
         model.addAttribute("paymentRecordList", paymentRecordDTOList);

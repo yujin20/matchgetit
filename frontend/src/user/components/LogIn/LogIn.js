@@ -3,6 +3,7 @@ import '../../styles/LogIn/logInPage.css';
 import '../../styles/LogIn/logInButton.css';
 import SignUp from './SignUp';
 import SocialLogIn from './SocialLogIn/SocialLogIn';
+import FindType from "../FindAcconts/FindType";
 
 
 
@@ -12,6 +13,10 @@ const LogIn = ({ onLogin }) => {
     const signUpWrap = document.querySelector('.signUp-wrap');
     const signUpBox = document.querySelector('.signUp-box');
     const signUpClose = document.querySelector('.closeBtn');
+    const SearchBtn = document.querySelector('.findIDPW');
+    const SearchWrap = document.querySelector('.search-wrap');
+    const SearchBox = document.querySelector('.search-box');
+    const SearchClose = document.querySelector('.closeBtn2');
 
     signUpBtn.addEventListener('click', (e) => {
       signUpWrap.style.display = 'block';
@@ -24,6 +29,19 @@ const LogIn = ({ onLogin }) => {
       signUpWrap.style.display = 'none';
       signUpBox.classList.add('transform-out');
       signUpBox.classList.remove('transform-in');
+      e.preventDefault();
+    });
+    SearchBtn.addEventListener('click', (e) => {
+      SearchWrap.style.display = 'block';
+      SearchBox.classList.add('transform-in');
+      SearchBox.classList.remove('transform-out');
+      e.preventDefault();
+    });
+
+    SearchClose.addEventListener('click', (e) => {
+      SearchWrap.style.display = 'none';
+      SearchBox.classList.add('transform-out');
+      SearchBox.classList.remove('transform-in');
       e.preventDefault();
     });
   }, []);
@@ -85,6 +103,7 @@ const LogIn = ({ onLogin }) => {
         </form>
         <div className="tabMenu">
           <div className="tabButton findIDPW">아이디/비밀번호 찾기</div>
+          <FindType/>
           <div className="tabButton signUp">회원가입</div>
           <SignUp />
         </div>

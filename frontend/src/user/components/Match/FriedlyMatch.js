@@ -276,7 +276,7 @@ function FriendlyMatch({ session }) {
                 </div>
                     <div className="pointContainer">
                         <div className="mBtn fButton pointBtn" type="button">
-                        {session.name}님 잔여 포인트 : {session.ownedPoint}
+                        {session.name}님 잔여 포인트 : {session.ownedCrd}
                         <button className="mBtn fButton mSubBtn" type="button" onClick={submitMatch}>
                             매칭
                         </button>

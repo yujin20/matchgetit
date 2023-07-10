@@ -113,8 +113,8 @@ function RankingBoard ({session}){
                         {data.map((item) => {
                             if (session.userId == item.userId) {
                                 return (
-                                    <tbody className="rank_tbody">
-                                    <tr className="rank01" key={item.rankId}>
+                                    <tbody className="rank_tbody" key={item.userId}>
+                                    <tr className="rank01" >
                                         <td>
                                             <p className="ranking_grade">
                                                 {item.groupId}
@@ -151,8 +151,8 @@ function RankingBoard ({session}){
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                    <tbody className="rank_tbody">
-                                    <tr className="rank01" key={item.rankId}>
+                                    <tbody className="rank_tbody" key={item.userId}>
+                                    <tr className="rank01">
                                         <td>
                                             <p className="ranking_grade">
                                                 {item.groupId}
@@ -183,8 +183,8 @@ function RankingBoard ({session}){
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                    <tbody className="rank_tbody">
-                                    <tr className="rank01" key={item.rankId}>
+                                    <tbody className="rank_tbody" key={item.userId}>
+                                    <tr className="rank01">
                                         <td>
                                             <p className="ranking_grade">
                                                 {item.groupId}
@@ -214,8 +214,8 @@ function RankingBoard ({session}){
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                    <tbody className="rank_tbody">
-                                    <tr className="rank01" key={item.rankId}>
+                                    <tbody className="rank_tbody" key={item.userId}>
+                                    <tr className="rank01">
                                         <td>
                                             <p className="ranking_grade">
                                                 {item.groupId}
@@ -245,8 +245,8 @@ function RankingBoard ({session}){
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                    <tbody className="rank_tbody">
-                                    <tr className="rank01" key={item.rankId}>
+                                    <tbody className="rank_tbody" key={item.userId}>
+                                    <tr className="rank01">
                                         <td>
                                             <p className="ranking_grade">
                                                 {item.groupId}
@@ -276,8 +276,8 @@ function RankingBoard ({session}){
                             </thead>
                             {data.filter(item => selectedGrade === "ALL" || item.groupId === selectedGrade)
                                 .map((item) => (
-                                    <tbody className="rank_tbody">
-                                    <tr className="rank01" key={item.rankId}>
+                                    <tbody className="rank_tbody" key={item.userId}>
+                                    <tr className="rank01">
                                         <td>
                                             <p className="ranking_grade">
                                                 {item.groupId}

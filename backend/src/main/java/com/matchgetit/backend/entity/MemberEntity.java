@@ -3,15 +3,13 @@ package com.matchgetit.backend.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.matchgetit.backend.constant.*;
 import com.matchgetit.backend.dto.AdminPageUserDTO;
-import com.matchgetit.backend.dto.ManagerDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
-import java.util.List;
 
-//@Data
+@Data
 @Entity
 @Table(name = "member")
 @Getter
@@ -77,9 +75,9 @@ public class MemberEntity {
     private Long chargeId;
 
     @Column(name = "OWNED_CRD")
-    private Long ownedCrd;
+    private int ownedCrd;
     @Column(name = "OWNED_POINT")
-    private Long ownedPoint;
+    private int ownedPoint;
 
     @Column(name = "WIN")
     private Long win;
@@ -102,27 +100,19 @@ public class MemberEntity {
 
     @Column(name = "RECOMMEND_COUNT")
     private String recommendCount;
-
     @Column(name = "LAST_CONNECTION_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastConnectionDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "MANAGERSUPPORTSTATUS")
-    private ManagerSupportStatus managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "0", 지원 "1"
-
+    private ManagerSupportStatus managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "0",  지원"1"
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATE")
     private PayState payState;
-
     @OneToOne(mappedBy = "user")
     public ManagerEntity managerEntity; // 매니저
-
     @OneToOne(mappedBy = "managerUser")
     private ManagerSupportRecordEntity managerSupportRecordEntity;
-
-    @OneToMany(mappedBy = "member")
-    private List<PaymentRecordEntity> paymentRecordEntityList;
 
     @Column(name = "RANK")
     private String rank;

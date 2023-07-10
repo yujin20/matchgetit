@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public interface StadiumRepository extends JpaRepository<StadiumEntity,Integer> {
+    List<StadiumEntity> findByMngId(String mngId);
     @Transactional
     List<StadiumEntity> findAll();
 
