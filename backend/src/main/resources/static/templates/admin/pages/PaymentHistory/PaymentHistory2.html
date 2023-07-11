@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ThymeleafVariablesResolveInspection -->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/styles/layouts/AdminpageLayout}">
@@ -7,6 +8,20 @@
     <title>PaymentHistory</title>
     <link rel="stylesheet" th:href="@{/css/PaymentHistory.css}" type="text/css">
 <!--      <link rel="stylesheet" th:href="@{/css/PaymentHistory2.css}" type="text/css">-->
+
+    <style>
+        #bottom {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        #bottom div {
+            padding: 5px 10px;
+            border: 1px solid lightgray;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <section layout:fragment="content">
@@ -17,17 +32,22 @@
 
         <hr>
         <div class="search-container">
-            <form>
+            <form th:object="${searchPaymentDTO}">
                 <div class="condition-container">
-
                     <div>
-
+                        <div class="condition-group">
+                            <span>조회 기간</span>
+                            <select th:field="*{dateType}">
+                                <option value="paidDate">거래일</option>
+                                <option value="canceledDate">취소일</option>
+                            </select>
+                        </div>
                         <div class="condition-group">
                             <label>
-                                <span>조회 기간</span>
-                                <input type="date" id="checkStartDate" name="checkStartDate">
+
+                                <input type="date" id="checkStartDate" name="checkStartDate" th:field="*{checkStartDate}">
                                 ~
-                                <input type="date" id="checkEndDate" name="checkEndDate">
+                                <input type="date" id="checkEndDate" name="checkEndDate" th:field="*{checkEndDate}">
                             </label>
                         </div>
 
@@ -44,7 +64,7 @@
                         <div class="condition-group">
                             <span>기록 검색</span>
                             <label>
-                                <select name="searchCondition">
+                                <select name="searchCondition" th:field="*{searchCondition}">
                                     <option value="">검색 조건</option>
                                     <option value="paymentId">결제 번호</option>
                                     <option value="userNumber">회원 번호</option>
@@ -52,7 +72,7 @@
                                     <option value="gameNumber">경기 번호</option>
                                 </select>
                                 &nbsp;
-                                <input type="text" name="searchKeyword">
+                                <input type="text" name="searchKeyword" th:field="*{searchKeyword}">
                             </label>
                         </div>
 
@@ -60,20 +80,38 @@
                         <div class="condition-group">
                             <span>거래 상태</span>
                             <label>
-                                <input type="checkbox" name="paymentStatus" value="completed">
+                                <input type="checkbox" name="paymentStatus" value="completed" th:field="*{paymentStatus}">
                                 결제 완료
                             </label>
                             <label>
-                                <input type="checkbox" name="paymentStatus" value="canceled">
+                                <input type="checkbox" name="paymentStatus" value="canceled" th:field="*{paymentStatus}">
                                 결제 취소
                             </label>
                             <label>
-                                <input type="checkbox" name="paymentStatus" value="refunded">
+                                <input type="checkbox" name="paymentStatus" value="refunded" th:field="*{paymentStatus}">
                                 부분 환불
                             </label>
+<!--                            <label>-->
+<!--                                <input type="checkbox" name="paymentStatus" value="" style="display: none">-->
+<!--                            </label>-->
+                        </div>
+
+                        <div class="condition-group">
+                            <label for="pageSize">한 페이지에 보여줄 결제 기록 수</label>
+                            <select id="pageSize" name="pageSize" th:field="*{pageSize}">
+                                <!--                        <option value="5">5</option>-->
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="70">70</option>
+                                <option value="100">100</option>
+                            </select>
                         </div>
                     </div>
                 </div>
+
+
 
                 <div class="buttons-container">
                     <button type="submit" class="search-button">검색</button>
@@ -93,6 +131,8 @@
                 <th>결제 번호</th>
                 <th>거래 일시</th>
                 <th>취소 일시</th>
+                <th>결제 금액</th>
+                <th>취소 금액</th>
                 <th>경기 번호</th>
                 <th>회원 번호</th>
                 <th>회원 이름</th>
@@ -102,25 +142,45 @@
 
             <tbody>
             <tr th:if="${paymentList.isEmpty()}">
-                <td colspan="8" style="text-align: center;">
+                <td colspan="10" style="text-align: center;">
                     등록된 결제 내역이 없습니다.
                 </td>
             </tr>
 
-            <tr th:each="payment: ${paymentList}">
+            <tr th:each="payment: ${paymentList.getContent()}">
                 <td>
                     <label><input type="checkbox" name="selectedPayment" value="" /></label>
                 </td>
                 <td th:text="${payment.paymentNumber}">123</td>
-                <td th:text="${payment.transactionDateTime}">2023-00-00</td>
-                <td th:text="${payment.cancelDateTime}">2023-00-00</td>
+                <td th:text="${payment.transactionDate}">2023-00-00</td>
+                <td th:text="${payment.cancelDate != null ? payment.cancelDate : '-'}">2023-00-00</td>
+                <td th:text="${payment.price}">10000</td>
+                <td th:text="${payment.canceledPrice}">5000</td>
                 <td th:text="${payment.gameNumber}">200</td>
-                <td th:text="${payment.userId.userId}">10</td>
-                <td th:text="${payment.userId.name}">김00</td>
-                <td th:text="${payment.paymentStatus}">결제 완료</td>
+                <td th:text="${payment.member.userId}">10</td>
+                <td th:text="${payment.member.name}">김00</td>
+                <td th:text="${payment.transactionStatus.value}">결제 완료</td>
             </tr>
             </tbody>
         </table>
+
+        <br>
+        <div id="bottom" style="text-align: center"
+             th:with="currPageText=${currPageNum}+1, max=${paymentList.getTotalPages() + 1}, pageSizeHalf=5/2">
+            <!--            <a href="/matchGetIt/admin/userList">[first]</a>-->
+
+            <div th:each="page2: ${#numbers.sequence(pageSizeHalf, 1)}" th:if="${currPageText - page2 > 0}" th:onclick="|page(${currPageNum - page2})|">
+                <a th:text="${currPageText - page2}"></a>
+            </div>
+
+            <div>
+                <span th:text="${currPageText}"></span>
+            </div>
+
+            <div th:each="page2: ${#numbers.sequence(1, pageSizeHalf)}" th:if="${currPageText + page2 < max}" th:onclick="|page(${currPageNum + page2})|">
+                <a th:text="${currPageText + page2}"></a>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -128,6 +188,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+        function page(page) {
+            let query = location.search;
+            location.href = "/matchGetIt/payment/list/"+ page + query;
+        }
+
         function setDateRange(days) {
             var endDate = new Date();
             var startDate = new Date();
@@ -166,9 +231,9 @@
             for (var i = 1; i < rows.length; i++) {
                 var row = rows[i];
                 var paymentNumber = row.cells[1].textContent.toUpperCase();
-                var gameNumber = row.cells[4].textContent.toUpperCase();
-                var userId = row.cells[5].textContent.toUpperCase();
-                var paymentStatus = row.cells[7].textContent.toUpperCase();
+                var gameNumber = row.cells[6].textContent.toUpperCase();
+                var userId = row.cells[7].textContent.toUpperCase();
+                var paymentStatus = row.cells[9].textContent.toUpperCase();
                 var transactionDateTime = row.cells[2].textContent;
 
                 var isVisible = true;
@@ -187,8 +252,8 @@
                     var targetValue = "";
 
                     switch (searchCondition) {
-                        case "name":
-                            targetValue = row.cells[6].textContent.toUpperCase();  // 회원 이름
+                        case "userName":
+                            targetValue = row.cells[8].textContent.toUpperCase();  // 회원 이름
                             break;
                         case "userNumber":
                             targetValue = userId;
@@ -235,12 +300,12 @@
                 status.checked = false;
             });
 
-            searchPaymentHistory();
+            // searchPaymentHistory();
         }
 
         document.querySelector("form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            searchPaymentHistory();
+            // event.preventDefault();
+            // searchPaymentHistory();
         });
 
         // document.querySelector(".reset-button").addEventListener("click", function() {

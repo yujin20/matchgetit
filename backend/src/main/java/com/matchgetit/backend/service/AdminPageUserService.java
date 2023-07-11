@@ -6,10 +6,11 @@ import com.matchgetit.backend.constant.LogInType;
 import com.matchgetit.backend.dto.AdminPageSearchUserDTO;
 import com.matchgetit.backend.dto.AdminPageUserDTO;
 import com.matchgetit.backend.entity.MemberEntity;
+import com.matchgetit.backend.repository.ManagerRepository;
+import com.matchgetit.backend.repository.ManagerSupportRecordRepository;
 import com.matchgetit.backend.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -25,6 +25,8 @@ import java.util.Map;
 public class AdminPageUserService {
 //    private final UserRepository userRepositoryOld;
     private final MemberRepository userRepository;
+    private final ManagerRepository managerRepository;
+    private final ManagerSupportRecordRepository managerSupportRepository;
 
     public void createUsers() {
         for (int i=1; i<10; i++) {
@@ -103,6 +105,12 @@ public class AdminPageUserService {
 
     public void deleteUser(Long userId) {
         MemberEntity member = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        if (member.getManagerEntity() != null) {
+            managerRepository.delete(member.getManagerEntity());
+        }
+        if (member.getManagerSupportRecordEntity() != null) {
+            managerSupportRepository.delete(member.getManagerSupportRecordEntity());
+        }
         userRepository.delete(member);
     }
 

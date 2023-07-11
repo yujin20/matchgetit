@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 @Repository
-public interface PaymentRecordRepository extends JpaRepository<PaymentRecordEntity, Long> {
+public interface PaymentRecordRepository extends JpaRepository<PaymentRecordEntity, Long>, PaymentRecordRepositoryCustom {
     List<PaymentRecordEntity> findByMember(MemberEntity member);
 
     List<PaymentRecordEntity> findByMemberContaining(MemberEntity member);

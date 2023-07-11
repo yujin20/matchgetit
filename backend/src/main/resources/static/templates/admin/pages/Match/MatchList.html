@@ -31,11 +31,8 @@
             border-radius: 4px;
         }
 
-        /* 링크 스타일 */
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-            cursor: pointer;
+        input[type="submit"] {
+            padding: 6px 10px;
         }
 
         /* 입력 필드 스타일 */
@@ -53,6 +50,23 @@
         /* 페이지 링크 스타일 */
         #bottom a, #bottom span {
             margin-right: 5px;
+        }
+
+        label {
+            margin-right: 3px;
+        }
+
+
+        #bottom {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        #bottom div {
+            padding: 5px 10px;
+            border: 1px solid lightgray;
+            cursor: pointer;
         }
     </style>
 
@@ -167,7 +181,7 @@
         <table>
             <thead>
             <tr>
-                <td><input type="checkbox" id="checkAll" onclick="checkAllBox(this);" /></td>
+<!--                <td><input type="checkbox" id="checkAll" onclick="checkAllBox(this);" /></td>-->
                 <td>번호</td>
                 <td>경기 시작일 및 시간</td>
                 <td>구장</td>
@@ -185,9 +199,9 @@
             </tr>
 
             <tr :each="game: ${userList.getContent()}">
-                <td>
-                    <input type="checkbox" name="selectedUser" :value="${user.id}">
-                </td>
+<!--                <td>-->
+<!--                    <input type="checkbox" name="selectedUser" :value="${user.id}">-->
+<!--                </td>-->
                 <td :text="${game.id}">123</td>
                 <td :text="${game.startDate}">2023-00-00 16:00</td>
                 <td :text="${game.stadium}">
@@ -224,19 +238,15 @@
         -->
     </form>
 
-    <br>
-
+    <br><hr><br>
     <form method="get" name="search-form" id="search-form" :object="${searchUserDTO}">
         <div>
-            <div id="search-regdate">
-                <label>경기 날짜:</label>
+            <div id="search-div1">
+                <label>경기 날짜</label>
                 <input type="date" :field="*{regDateStart}" /> ~
                 <input type="date" :field="*{regDateEnd}" />
-            </div>
-            <br>
 
-            <div id="search-div">
-                <label for="accountState">경기 상태:</label>
+                <label for="accountState" style="margin-left: 10px">경기 상태</label>
                 <select id="accountState" :field="*{accountState}">
                     <option value="">전체</option>
 <!--                    <option value="ACTIVE">활동 중</option>-->
@@ -247,8 +257,11 @@
                     <option value="완료">완료</option>
                     <option value="취소">취소</option>
                 </select>
+            </div>
+            <br>
 
-                <label for="searchType">검색 유형:</label>
+            <div id="search-div2">
+                <label for="searchType">검색 유형</label>
                 <select id="searchType" :field="*{searchType}">
                     <option value="userId">회원 번호</option>
                     <option value="userName">회원 이름</option>
@@ -256,13 +269,14 @@
                     <option value="phoneNum">연락처</option>
                 </select>
 
-                <label for="searchValue">검색어:</label>
+                <label for="searchValue">검색어</label>
                 <input type="search" id="searchValue" :field="*{searchValue}" />
                 <input type="submit" value="검색" />
             </div>
             <br>
+
             <div id="paging">
-                <label for="pageSize">한 페이지에 보여줄 경기 수:</label>
+                <label for="pageSize">한 페이지에 보여줄 경기 수</label>
                 <select id="pageSize" :field="*{pageSize}">
                     <option value="5">5</option>
                     <option value="10">10</option>

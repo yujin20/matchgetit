@@ -65,13 +65,13 @@ public class InquiryRepositoryCustomImpl implements InquiryRepositoryCustom {
     private BooleanExpression searchWithCondition(String searchType, String searchValue) {
         if (searchValue == null || searchValue.isEmpty()) return null;
         else if (StringUtils.equals("title", searchType)) {
-            return inquiryEntity.title.contains(searchValue);
+            return inquiryEntity.title.containsIgnoreCase(searchValue);
         }
         else if (StringUtils.equals("content", searchType)) {
-            return inquiryEntity.content.contains(searchValue);
+            return inquiryEntity.content.containsIgnoreCase(searchValue);
         }
         else if (StringUtils.equals("writedBy", searchType)) {
-            return inquiryEntity.createdBy.contains(searchValue);
+            return inquiryEntity.createdBy.containsIgnoreCase(searchValue);
         }
         return null;
     }

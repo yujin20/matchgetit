@@ -3,6 +3,7 @@ package com.matchgetit.backend.service;
 import com.matchgetit.backend.constant.PaymentStatus;
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.dto.PaymentRecordDTO;
+import com.matchgetit.backend.dto.SearchPaymentDTO;
 import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.entity.PaymentRecordEntity;
 import com.matchgetit.backend.repository.MemberRepository;
@@ -10,11 +11,15 @@ import com.matchgetit.backend.repository.PaymentRecordRepository;
 import com.matchgetit.backend.util.FormatDate;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -80,7 +85,7 @@ public class PaymentHistoryService {
 
         for (PaymentRecordEntity payment: paymentList) {
             PaymentRecordDTO paymentDTO = modelMapper.map(payment, PaymentRecordDTO.class);
-            //paymentDTO.setMember(modelMapper.map(payment.getMember(), MemberDTO.class)); //오류납니다 이 파트도
+//            paymentDTO.setMember(modelMapper.map(payment.getMember(), MemberDTO.class));
             paymentDTOList.add(paymentDTO);
         }
 
@@ -88,13 +93,14 @@ public class PaymentHistoryService {
     }
 
 
-    public List<PaymentRecordDTO> findByMemberAndDate(Long userId,Date selectDate){
+    public List<PaymentRecordDTO> findByMemberAndDate(Long userId, Date selectDate){
         MemberEntity member = memberRepository.findByUserId(userId);
         System.out.println(member.getName());
         List<PaymentRecordEntity> paymentEnList = paymentRecordRepository.findByMember(member);
         return paymentEnList.stream().filter(pm->FormatDate.formatDateToString(pm.getTransactionDate()).equals(FormatDate.formatDateToString(selectDate)))
                 .map(p->modelMapper.map(p, PaymentRecordDTO.class)).toList();
     }
+
     public void insertData(MemberDTO member, int price) {
         PaymentRecordEntity paymentRecordEntity = new PaymentRecordEntity();
         paymentRecordEntity.setMember(modelMapper.map(member,MemberEntity.class));
@@ -104,4 +110,63 @@ public class PaymentHistoryService {
         paymentRecordEntity.setPrice(price);
         paymentRecordRepository.save(paymentRecordEntity);
     }
+
+
+
+
+
+
+    public void createPayments() {
+        for (int i=1; i<=10; i++) {
+            PaymentRecordEntity payment = new PaymentRecordEntity();
+            payment.setPrice(10000);
+            payment.setTransactionDate(new Date());
+            payment.setGameNumber("200");
+            payment.setTransactionStatus(PaymentStatus.COMPLETED);
+
+            if (i<5) {
+                payment.setTransactionDate(java.sql.Date.valueOf("2023-07-01"));
+                payment.setCancelDate(new Date());
+                payment.setCanceledPrice(5000);
+                payment.setTransactionStatus(PaymentStatus.REFUNDED);
+            }
+            if (i==5) {
+                payment.setTransactionDate(java.sql.Date.valueOf("2023-06-23"));
+                payment.setCancelDate(new Date());
+                payment.setCanceledPrice(10000);
+                payment.setTransactionStatus(PaymentStatus.CANCELED);
+            }
+
+            MemberEntity member = memberRepository.findByUserId((long) i);
+            payment.setMember(member);
+
+            paymentRecordRepository.save(payment);
+        }
+    }
+
+
+    public Page<PaymentRecordDTO> getPageablePaymentHistory(SearchPaymentDTO searchPaymentDTO, Pageable pageable) {
+        List<String> paymentStatusList = searchPaymentDTO.getPaymentStatus();
+        List<PaymentStatus> enumPaymentStatusList = new ArrayList<>();
+
+        if (paymentStatusList != null) {
+            for (String paymentStatus: paymentStatusList) {
+                enumPaymentStatusList.add(PaymentStatus.valueOf(paymentStatus.toUpperCase()));
+            }
+        }
+        searchPaymentDTO.setEnumPaymentStatus(enumPaymentStatusList);
+
+        List<PaymentRecordEntity> paymentList = paymentRecordRepository.getPaymentHistoryListBy(searchPaymentDTO, pageable);
+        List<PaymentRecordDTO> paymentDTOList = new ArrayList<>();
+
+        for (PaymentRecordEntity payment: paymentList) {
+            PaymentRecordDTO paymentDTO = modelMapper.map(payment, PaymentRecordDTO.class);
+//            paymentDTO.setMember(modelMapper.map(payment.getMember(), MemberDTO.class));
+            paymentDTOList.add(paymentDTO);
+        }
+
+        Long total = paymentRecordRepository.getPaymentHistoryCountBy(searchPaymentDTO);
+        return new PageImpl<>(paymentDTOList, pageable, total);
+    }
+
 }

@@ -29,7 +29,7 @@ public class AdminInquiryController {
 
     @PostConstruct
     public void createInquiries() {
-        inquiryService.createInquiries();
+//        inquiryService.createInquiries();
     }
 
 
@@ -46,7 +46,7 @@ public class AdminInquiryController {
 //        List<InquiryDTO> inquiryList = inquiryService.getInquiryList();
         model.addAttribute("inquiryList", inquiryList);
         model.addAttribute("currPageNum", pageable.getPageNumber());
-        model.addAttribute("searchInquiryDTO", searchInquiryDTO);
+//        model.addAttribute("searchInquiryDTO", searchInquiryDTO);
         return path + "InquiryBoard";
     }
 

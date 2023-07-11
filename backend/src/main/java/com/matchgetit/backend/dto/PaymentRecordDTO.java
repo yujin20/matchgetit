@@ -2,8 +2,6 @@ package com.matchgetit.backend.dto;
 
 import com.matchgetit.backend.constant.PaymentStatus;
 import com.matchgetit.backend.entity.MemberEntity;
-import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +13,7 @@ public class PaymentRecordDTO {
     private Long paymentNumber;
     private MemberEntity member;
     private int price;
+    private int canceledPrice;
     private Date transactionDate; // 거래 일시
     private Date cancelDate; // 취소 일시
     private String gameNumber; // 경기 번호

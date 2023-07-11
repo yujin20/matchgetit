@@ -2,7 +2,9 @@ package com.matchgetit.backend.controller;
 
 import com.matchgetit.backend.service.AdminDashboardService;
 import com.matchgetit.backend.service.AdminPageUserService;
+import com.matchgetit.backend.service.PaymentHistoryService;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +17,23 @@ import java.util.Map;
 public class AdminMainController {
     private final AdminDashboardService dashboardService;
     private final AdminPageUserService userService;
+    private final PaymentHistoryService paymentService;
 
     @PostConstruct
     public void createUsers() {
-        userService.createUsers();
-        dashboardService.createManagers();
+//        userService.createUsers();
+//        dashboardService.createManagers();
+//        paymentService.createPayments();
+    }
+
+    @GetMapping("/matchGetIt/admin/gate")
+    public String gate(HttpSession session) {
+        System.out.println(session.getAttribute("member"));
+        return "redirect:/matchGetIt/admin";
     }
 
 
-    @GetMapping(value = {"/matchGetIt/admin", "/"})
+    @GetMapping(value = {"/matchGetIt/admin"})
     public String mainPage(Model model) {
         Map<String, Long> userCounts = dashboardService.getUserCounts();
         model.addAttribute("userCounts", userCounts);

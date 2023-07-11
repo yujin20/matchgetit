@@ -17,3 +17,4 @@ public class DashboardDataEntity {
     private Integer canceledMatch;
 
 }
+// 병합에 아직 반영되지 않은 파일.

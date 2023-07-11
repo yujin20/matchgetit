@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "INQUIRY")
 @Getter @Setter @ToString
@@ -22,7 +25,7 @@ public class InquiryEntity extends BaseEntity{
     private String category;
     private String state;
 
-//    @OneToMany(mappedBy = "inquiry", fetch = FetchType.LAZY)
-//    private List<InquiryCommentEntity> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "inquiry", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<InquiryCommentEntity> comments = new ArrayList<>();
 
 }

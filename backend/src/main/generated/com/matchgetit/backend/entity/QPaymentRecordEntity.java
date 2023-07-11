@@ -24,6 +24,8 @@ public class QPaymentRecordEntity extends EntityPathBase<PaymentRecordEntity> {
 
     public final DatePath<java.util.Date> cancelDate = createDate("cancelDate", java.util.Date.class);
 
+    public final NumberPath<Integer> canceledPrice = createNumber("canceledPrice", Integer.class);
+
     public final StringPath gameNumber = createString("gameNumber");
 
     public final QMemberEntity member;

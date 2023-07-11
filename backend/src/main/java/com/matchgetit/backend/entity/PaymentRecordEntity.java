@@ -24,6 +24,9 @@ public class PaymentRecordEntity {
     private int price;
 
     @Column
+    private int canceledPrice;
+
+    @Column
     @Temporal(TemporalType.DATE)
     private Date transactionDate; // 거래 일시
 

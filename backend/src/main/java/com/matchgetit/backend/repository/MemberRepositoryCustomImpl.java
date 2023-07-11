@@ -73,7 +73,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         }
         else if (StringUtils.equals("userName", searchType)) {
 //            return memberEntity.name.like("%"+searchValue+"%");
-            return memberEntity.name.contains(searchValue);
+//            return memberEntity.name.contains(searchValue);
+            return memberEntity.name.containsIgnoreCase(searchValue);
         }
         else if (StringUtils.equals("email", searchType)) {
             return memberEntity.email.like("%"+searchValue+"%");
@@ -88,8 +89,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
         String regDateStart = searchUserDTO.getRegDateStart();
         String regDateEnd = searchUserDTO.getRegDateEnd();
 
-        if (regDateStart == null || regDateEnd == null
-                || regDateStart.isEmpty() || regDateEnd.isEmpty())
+        if (regDateStart == null || regDateEnd == null || regDateStart.isEmpty() || regDateEnd.isEmpty())
             return null;
         Date from = Date.valueOf(regDateStart);
         Date to = Date.valueOf(regDateEnd);

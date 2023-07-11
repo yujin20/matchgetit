@@ -21,7 +21,7 @@ public class MemberEntity {
     private Long userId;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "PARTY_ID", nullable = true)
     private PartyEntity party;
 
@@ -100,17 +100,22 @@ public class MemberEntity {
 
     @Column(name = "RECOMMEND_COUNT")
     private String recommendCount;
+
     @Column(name = "LAST_CONNECTION_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastConnectionDate;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "MANAGERSUPPORTSTATUS")
-    private ManagerSupportStatus managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "0",  지원"1"
+    private ManagerSupportStatus managerSupportStatus; //매니저 지원의 현재 상태를 표시 미지원 "0", 지원 "1"
+
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATE")
     private PayState payState;
+
     @OneToOne(mappedBy = "user")
     public ManagerEntity managerEntity; // 매니저
+
     @OneToOne(mappedBy = "managerUser")
     private ManagerSupportRecordEntity managerSupportRecordEntity;
 
