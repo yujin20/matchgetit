@@ -2,10 +2,12 @@ package com.matchgetit.backend.controller;
 
 import com.matchgetit.backend.dto.InquiryCommentDTO;
 import com.matchgetit.backend.dto.InquiryDTO;
+import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.dto.SearchInquiryDTO;
 import com.matchgetit.backend.service.InquiryService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -92,8 +94,9 @@ public class AdminInquiryController {
 
     // 댓글 작성
     @PostMapping("/inquiry/{inquiryId}")
-    public String writeComment(InquiryCommentDTO commentDTO, @PathVariable Long inquiryId) {
+    public String writeComment(InquiryCommentDTO commentDTO, @PathVariable Long inquiryId, HttpSession session) {
 //        System.out.println(">>>>>>>>>>>>"+commentDTO);
+        commentDTO.setWritedBy(((MemberDTO) session.getAttribute("member")).getName());
         inquiryService.writeComment(commentDTO, inquiryId);
         return "redirect:/matchGetIt/admin/inquiry/"+inquiryId;
     }

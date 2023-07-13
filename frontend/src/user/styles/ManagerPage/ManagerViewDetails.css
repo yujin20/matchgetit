@@ -9,10 +9,18 @@
 .details-title{
     margin-top: 5%;
     font-weight: bold;
+    font-size: 2.7rem;
+    color: #07b4f8;
 }
-.match-information, .match_place, .match_note_container, .match_note, .match_note_filling_column{
-    margin-top: 10%;
+.match-information, .match_note_input{
+    margin-top: 7%;
     flex-shrink: 0;
+}
+.match_note{
+    margin-top: 5%;
+}
+.match_note{
+    font-size: 2rem;
 }
 .Team_A, .Team_B{
     border: 1px solid #000000;
@@ -20,26 +28,34 @@
     margin: 10px auto;
     overflow: auto;
 }
+.Team_A{margin-right: 5%}
+.Team_B{margin-left: 5%}
+
 .Team-information{
     width: 100%;
+    justify-content: center;
+    display: flex;
 }
-
+.Team-name{
+    font-size: 1.3rem;
+}
 .match-information{
     display: flex;
     margin-bottom: 10%;
-}
-.match_note_container{
 
 }
 .input_score{
-    width: 50px;
+    width: 30%;
+    margin-left: 5px;
+    font-size: 1.5rem;
 }
 .input_note{
     border-radius: 5px;
-    height: 80px;
+    height: 100px;
     width: 90%;
+    font-size: 1.6rem;
 }
-.match_note_container{
+.match_note_input{
     width: 100%;
 }
 .details-wrap {
@@ -54,7 +70,7 @@
 }
 
 .details-box {
-    width: 120%;
+    width: 80%;
     height:80%;
     padding: 70px;
     transform: translate(-50%, -50%) scale(0.5);
@@ -68,7 +84,10 @@
     overflow:auto;
     font-size: 1rem;
 }
-
+.match-date,.match-time,.match-stadium{
+    font-size: 1.8rem;
+    margin-right: 10px;
+}
 .details-box::-webkit-scrollbar {
     width: 10px;
     display: none;
@@ -138,7 +157,8 @@
 }
 
 .closeBtn3 {
-    width: 40px;
+    width: 30px;
+    margin-right: 20px;
 }
 
 .closeBtn3 .inner label {
@@ -166,14 +186,20 @@
 .enter_button{
     margin-top: 10%;
     border-radius: 5px;
+    width: 150px;
+    height: 50px;
+    font-size: 1.5rem;
+    background: #07b4f8;
+    font-weight: bold;
+    color: #fff;
 }
 @media (max-width: 767px) {
     .details-box {
-        width:100%;
+        width:160%;
         height:90%;
     }
     .closeBtn3 {
-        width: 40px;
+        width: 30px;
     }
 
     .closeBtn3 .inner label {

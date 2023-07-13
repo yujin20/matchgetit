@@ -16,12 +16,16 @@ public class MatchRecEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="MATCH_REC_ID")
     private Long matchRecId;
-    @Column(name="PARTY_LEADER_ID")
-    private Long partyLeaderId;
+    @ManyToOne
+    @JoinColumn(name="PARTY_LEADER_ID")
+    private MemberEntity partyLeader;
     @ManyToOne
     @JoinColumn(name="STD_ID",nullable=true)
     private StadiumEntity stadium;
     //matchWait 칼럼 외래키
+    @ManyToOne
+    @JoinColumn(name="MANAGER_ID")
+    private MemberEntity manager;//매니저 id ( = 유저id )
     @Column(name="MATCH_SCORE")
     private String matchScore;
     @Temporal(TemporalType.TIMESTAMP)
@@ -40,8 +44,6 @@ public class MatchRecEntity {
     @Temporal(TemporalType.DATE)
     @Column(name="CREDIT")
     private Long crd;
-    @Column(name="POINT")
-    private Long point;
     @Enumerated(EnumType.STRING)
     @Column(name="MATCH_STATE")
     private MatchState matchState;

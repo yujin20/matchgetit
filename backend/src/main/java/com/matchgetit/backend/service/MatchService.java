@@ -171,10 +171,12 @@ public class MatchService{
         matchWaitEntity.setSearchStart(matchEntity.getSearchStart());
         matchWaitEntity.setSearchEnd(new Date());
         matchWaitEntity.setCrd(matchEntity.getCrd());
-        matchWaitEntity.setPoint(matchEntity.getPoint());
         matchWaitEntity.setCycle(matchEntity.getCycle());
         matchWaitEntity.setTeam(team);
         matchRepository.delete(matchEntity);
         matchWaitRepository.save(matchWaitEntity);
+    }
+    public int matchAllCount(){
+        return matchRepository.findAll().size();
     }
 }

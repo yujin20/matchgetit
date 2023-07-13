@@ -17,10 +17,9 @@ div.logInOutBtnArea{
   font-size: 0.9rem;
   box-sizing: border-box;
   appearance: none;
-  background-color: transparent;
   border-radius: 0.6em;
   border: transparent;
-  /*cursor: pointer;*/
+  cursor: pointer;
   display: flex;
   align-self: center;
   line-height: 1;

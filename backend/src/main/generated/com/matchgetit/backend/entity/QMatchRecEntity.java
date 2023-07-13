@@ -30,6 +30,8 @@ public class QMatchRecEntity extends EntityPathBase<MatchRecEntity> {
 
     public final StringPath etc = createString("etc");
 
+    public final QMemberEntity manager;
+
     public final NumberPath<Long> matchRecId = createNumber("matchRecId", Long.class);
 
     public final StringPath matchScore = createString("matchScore");
@@ -40,9 +42,7 @@ public class QMatchRecEntity extends EntityPathBase<MatchRecEntity> {
 
     public final EnumPath<com.matchgetit.backend.constant.MatchState> matchState = createEnum("matchState", com.matchgetit.backend.constant.MatchState.class);
 
-    public final NumberPath<Long> partyLeaderId = createNumber("partyLeaderId", Long.class);
-
-    public final NumberPath<Long> point = createNumber("point", Long.class);
+    public final QMemberEntity partyLeader;
 
     public final QStadiumEntity stadium;
 
@@ -66,6 +66,8 @@ public class QMatchRecEntity extends EntityPathBase<MatchRecEntity> {
 
     public QMatchRecEntity(Class<? extends MatchRecEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.manager = inits.isInitialized("manager") ? new QMemberEntity(forProperty("manager"), inits.get("manager")) : null;
+        this.partyLeader = inits.isInitialized("partyLeader") ? new QMemberEntity(forProperty("partyLeader"), inits.get("partyLeader")) : null;
         this.stadium = inits.isInitialized("stadium") ? new QStadiumEntity(forProperty("stadium")) : null;
     }
 

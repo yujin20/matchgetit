@@ -294,7 +294,8 @@
                     <div class="comment-header">
                         <span class="comment-author" th:text="${comment.writedBy}">관리자</span>
                         <div class="header-buttons">
-                            <button type="button" th:if="${#authentication.name == comment.writedBy}" onclick="openCommentEdit(this)">수정</button>
+<!--                            <button type="button" th:if="${#authentication.name == comment.writedBy}" onclick="openCommentEdit(this)">수정</button>-->
+                            <button type="button" th:if="${session.member.email == comment.createdBy}" onclick="openCommentEdit(this)">수정</button>
                             <button type="button" th:onclick="|confirmDelete(${comment.id})|">삭제</button>
                         </div>
                     </div>
@@ -385,7 +386,7 @@
             <form method="post" th:object="${commentDTO}" th:action>
                 <!--            <input type="text" class="comment-input" placeholder="댓글을 입력하세요">-->
                 <label>
-                    <textarea class="comment-input" placeholder="댓글을 입력하세요" rows="6" th:field="${commentDTO.content}"></textarea>
+                    <textarea class="comment-input" placeholder="댓글을 입력하세요" rows="6" th:field="${commentDTO.content}" required></textarea>
                 </label>
                 <button class="comment-button" style="margin: 0 5px">답변</button>
                 <button class="comment-button" type="button" onclick="location.href='/matchGetIt/admin/inquiryBoard';">뒤로 가기</button>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../styles/ManagerPage/ManagerViewDetails.css";
 import axiosInstance from "../../components/axiosInstance";
 
-const MngViewDetails = ({ selectTime, session, selectDate,isSuccess,setIsSuccess }) => {
+const MngViewDetails = ({ selectTime, session, selectDate,isSuccess,setIsSuccess, schedule }) => {
     const [scoreA, setScoreA] = useState("");
     const [scoreB, setScoreB] = useState("");
     const [etc, setEtc] = useState("");
@@ -56,16 +56,17 @@ const MngViewDetails = ({ selectTime, session, selectDate,isSuccess,setIsSuccess
                 <div className="details-title">경기 상세정보</div>
                 <div className="detailsContainer">
                     <div className="match-information">
-                        <div className="match-date">날짜</div>
-                        <div className="match-time">시간</div>
-                        <div className="match-stadium">장소</div>
+                        <div className="match-date">{selectDate}</div>
+                        <div className="match-time">{selectTime}시간</div>
+                        <div className="match-stadium">{matchData[0]?.stadium.std_name}</div>
                     </div>
                     <div className="Team-information">
-                        <div className="Team-name" style={{ textAlign: "center" }}>
+                        <div className="Team-name" style={{ textAlign: "center"}}>
                             A팀
                             <input
                                 type="text"
-                                className="input_scoreA"
+                                className="input_score"
+                                placeholder="점수"
                                 value={scoreA}
                                 onChange={(e) => setScoreA(e.target.value)}
                             ></input>
@@ -83,7 +84,8 @@ const MngViewDetails = ({ selectTime, session, selectDate,isSuccess,setIsSuccess
                             B팀
                             <input
                                 type="text"
-                                className="input_scoreB"
+                                className="input_score"
+                                placeholder="점수"
                                 value={scoreB}
                                 onChange={(e) => setScoreB(e.target.value)}
                             ></input>
@@ -98,20 +100,15 @@ const MngViewDetails = ({ selectTime, session, selectDate,isSuccess,setIsSuccess
                             </div>
                         </div>
                     </div>
-                    <div className="match_place">서울 한가운데</div>
-                    <div className="match_note_container">
-                        <div className="match_note">
-                            비고란임 작성하셈
-                            <div className="match_note_filling_column">
+                    <div className="match_note_input">
                 <textarea
                     rows="4"
                     cols="50"
                     className="input_note"
+                    placeholder="경기 특이사항을 작성해주세요"
                     value={etc}
                     onChange={(e) => setEtc(e.target.value)}
                 ></textarea>
-                            </div>
-                        </div>
                     </div>
                     <div className="button_container">
                         <button className="enter_button" onClick={submitMatchData}>

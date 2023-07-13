@@ -132,14 +132,14 @@
             const allChecked = $("#checkAll").prop("checked");
             $("input[name=selectedUser]").prop("checked", allChecked);
         }
-        
-        
+
+
         // 목록 페이지 이동
         function page(page) {
             let query = location.search;
             location.href = "/matchGetIt/admin/userList/"+ page + query;
         }
-        
+
 
         // 회원 삭제 확인
         function confirmDelete(form) {

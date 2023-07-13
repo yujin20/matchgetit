@@ -12,7 +12,6 @@ import '../styles/CommonFactor/logInOutBtn.css';
 import MenuBar from "./MenuBar";
 import Rank from '../components/Rank/RankingBoard';
 import PartyAccept from "./Party/PartyAccept";
-import Chatbot from "../components/chatbot/chatbot";
 import MatchResult from "./Match/MatchResult";
 
 function Main({ onLogin, onLogout, isLoggedIn }) {
@@ -216,7 +215,7 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
             <div className="logInOutBtnArea">
                 {isLoggedIn ? (
                     <>
-                        <span className="sessionIdArea">{session.userId} : {session.name}</span>
+                        <span className="sessionIdArea" onClick={()=>handleSlideChange(2)}>{session.name}님</span>
                         <span><button className="popUpBtn" onClick={handlePartyMenuToggle}>파티 메뉴</button></span>
                         <span>
 
@@ -267,7 +266,7 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
                             </div>
                             <div className="swiper-slide">
                                 <div className="slideContainer">
-                                    <div className="slide-page"><Mypage session={session}/></div>
+                                    <div className="slide-page"><Mypage logout={handleLogout} session={session}/></div>
                                 </div>
                             </div>
                         </>
@@ -275,10 +274,7 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
                 </div>
                 <div className="swiper-pagination"></div>
             </div>
-            <Chatbot />
             {isLoggedIn ? <MenuBar isLoggedIn={isLoggedIn} onSlideChange={handleSlideChange} /> : null}
-
-
         </>
     );
 }

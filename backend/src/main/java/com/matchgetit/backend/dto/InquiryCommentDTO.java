@@ -18,6 +18,7 @@ public class InquiryCommentDTO {
     private String writedBy;
     private String regDate;
     private boolean isEdited;
+    private String createdBy;
 
 //    private Long parentCommentId;
 //    private String parentCommentWriter;
@@ -31,7 +32,7 @@ public class InquiryCommentDTO {
     public static InquiryCommentDTO of(InquiryCommentEntity comment) {
         modelMapper.typeMap(InquiryCommentEntity.class, InquiryCommentDTO.class)
                 .addMappings(mapping -> {
-                    mapping.map(InquiryCommentEntity::getCreatedBy, InquiryCommentDTO::setWritedBy);
+                    mapping.map(InquiryCommentEntity::getWriterName, InquiryCommentDTO::setWritedBy);
                     mapping.map(InquiryCommentEntity::getRegTime, InquiryCommentDTO::setRegDate);
                 });
         return modelMapper.map(comment, InquiryCommentDTO.class);
@@ -45,7 +46,7 @@ public class InquiryCommentDTO {
     public InquiryCommentEntity toEntity() {
         modelMapper.typeMap(InquiryCommentDTO.class, InquiryCommentEntity.class)
                 .addMappings(mapping -> {
-                    mapping.map(InquiryCommentDTO::getWritedBy, InquiryCommentEntity::setCreatedBy);
+                    mapping.map(InquiryCommentDTO::getWritedBy, InquiryCommentEntity::setWriterName);
                     mapping.map(InquiryCommentDTO::getRegDate, InquiryCommentEntity::setRegTime);
                 });
         return modelMapper.map(this, InquiryCommentEntity.class);

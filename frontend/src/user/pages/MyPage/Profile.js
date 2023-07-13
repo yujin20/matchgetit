@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './profile.css';
 import axios from "axios";
 
-function MyPage({session}) {
+function MyPage({session,logout}) {
     const [email, setEmail] = useState(session.email || '');
     const [name, setName] = useState(session.name || '');
     const [pn, setPn] = useState(session.pn || '');
@@ -34,13 +34,13 @@ function MyPage({session}) {
     const handleDelete = () => {
         if (window.confirm("확인을 누르면 회원 정보가 삭제됩니다.")) {
             // 회원 탈퇴 로직 구현
+            logout();
             axios
                 .delete('/matchGetIt/auth/delete', {
                     params: {id: session.userId}
                 })
                 .then(() => {
                     alert('탈퇴되었습니다.');
-                    window.location.href = '/user/Main.js';
                 })
                 .catch((error) => {
                     console.error("실패");
@@ -78,7 +78,7 @@ function MyPage({session}) {
                                         <label>이메일</label>
                                         <input
                                             type="email"
-                                            id="email"
+                                            className="input_Data"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="example@email.com"
@@ -91,7 +91,7 @@ function MyPage({session}) {
                                         <label>이름</label>
                                         <input
                                             type="text"
-                                            id="name"
+                                            className="input_Data"
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
                                             placeholder="김 풋살"
@@ -105,7 +105,7 @@ function MyPage({session}) {
                                         <div className="input-button-container">
                                             <input
                                                 type="tel"
-                                                id="pn"
+                                                className="input_Data"
                                                 value={pn}
                                                 onChange={(e) => setPn(e.target.value)}
                                                 placeholder="010-5678-1234"
@@ -120,7 +120,7 @@ function MyPage({session}) {
                                         <div className="input-button-container">
                                             <input
                                                 type="password"
-                                                id="userpassword"
+                                                className="input_Data"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="********"
@@ -158,6 +158,7 @@ function MyPage({session}) {
                                                     value="1"
                                                     checked={gender === '1'}
                                                     onChange={() => setGender('1')}
+                                                    disabled
                                                 />
                                                 <label htmlFor="1" className="chip_item-label">
                                                     남자
@@ -172,6 +173,7 @@ function MyPage({session}) {
                                                     value="2"
                                                     checked={gender === '2'}
                                                     onChange={() => setGender('2')}
+                                                    disabled
                                                 />
                                                 <label htmlFor="2" className="chip_item-label">
                                                     여자
@@ -193,6 +195,7 @@ function MyPage({session}) {
                                                     value="expert"
                                                     checked={prfcn === 'ADVANCED'}
                                                     onChange={() => prfcn('ADVANCED')}
+                                                    disabled
                                                 />
                                                 <label htmlFor="expert" className="chip_item-label">
                                                     상
@@ -207,6 +210,7 @@ function MyPage({session}) {
                                                     value="middle"
                                                     checked={prfcn === 'MIDDLE'}
                                                     onChange={() => setProficiency('MIDDLE')}
+                                                    disabled
                                                 />
                                                 <label htmlFor="middle" className="chip_item-label">
                                                     중
@@ -221,13 +225,13 @@ function MyPage({session}) {
                                                     value="basic"
                                                     checked={prfcn === 'BEGINNER'}
                                                     onChange={() => setProficiency('BEGINNER')}
+                                                    disabled
                                                 />
                                                 <label htmlFor="basic" className="chip_item-label">
                                                     하
                                                 </label>
                                             </li>
                                         </ul>
-                                        <a className="change">※ 숙련도는 리그 매치 전에 1회에 한하여 <br/> 변경 가능합니다.</a>
                                         <button
                                             type="button"
                                             className="button2"
@@ -239,7 +243,6 @@ function MyPage({session}) {
                                             type="button"
                                             className="button2"
                                             onClick={handleDelete}
-                                            disabled={!isAccountTypeNormal}
                                         >회원 탈퇴
                                         </button>
                                     </div>

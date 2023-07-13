@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Mypage.css";
 import "./profile.css";
 import "../Payments/CreditCharge.css";
@@ -14,21 +14,37 @@ import '../../styles/CommonFactor/grade.css';
 
 
 
-function Mypage({session}) {
+function Mypage({session,logout}) {
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [isChargeOpen, setChargeOpen] = useState(true);
     const [isAdmin, setIsAdmin] = useState(session && session.loginType.toUpperCase() === "ADMIN");
-    console.log("session:", session)
-    console.log(session.loginType)
-    console.log(isAdmin)
-    // const [isAdmin, setIsAdmin] = useState(false);
+    // console.log("session:", session)
+    // console.log(session.loginType)
+    // console.log(isAdmin)
+    // const [isAdmin, setIsAdmin] = useState(true);
     const [isMng, setIsMng] = useState(true);
 
-    //임의로 매니저 true로 해놨음 원래로직대로면 매니저신청 >> 관리자 등록 >> role체크 후 true로 바뀌어야 함
+    //임의로 매니저 true로 해놨음 원래 로직대로면 매니저신청 >> 관리자 등록 >> role체크 후 true로 바뀌어야 함
     const [isApplyManager, setApplyManager] = useState(false);
     const [isHistoryOpen, setHistoryOpen] = useState(false);
     const [isQABoardOpen, setQABoardOpen] = useState(false);
     const [isMngMenuOpen, setIsMngMenuOpen] = useState(false);
+    const [matchCount, setMatchCount] = useState(0);
+
+    useEffect(() => {
+        axiosInstance.post("/matchGetIt/match/getMatchCount")
+            .then(res => {
+                const count = Number(res.data);
+                setMatchCount(count);
+            })
+            .catch(err => {
+                console.log('서버 오류');
+            });
+    }, []);
+
+    useEffect(() => {
+        setIsAdmin(session && session.loginType.toUpperCase() === "ADMIN")
+    }, [session])
 
     const handleApplyManagerToggle = () => {
         setApplyManager(!isApplyManager);
@@ -66,6 +82,41 @@ function Mypage({session}) {
         })//해당 유저의 권한을 가져오는 함수
     }
 
+    const renderGradeImage = ()=>{
+        let iconUrl='';
+
+        switch (session.prfcn) {
+            case 'BEGINNER':
+                iconUrl = process.env.PUBLIC_URL + '/images/beginner.png';
+                break;
+            case 'MIDDLE':
+                iconUrl = process.env.PUBLIC_URL + '/images/middle.png';
+                break;
+            case 'ADVANCED':
+                iconUrl = process.env.PUBLIC_URL + '/images/advanced.png';
+                break;
+            case 'PROFESSIONAL':
+                iconUrl = process.env.PUBLIC_URL + '/images/professional.png';
+                break;
+            default:
+                break;
+        }
+        return iconUrl;
+    }
+    const renderState = () => {
+        let matchStatus = '';
+
+        if (matchCount >= 0 && matchCount < 100) {
+            matchStatus = '😀 원활';
+        } else if (matchCount >= 100) {
+            matchStatus = '😐 혼잡';
+        } else {
+            matchStatus = '😡 서버 오류';
+        }
+
+        return matchStatus;
+    };
+
     return (
         <div className="content-body_left-wrap">
             <section>
@@ -87,14 +138,12 @@ function Mypage({session}) {
                 </div>
                 <div className="my-status">
                     <li className="my-status_item my-status_item-double">
-                        {/*<a href="/mypage/mymanner/">*/}
-                            <div className="my-status_label">
-                                <p style={{ fontSize: '12px' }}>매너</p>
-                            </div>
-                            <div className="my-status_content">
-                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_manner_card.svg" alt="매너" />
-                                좋아요
-                            </div>
+                        <div className="my-status_label">
+                            <p style={{ fontSize: '12px' }}>매칭 서버</p>
+                        </div>
+                        <div className="my-status_content">
+                            <div>{renderState()}</div>
+                        </div>
                         {/*</a>*/}
                     </li>
                     <li className="my-status_item my-status_item-double">
@@ -102,22 +151,19 @@ function Mypage({session}) {
                             <a href="/magazine/1/" style={{ fontSize: '12px' }}>숙련도</a>
                             <img src="https://plab-football.s3.amazonaws.com/static/img/ic_level_show.svg" alt="레벨" />
                         </div>
-                        {/*<a href="/mypage/mylevel/">*/}
-                            <div className="my-status_content">
-                                <div className="lv-system_title">
-                                    <div>
-                                        <span className="badge badge-rookie badge_lv-system">R</span>
-                                    </div>
-                                    <div>
-                                        <div className="lv-system_name">
-                                            <h4>루키</h4>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        {/* Additional content */}
-                                    </div>
+                        <div className="my-status_content">
+                            <div className="lv-system_title">
+                                <div className="lv-system_name">
+                                    <h4>{session.prfcn}</h4>
+                                </div>
+                                <div className="prfcnArea">
+                                    <img className="myPageIcon" src={renderGradeImage()} alt="레벨" />
+                                </div>
+                                <div>
+                                    {/* Additional content */}
                                 </div>
                             </div>
+                        </div>
                         {/*</a>*/}
                     </li>
                 </div>
@@ -133,79 +179,59 @@ function Mypage({session}) {
                         </div>
                     </li>
                 )}
-                {!isChargeOpen && (
-                    <li className="my-status CreditCharge-settings">
-                        <div className="CreditCharge-settings">
-                            <CreditCharge session={session}/>
-                            <div className="charge__back" onClick={handleChargeToggle}>
-                                닫기
-                            </div>
+                <div className={`my-status CreditCharge-settings ${!isChargeOpen ? "fade-in" : "fade-out"}`}>
+                    {!isChargeOpen && (<div className="CreditCharge-settings">
+                        <CreditCharge session={session} />
+                        <div className="charge__back" onClick={handleChargeToggle}>
+                            닫기
                         </div>
-                    </li>
-                )}
+                    </div>)}
+                </div>
 
                 <div className="profile-view">
                     <button className="btn sm gray" onClick={handleProfileToggle}>
-                        <p>프로필 보기</p>
+                        <p>프로필 {isProfileOpen?(<>닫기</>):(<>보기</>)}</p>
                     </button>
                 </div>
-                {isProfileOpen && (
-                    <div className="profile-settings">
-                        <Profile session={session}/>
-                    </div>
-                )}
-                {/*<div className="profile-view">*/}
-                {/*    <button className="btn sm gray" onClick={handleApplyManagerToggle}>*/}
-                {/*        <p>매니저 지원하기</p>*/}
-                {/*    </button>*/}
-                {/*</div>*/}
-                {/*{isApplyManager && (*/}
-                {/*    <div className="ApplyManager">*/}
-                {/*        <ApplyManager session={session}/>*/}
-                {/*    </div>*/}
-                {/*)}*/}
+                <div className={`profile-settings ${isProfileOpen ? "fade-in" : "fade-out"}`}>
+                    {isProfileOpen && ( <Profile session={session} logout={logout} />)}
+                </div>
 
             </section>
             <section>
                 <div>
                     <div className="my-content-title">my content</div>
-                        <div className="content-label">
-                            <img src="https://plab-football.s3.amazonaws.com/static/img/ic_myplab_color.svg" alt="신청 내역"/>
-                            <p>신청 내역</p>
+                    <div className="content-label">
+                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_myplab_color.svg" alt="신청 내역"/>
+                        <p>신청 내역</p>
+                    </div>
+                    <div>
+                        <a className="content-label" onClick={handleHistoryToggle}>
+                            <img src="https://plab-football.s3.amazonaws.com/static/img/ic_point_color.svg" alt="결제 내역"/>
+                            <p>결제 내역</p>
+                        </a>
+                        <div className={`profile-settings ${isHistoryOpen ? "fade-in" : "fade-out"}`} >
+                            {isHistoryOpen && (<CreditHistory session={session}/>)}
                         </div>
-                        <div>
-                            <a className="content-label" onClick={handleHistoryToggle}>
-                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_point_color.svg" alt="결제 내역"/>
-                                <p>결제 내역</p>
-                            </a>
-                            {isHistoryOpen && (
-                                <div className="profile-settings">
-                                    <CreditHistory session={session}/>
-                                </div>
-                            )}
+                    </div>
+                    <div>
+                        <a className="content-label" onClick={handleQABoardToggle}>
+                            <img src="https://plab-football.s3.amazonaws.com/static/img/ic_faq_color.svg" alt="문의 게시판" />
+                            <p>문의 게시판</p>
+                        </a>
+                        <div className={`profile-settings ${isQABoardOpen ? "fade-in" : "fade-out"}`}>
+                            {isQABoardOpen && (<QABoard session={session} />)}
                         </div>
-                        <div>
-                            <a className="content-label" onClick={handleQABoardToggle}>
-                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_faq_color.svg" alt="문의 게시판" />
-                                <p>문의 게시판</p>
-                            </a>
-                            {isQABoardOpen && (
-                                <div className="profile-settings">
-                                    <QABoard session={session}/>
-                                </div>
-                            )}
-                        </div>
+                    </div>
                     {!isMng && (
                         <div>
                             <a className="content-label" onClick={handleApplyManagerToggle}>
-                                <img src="https://plab-football.s3.amazonaws.com/static/img/explore_fire.svg" alt="매니저 지원"/>
+                                <img src="https://plab-football.s3.amazonaws.com/static/img/ic_manager_color.svg" alt="매니저 지원"/>
                                 <p>매니저 지원하기</p>
                             </a>
-                            {isApplyManager && (
-                                <div className="ApplyManager">
-                                    <ApplyManager session={session}/>
-                                </div>
-                            )}
+                            <div className={`ApplyManager ${isApplyManager ? "fade-in" : "fade-out"}`}>
+                                {isApplyManager && (<ApplyManager session={session}/>)}
+                            </div>
                         </div>
                     )}
                     {isAdmin && (
@@ -219,13 +245,15 @@ function Mypage({session}) {
                     {isMng && (
                         <>
                             <div className="content-label mngMenu" onClick={handleMngMenuToggle}>
-                                <p>매니저 페이지 이동</p>
+                                <p>💼&nbsp;&nbsp; 매니저 메뉴 {isMngMenuOpen?(<>닫기</>):(<>보기</>)}</p>
                             </div>
-                            {isMngMenuOpen && (
-                                <ManagerMatchPage session={session} isMngOpen={isMngMenuOpen} handleMngMenuToggle={handleMngMenuToggle}/>
-                            )}
+                            <div className={`profile-settings ${isMngMenuOpen ? "fade-in" : "fade-out"}`}>
+                                {isMngMenuOpen && (
+                                    <ManagerMatchPage session={session} isMngOpen={isMngMenuOpen} handleMngMenuToggle={handleMngMenuToggle}/>
+                                )}
+                            </div>
                         </>
-                        )}
+                    )}
                 </div>
             </section>
         </div>

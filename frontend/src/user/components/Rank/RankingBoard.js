@@ -9,27 +9,6 @@ function RankingBoard ({session}){
     const [data, setData] = useState([]);
     const [selectedGrade, setSelectedGrade] = useState("ALL");
 
-    const gradeComp = (rating2) => {
-        let grade = "";
-        let rating3 = parseInt(rating2);
-        if(rating3>=1100) {
-            grade = "Professional";
-        } else if (rating3>=701){
-            grade = "Advanced";
-        } else if (rating3>=401){
-            grade = "Middle";
-        } else {
-            grade = "Beginner";
-        }
-        return grade;
-    };
-
-    const VicRatingComf = (win,lose) => {
-        let win2 = parseInt(win);
-        let lose2 = parseInt(lose);
-        let VicRating = win2*100/(lose2+win2)+"%";
-        return VicRating;
-    }
 
     useEffect(() => {
 

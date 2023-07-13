@@ -19,11 +19,11 @@ const Options = (props) => {
             handler: props.actionProvider.handlePaymentGuide,
             id: 3,
         },
-        {
-            text: "고객센터 문의",
-            handler: props.actionProvider.handleServiceCenter,
-            id: 4,
-        },
+        // {
+        //     text: "고객센터 문의",
+        //     handler: props.actionProvider.handleServiceCenter,
+        //     id: 4,
+        // },
     ];
 
     const buttonsMarkup = options.map((option) => (

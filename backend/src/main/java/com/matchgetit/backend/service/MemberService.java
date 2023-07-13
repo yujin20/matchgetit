@@ -49,12 +49,13 @@ public class MemberService {
         member.setLoginType(LogInType.NORMAL);
         member.setPayState(PayState.POINT);
         member.setManagerSupportStatus(ManagerSupportStatus.BASIC);
-        if(proficiency == Proficiency.ADVANCED)member.setRating(800L);
-        else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
+        if(proficiency == Proficiency.ADVANCED) member.setRating(800L);
+        else if(proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
-        member.setRegDate(new Date());
         member.setOwnedCrd(0);
-        member.setOwnedPoint(0);
+        member.setRegDate(new Date());
+        member.setLastConnectionDate(new Date());
+        member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
     public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency,AccountType accountType,LogInType logInType) {
@@ -70,15 +71,16 @@ public class MemberService {
         member.setGender(gender);
         member.setPrfcn(proficiency);
         member.setAccountType(accountType);
-        member.setRegDate(new Date());
         member.setLoginType(logInType);
         member.setPayState(PayState.POINT);
         member.setManagerSupportStatus(ManagerSupportStatus.BASIC);
-        if(proficiency == Proficiency.ADVANCED)member.setRating(800L);
-        else if(proficiency == Proficiency.MIDDLE)member.setRating(500L);
+        if(proficiency == Proficiency.ADVANCED) member.setRating(800L);
+        else if(proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
         member.setOwnedCrd(0);
-        member.setOwnedPoint(0);
+        member.setRegDate(new Date());
+        member.setLastConnectionDate(new Date());
+        member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
     public void googleSignUp(String email, String name,String pn, String birthday, Gender gender, Proficiency proficiency, AccountType accountType, LogInType logInType) {
@@ -94,15 +96,15 @@ public class MemberService {
         member.setPn(pn);
         member.setPrfcn(proficiency);
         member.setAccountType(accountType);
-        member.setRegDate(new Date());
         member.setLoginType(logInType);
         member.setPayState(PayState.POINT);
-        if (gender == Gender.MALE) member.setGender(Gender.MALE);
-        else member.setGender(Gender.FEMALE);
+        member.setManagerSupportStatus(ManagerSupportStatus.BASIC);
         if (proficiency == Proficiency.ADVANCED) member.setRating(800L);
         else if (proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
-
+        member.setRegDate(new Date());
+        member.setLastConnectionDate(new Date());
+        member.setAccountState(AccountState.ACTIVE);
         memberRepository.save(member);
     }
 
@@ -279,9 +281,6 @@ public class MemberService {
             return memberDTO;
         }
     }
-
-
-
 
 
 }

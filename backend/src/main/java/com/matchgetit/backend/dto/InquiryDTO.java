@@ -21,6 +21,7 @@ public class InquiryDTO {
     private String writedBy;
     private String regDate;
 //    private LocalDateTime regTime;
+    private String createdBy;
 
     private List<InquiryCommentDTO> commentList = new ArrayList<>();
 
@@ -30,7 +31,7 @@ public class InquiryDTO {
     public static InquiryDTO of(InquiryEntity inquiry) {
         modelMapper.typeMap(InquiryEntity.class, InquiryDTO.class)
                 .addMappings(mapping -> {
-                    mapping.map(InquiryEntity::getCreatedBy, InquiryDTO::setWritedBy);
+                    mapping.map(InquiryEntity::getWriterName, InquiryDTO::setWritedBy);
 //                    mapping.map(InquiryEntity::getRegTime, InquiryDTO::setRegTime);
                 });
         return modelMapper.map(inquiry, InquiryDTO.class);
@@ -39,9 +40,9 @@ public class InquiryDTO {
     public InquiryEntity toEntity() {
         modelMapper.typeMap(InquiryDTO.class, InquiryEntity.class)
                 .addMappings(mapping -> {
-//                    mapping.map(InquiryDTO::getWritedBy, InquiryEntity::setCreatedBy);
+                    mapping.map(InquiryDTO::getWritedBy, InquiryEntity::setWriterName);
                     mapping.skip(InquiryEntity::setId);
-                    mapping.skip(InquiryEntity::setCreatedBy);
+//                    mapping.skip(InquiryEntity::setCreatedBy);
                     mapping.skip(InquiryEntity::setRegTime);
                 });
         return modelMapper.map(this, InquiryEntity.class);

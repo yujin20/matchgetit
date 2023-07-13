@@ -5,6 +5,7 @@ import com.matchgetit.backend.repository.InquiryRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,27 +14,26 @@ import java.util.List;
 
 
 @AllArgsConstructor
-@RestController
+@Controller
 @RequestMapping(value="/matchGetIt")
 public class UserInquiryBoardController {
 
     InquiryRepository inquiryRepository;
 
     @PostMapping("/userInquiry")
-    public String userInquirySave(@RequestParam("category") String category, @RequestParam("QAtitle") String title, @RequestParam("QAcontent") String content,@RequestParam("QAName") String userId, HttpServletRequest request, Model model, HttpServletResponse response) {
+    public String userInquirySave(@RequestParam("category") String category, @RequestParam("QAtitle") String title, @RequestParam("QAcontent") String content,@RequestParam("QAName") String userId) {
 
-        System.out.println("1");
         System.out.println(userId);
         System.out.println(title);
         InquiryEntity inquiry = new InquiryEntity();
         inquiry.setTitle(title);
         inquiry.setContent(content);
         inquiry.setCategory(category);
-        inquiry.setState("WAITING");
-        inquiry.setRegTime(LocalDateTime.now());
-        inquiry.setCreatedBy(userId);
-        inquiry.setModifiedBy(userId);
-        System.out.println(inquiry.getCreatedBy());
+        inquiry.setState("접수 대기");
+//        inquiry.setRegTime(LocalDateTime.now());
+//        inquiry.setCreatedBy(userId);
+//        inquiry.setModifiedBy(userId);
+//        System.out.println(inquiry.getCreatedBy());
         inquiryRepository.save(inquiry);
 
         return "redirect:http://localhost:3000";

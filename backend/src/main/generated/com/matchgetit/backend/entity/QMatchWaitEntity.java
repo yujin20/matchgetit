@@ -32,8 +32,6 @@ public class QMatchWaitEntity extends EntityPathBase<MatchWaitEntity> {
 
     public final QPartyEntity party;
 
-    public final NumberPath<Long> point = createNumber("point", Long.class);
-
     public final DateTimePath<java.util.Date> searchEnd = createDateTime("searchEnd", java.util.Date.class);
 
     public final DateTimePath<java.util.Date> searchStart = createDateTime("searchStart", java.util.Date.class);

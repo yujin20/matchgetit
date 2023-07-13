@@ -101,15 +101,16 @@ public class MatchWaitService{
     @Transactional
     public void convertMatchRec(MatchWaitEntity matchWaitEntity,String score,String etc){
         MatchRecEntity matchRecEntity = new MatchRecEntity();
-        matchRecEntity.setPartyLeaderId(matchWaitEntity.getParty().getPartyLeader().getUserId());
+        matchRecEntity.setPartyLeader(matchWaitEntity.getParty().getPartyLeader());
         matchRecEntity.setMatchScore(score);
         matchRecEntity.setMatchState((score.equals(":"))? MatchState.CANCEL :MatchState.COMPLETE);
         matchRecEntity.setTeam(matchWaitEntity.getTeam());
         matchRecEntity.setStadium(matchWaitEntity.getStadium());
+        MemberEntity manager = memberRepository.findByUserId(Long.valueOf(matchWaitEntity.getStadium().getMngId()));
+        matchRecEntity.setManager(manager);
         matchRecEntity.setMatchSearchStr(matchWaitEntity.getSearchStart());
         matchRecEntity.setMatchSearchEnd(matchWaitEntity.getSearchEnd());
         matchRecEntity.setCrd(matchRecEntity.getCrd());
-        matchRecEntity.setPoint(matchWaitEntity.getPoint());
         matchRecEntity.setApplicationDate(matchWaitEntity.getParty().getApplicationDate());
         matchRecEntity.setApplicationTime(matchWaitEntity.getParty().getApplicationTime());
         matchRecEntity.setEtc(etc);
@@ -133,7 +134,6 @@ public class MatchWaitService{
         matchEntity.setSearchStart(matchWaitEntity.getSearchStart());
         matchEntity.setSearchEnd(null);
         matchEntity.setCrd(matchWaitEntity.getCrd());
-        matchEntity.setPoint(matchWaitEntity.getPoint());
         matchEntity.setCycle(cycle+1);
         matchRepository.save(matchEntity);
         matchWaitRepository.delete(matchWaitEntity);

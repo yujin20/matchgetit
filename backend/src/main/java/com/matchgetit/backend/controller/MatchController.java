@@ -210,6 +210,17 @@ public class MatchController {
 
 
     }
+
+    @PostMapping("/getMatchCount")
+    public ResponseEntity<Integer> getMatchCount(){
+        try {
+            int matchCount = matchService.matchAllCount();
+
+            return new ResponseEntity<>(matchCount, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(-1,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }//매칭 결과에 있는 리스트 반환 메소드
 
 

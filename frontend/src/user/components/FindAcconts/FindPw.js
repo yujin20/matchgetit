@@ -42,14 +42,14 @@ function FindPw({session}) {
             </div>
             <div className="findInputdata">
                 <label>이메일</label>
-                    <input
-                        type="email"
-                        className="find_input"
-                        value={temporaryPw}
-                        onChange={(e) => setTemporaryPw(e.target.value)}
-                    />
+                <input
+                    type="email"
+                    className="find_input"
+                    value={temporaryPw}
+                    onChange={(e) => setTemporaryPw(e.target.value)}
+                />
             </div>
-            <button type="button" value="인증번호 발급" className="button" onClick={handleConfirmationClick}>임시비밀번호
+            <button type="button" value="인증번호 발급" className="button_check" onClick={handleConfirmationClick}>임시비밀번호
                 발급
             </button>
         </div>

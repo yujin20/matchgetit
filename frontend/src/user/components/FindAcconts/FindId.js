@@ -27,36 +27,36 @@ function FindId() {
                 // 아이디찾기 실패시 처리
             });
     }
-        return (
-            <div className="find-container" id="phone-menu">
-                <div className="findInputdata">
-                    <label>이름</label>
-                    <input
-                        type="text"
-                        className="find_input"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div className="findInput">
-                    <label>휴대폰 번호</label>
-                    <input
-                        type="tel"
-                        className="find_input"
-                        value={pn}
-                        id="pNum"
-                        onChange={(e) => setPhoneNum(e.target.value)}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="button"
-                    onClick={handleFormSubmit}
-                >
-                    확인
-                </button>
-                 <p>{value}</p>
+    return (
+        <div className="find-container" id="phone-menu">
+            <div className="findInputdata">
+                <label>이름</label>
+                <input
+                    type="text"
+                    className="find_input"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
             </div>
-        );
+            <div className="findInput">
+                <label>휴대폰 번호</label>
+                <input
+                    type="tel"
+                    className="find_input"
+                    value={pn}
+                    id="pNum"
+                    onChange={(e) => setPhoneNum(e.target.value)}
+                />
+            </div>
+            <button
+                type="submit"
+                className="button_check"
+                onClick={handleFormSubmit}
+            >
+                확인
+            </button>
+            <p>{value}</p>
+        </div>
+    );
 }
 export default FindId;

@@ -76,8 +76,6 @@ public class MemberEntity {
 
     @Column(name = "OWNED_CRD")
     private int ownedCrd;
-    @Column(name = "OWNED_POINT")
-    private int ownedPoint;
 
     @Column(name = "WIN")
     private Long win;

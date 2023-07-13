@@ -162,7 +162,7 @@ public class StadiumService {
         StadiumEntity6.setStdDetails("풋살장에 대한 상세 정보 7");
 
         StadiumEntity StadiumEntity7 = new StadiumEntity();
-        StadiumEntity7.setMngId("20");
+        StadiumEntity7.setMngId("1");
         StadiumEntity7.setStdName("풋살장 8");
         StadiumEntity7.setStdLink("http://www.example.com/8");
         StadiumEntity7.setXCor("37.493031");

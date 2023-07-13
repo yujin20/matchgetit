@@ -21,7 +21,7 @@ public class MatchEntity{
     @JoinColumn(name="PARTY_ID")
     private PartyEntity party;
     @ManyToOne
-    @JoinColumn(name="STD_ID", nullable = true)
+    @JoinColumn(name="STD_ID",nullable = true)
     private StadiumEntity stadium;
     @Enumerated(EnumType.STRING)
     @Column(name="ACCEPT")
@@ -32,8 +32,6 @@ public class MatchEntity{
     private Date searchEnd;
     @Column(name="PYM_CRD")
     private Long crd;
-    @Column(name="PYM_POINT")
-    private Long point;
     @Column(name="CYCLE")
     private int cycle;
 }

@@ -32,6 +32,8 @@ public class InquiryCommentEntity extends BaseEntity {
 
     private Boolean isEdited = false;
 
+    private String writerName;
+
 
     public InquiryCommentEntity createComment(InquiryEntity inquiry, List<InquiryCommentEntity> subComments) {
         InquiryCommentEntity comment = new InquiryCommentEntity();

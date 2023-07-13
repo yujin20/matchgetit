@@ -46,6 +46,8 @@ public class QInquiryEntity extends EntityPathBase<InquiryEntity> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
 
+    public final StringPath writerName = createString("writerName");
+
     public QInquiryEntity(String variable) {
         super(InquiryEntity.class, forVariable(variable));
     }

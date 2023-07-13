@@ -11,6 +11,7 @@
   width:100%;
   background-color:rgba(0,0,0,0.1);
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 .applicationContainer::-webkit-scrollbar {
 width: 0;
@@ -40,7 +41,6 @@ background: transparent;
 .matchingTitle{
   margin-top: 1%;
   font-weight: 900;
-  /*margin-bottom: 5%;*/
 }
 .applicationContainer form{
   width:100%;
@@ -51,9 +51,12 @@ background: transparent;
   flex-direction: column;
   margin-top: 2.5%;
   margin-bottom: 2.5%;
-  /*overflow-y: scroll;*/
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
   background-color: rgba(255, 255, 255, 0.25);
+}
+.applicationContainer form::-webkit-scrollbar {
+  display: none;
 }
 .address,.time,.party{
   width:50%;
@@ -85,7 +88,6 @@ background: transparent;
 
 .inputMatchData {
   flex: 1;
-  /* 기타 스타일 속성들 */
 }
 .inputWithButton .mBtn.fButton.pBtn {
   border: transparent;
@@ -106,7 +108,6 @@ background: transparent;
   cursor: pointer;
   font-weight: bold;
   padding: 1% 10%;
-  /*margin-bottom: 5%;*/
   font-size: 15%;
 }
 .pointContainer{
@@ -115,9 +116,8 @@ background: transparent;
 }
 
 .pointBtn{
-  height: 100%;
   margin-top: 10%;
-  padding: 2% 15% 1.5% 3%;
+  padding: 3% 15% 3% 3%;
   margin-bottom: 1rem;
   font-size: 15px;
   background-color: #FFFFFF;
@@ -132,12 +132,8 @@ background: transparent;
 }
 
 .mSubBtn{
-  /*padding: 2% 2%;*/
-  /*margin-bottom: 20px;*/
-  /*font-size: 40%;*/
-  /*justify-content: right;*/
   position: absolute;
-  top: 20%;
+  top: 15%;
   right: 5%;
   left: auto;
   padding: 0.5rem 0.5rem;
@@ -163,7 +159,6 @@ background: transparent;
 
 .timeSelect {
   width: 200px;
-  padding: 8px 12px;
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -180,7 +175,6 @@ background: transparent;
 }
 
 .mDate {
-  /*border: none;*/
   color: #333;
   outline: none;
   transition: border-color 0.3s;
@@ -225,14 +219,12 @@ background: transparent;
   padding: 2% 5%;
 }
 .partyList{
-  /*display: flex;*/
   justify-content: center;
   align-items: center;
   flex-direction: row;
 }
 .Pname{
   font-size: 40px;
-  /*display:inline-block;*/
   color: #FFFFFF;
   display: flex;
 }
@@ -298,10 +290,6 @@ background: transparent;
   .subTitle{
     text-align: center;
   }
-  .mSubBtn{
-    /*padding: 5% 5%;*/
-    /*margin-bottom: 5rem;*/
-  }
   .pointContainer{
     width: 70%;
     height: 45px;
@@ -321,9 +309,7 @@ background: transparent;
   }
 }
 
-/* Add your existing CSS styles here */
 
-/* Style the custom mTime popup */
 .timeselectContainer{
   display: flex;
   align-items: center;

@@ -24,6 +24,5 @@ public class MatchDTO{
     private Date searchStart;
     private Date searchEnd;
     private Long crd;
-    private Long point;
     private int cycle;
 }

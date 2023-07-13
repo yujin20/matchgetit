@@ -64,9 +64,9 @@ public class RankService {
                     rankDTOList.add(rankDTO);
                 } else if(lose == null) {
                     RankDTO rankDTO = new RankDTO(rE.getUserId(), grade, rE.getName(),
-                            rE.getRating(), rE.getWin(), 0L,"0%",currentRank);
+                            rE.getRating(), rE.getWin(), 0L,"100%",currentRank);
                     rankDTOList.add(rankDTO);
-                } else if (win == null) {
+                } else {
                     RankDTO rankDTO = new RankDTO(rE.getUserId(), grade, rE.getName(),
                             rE.getRating(), 0L, rE.getLose(), "0%",currentRank);
                     rankDTOList.add(rankDTO);

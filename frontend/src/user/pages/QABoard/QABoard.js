@@ -127,7 +127,6 @@ function QABoard({session}) {
                   <td>{data.title}</td>
                   <td>{data.createdBy}</td>
                   <td>{formatDateTime(data.regTime)}</td>
-                <hr/>
               </tr>
                 {expandedRowIndex === index && (
                     <tr>

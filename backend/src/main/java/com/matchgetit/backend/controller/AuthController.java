@@ -52,7 +52,7 @@ public class AuthController {
             if(member!=null){
                 String token = jwtTokenProvider.generateToken(member.getEmail());
                 System.out.println("토큰>>>>>>>"+token);
-                session.setAttribute("jwtToken",token);
+                session.setAttribute("token",token);
                 session.setAttribute("member",member);
                 return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
             }else{

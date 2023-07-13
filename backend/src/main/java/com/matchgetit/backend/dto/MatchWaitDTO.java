@@ -16,6 +16,5 @@ public class MatchWaitDTO {
     private Date searchEnd;
     private String team;
     private Long crd;
-    private Long point;
     private int cycle;
 }

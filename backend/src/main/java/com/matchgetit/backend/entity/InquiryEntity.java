@@ -28,4 +28,6 @@ public class InquiryEntity extends BaseEntity{
     @OneToMany(mappedBy = "inquiry", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<InquiryCommentEntity> comments = new ArrayList<>();
 
+    private String writerName;
+
 }

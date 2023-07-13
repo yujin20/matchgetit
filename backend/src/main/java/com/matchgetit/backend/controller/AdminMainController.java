@@ -1,9 +1,12 @@
 package com.matchgetit.backend.controller;
 
+import com.matchgetit.backend.constant.LogInType;
+import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.service.AdminDashboardService;
 import com.matchgetit.backend.service.AdminPageUserService;
 import com.matchgetit.backend.service.PaymentHistoryService;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,8 +30,18 @@ public class AdminMainController {
     }
 
     @GetMapping("/matchGetIt/admin/gate")
-    public String gate(HttpSession session) {
+    public String gate(HttpSession session, Model model, HttpServletRequest request) {
         System.out.println(session.getAttribute("member"));
+        System.out.println(session.getAttribute("jwtToken"));
+        MemberDTO member = (MemberDTO) session.getAttribute("member");
+
+        if (member == null || member.getLoginType() != LogInType.ADMIN) {
+            model.addAttribute("msg", "잘못된 접근입니다.");
+            model.addAttribute("url", "http://localhost:3000/");
+            return "admin/components/Utils/alert";
+        }
+
+//        return "forword:/matchGetIt/admin/login";
         return "redirect:/matchGetIt/admin";
     }
 

@@ -48,6 +48,8 @@ public class QInquiryCommentEntity extends EntityPathBase<InquiryCommentEntity> 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateTime = _super.updateTime;
 
+    public final StringPath writerName = createString("writerName");
+
     public QInquiryCommentEntity(String variable) {
         this(InquiryCommentEntity.class, forVariable(variable), INITS);
     }

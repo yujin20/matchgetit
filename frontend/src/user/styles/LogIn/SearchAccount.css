@@ -13,16 +13,12 @@ h3{
     opacity: 1;
     width: 40px;
 }
-div{
-    display: block;
-}
 .find-container{
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
-    height: 50vh;
     width: 100%;
 }
 label{
@@ -36,7 +32,7 @@ label{
 .button:hover{
     background-color: #0F59D6;
 }
-.button{
+.button_check{
     background-color: #00BFFF;
     padding: 10px 20px;
     border-radius: 10px;
@@ -66,13 +62,16 @@ label{
     margin-right: 10px;
 }
 .find_input{
-    border-radius: 10px;
-    padding: 3%;
+    border: 1px solid #d9e0e6;
+    background-color: #f8fafb;
     width: 40vh;
-    margin: 3%;
+    height: 54px;
+    border-radius: 16px;
+    padding: 14px 15px;
+    font-size: 16px;
     box-sizing: border-box;
-    transition: border-color 0.3s ease-in-out; /* hover 효과의 애니메이션 설정 */
-    border: 1px solid transparent;
+    outline: none;
+    margin-bottom: 5px;
 }
 .findInputData{
     position: relative;
@@ -196,7 +195,7 @@ label{
 }
 @media (max-width: 767px) {
     .search-box {
-        width:60%;
+        width:70%;
         height:70%;
     }
     .closeBtn {

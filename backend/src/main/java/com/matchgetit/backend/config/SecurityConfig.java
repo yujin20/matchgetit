@@ -31,7 +31,6 @@ public class SecurityConfig {
                 .requestMatchers("/matchGetIt/stadium/**").permitAll()
                 .requestMatchers(("/matchGetIt/rank/**")).permitAll()
                 .requestMatchers("/css/**").permitAll()//예외 페이지 구성
-
 //                .anyRequest().access("@securityConfig.hasValidToken(request)");
                 .anyRequest().permitAll();
         return http.build();
@@ -46,7 +45,7 @@ public class SecurityConfig {
             return jwtTokenProvider.validateToken(headerToken);
         }
         if (token != null) {
-            System.out.println(jwtTokenProvider.validateToken(token));
+//            System.out.println(jwtTokenProvider.validateToken(token));
             return jwtTokenProvider.validateToken(token);
         }else{
             return false;

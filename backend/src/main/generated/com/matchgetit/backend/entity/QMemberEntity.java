@@ -60,8 +60,6 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final NumberPath<Integer> ownedCrd = createNumber("ownedCrd", Integer.class);
 
-    public final NumberPath<Integer> ownedPoint = createNumber("ownedPoint", Integer.class);
-
     public final QPartyEntity party;
 
     public final EnumPath<com.matchgetit.backend.constant.PayState> payState = createEnum("payState", com.matchgetit.backend.constant.PayState.class);

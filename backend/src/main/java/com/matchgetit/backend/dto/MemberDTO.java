@@ -31,7 +31,6 @@ public class MemberDTO {
         private LogInType loginType;
         private AccountState accountState; //로그인 상태 변경
         private int ownedCrd;
-        private int ownedPoint;
         private Long win;
         private Long lose;
         private Long rating;
