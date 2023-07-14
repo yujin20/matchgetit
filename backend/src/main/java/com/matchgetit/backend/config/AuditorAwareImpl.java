@@ -34,7 +34,8 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 //        }
 
         if (userId == null || userId.isEmpty()) {
-            userId = "Anonymous";
+//            userId = "Anonymous";
+            userId = "관리자";
         }
         return Optional.of(userId);
 //        return Optional.of("테스터");

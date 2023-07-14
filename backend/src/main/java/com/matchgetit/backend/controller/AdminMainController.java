@@ -27,6 +27,7 @@ public class AdminMainController {
 //        userService.createUsers();
 //        dashboardService.createManagers();
 //        paymentService.createPayments();
+//        dashboardService.createDashboradDataEntity();
     }
 
     @GetMapping("/matchGetIt/admin/gate")
@@ -53,6 +54,12 @@ public class AdminMainController {
 
         Map<String, Long> managerCounts = dashboardService.getManagerCounts();
         model.addAttribute("managerCounts", managerCounts);
+
+        Map<String, Long> matchCounts = dashboardService.getMatchCounts();
+        model.addAttribute("matchCounts", matchCounts);
+
+        Map<String, Long> inquiryCounts = dashboardService.getInquiryCounts();
+        model.addAttribute("inquiryCounts", inquiryCounts);
 
         return "admin/pages/Dashboard/Dashboard";
     }

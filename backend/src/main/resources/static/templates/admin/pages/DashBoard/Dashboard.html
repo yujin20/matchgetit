@@ -152,7 +152,7 @@
             width: 150px;
         }
 
-        .user .flexItem {
+        .user .flexItem, .inquiry .flexItem {
             background-color: #f1f1f1;
             width: 300px;
             padding: 7px;
@@ -168,6 +168,14 @@
             position: absolute;
             top: 130px;
             right: 30px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .inquiry div > span {
+            cursor: pointer;
         }
     </style>
     <!-- <th:block th:replace="~{admin/AdminHeader.html::style}"></th:block> -->
@@ -192,10 +200,10 @@
                 <span>금일 신규 회원 수: <span th:text="${userCounts.get('signUpToday')}">00</span>명</span>
             </div>
             <div class="flexItem">
-                <span>현재 매칭 중인 회원: <span :text="${userCounts.get('signUpToday')}">00</span>명</span>
+                <span>현재 매칭 중인 회원: <span :text="${userCounts.get('matchingUsers')}">00</span>명</span>
             </div>
             <div class="flexItem">
-                <span>금일 탈퇴 회원 수: <span :text="${userCounts.get('signUpToday')}">00</span>명</span>
+                <span>금일 탈퇴 회원 수: <span th:text="${userCounts.get('canceledMembership')}">00</span>명</span>
             </div>
         </div>
     </div>
@@ -223,7 +231,7 @@
         </div>
     </div>
 
-    <div class="info-tile flexbox msgtile" style="display: none;">
+    <div class="info-tile flexbox msgtile hide">
         <div class="tile-header">
             <span>채팅 상담</span>
         </div>
@@ -256,11 +264,29 @@
         </div>
     </div>
 
-    <div class="info-tile flexbox stadium">
+    <div class="info-tile flexbox inquiry">
+        <div class="tile-header">
+            <span>문의</span>
+        </div>
+        <div class="flexbox tile-body">
+            <div class="flexItem">
+                <span onclick="linkToInquiryBoard(1)">오늘 등록된 문의: <span th:text="${inquiryCounts.get('registeredToday')}">00</span>개</span>
+            </div>
+            <div class="flexItem">
+                <span onclick="linkToInquiryBoard(2)">접수 대기 중인 문의: <span th:text="${inquiryCounts.get('waiting')}">00</span>개</span>
+            </div>
+            <div class="flexItem">
+                <span onclick="linkToInquiryBoard(3)">처리 중인 문의: <span th:text="${inquiryCounts.get('inProgress')}">00</span>개</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-tile flexbox-row stadium">
         <div class="tile-header">
             <span>구장</span>
         </div>
-        <div class="flexbox-row tile-body2">
+        <canvas id="stadiumChart"></canvas>
+        <div class="flexbox-row tile-body2 hide">
             <div class="flexbox">
                 <span>매칭 중</span>
                 <span>00구장</span>
@@ -284,20 +310,23 @@
             <span>경기</span>
         </div>
         <div class="flexbox tile-body">
-            <div class="flexItem">
-                <span>오늘 예약된 경기: 00개</span>
+            <div class="flexItem hide">
+                <span>오늘 예약된 경기: <span :text="${matchCounts.get('reservedToday')}">00</span>개</span>
             </div>
             <div class="flexItem">
-                <span>진행 중인 경기: 00개</span>
+                <span>현재 인원 모집 완료된 경기: <span th:text="${matchCounts.get('allMatchWait')}">00</span>개</span>
             </div>
             <div class="flexItem">
-                <span>진행 예정인 경기: 00개</span>
+                <span>진행 중인 경기: <span th:text="${matchCounts.get('proceeding')}">00</span>개</span>
+            </div>
+            <div class="flexItem hide">
+                <span>진행 예정인 경기: <span :text="${matchCounts.get('startSoon')}">00</span>개</span>
             </div>
             <div class="flexItem">
-                <span>오늘 완료된 경기: 00개</span>
+                <span>오늘 완료된 경기: <span th:text="${matchCounts.get('finished')}">00</span>개</span>
             </div>
             <div class="flexItem">
-                <span>오늘 취소된 경기: 00개</span>
+                <span>오늘 취소된 경기: <span th:text="${matchCounts.get('canceled')}">00</span>개</span>
             </div>
         </div>
     </div>
@@ -331,7 +360,7 @@
         </div>
     </div>
 
-    <div id="test" onclick="$('.notify').show(); $('#test').hide();">
+    <div id="test" onclick="$('.notify').show(); $('#test').hide();" style="display: none;">
         <b style="font-size: 1.2rem">알림창 열기</b>
     </div>
 
@@ -370,7 +399,9 @@
             datasets: [{
                 label: '총 회원 수 현황',
                 data: [188, 193, 200, 210, 225, 232, 240],
-                borderWidth: 1
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
             }]
         },
         // options: {
@@ -381,6 +412,37 @@
         //     }
         // }
     });
+
+    const stadiumChartArea = document.getElementById("stadiumChart").getContext("2d");
+    new Chart(stadiumChartArea, {
+        type: 'doughnut',
+        data: {
+            labels: ['매칭 중', '매칭 가능', '매칭 불가'],
+            datasets: [{
+                label: '구장 수',
+                data: [18, 30, 10],
+                hoverOffset: 10
+            }]
+        }
+    })
+
+    function linkToInquiryBoard(cd) {
+        console.log('onclick')
+        let url = '/matchGetIt/admin/inquiryBoard';
+        switch (cd) {
+            case 1:
+                let today = new Date().toISOString().slice(0, 10);
+                url += '?regDateStart='+today+'&regDateEnd='+today;
+                break;
+            case 2:
+                url += '?state=접수 대기';
+                break;
+            case 3:
+                url += '?state=처리 중';
+                break;
+        }
+        location.href = url;
+    }
 </script>
 
 <th:block th:replace="~{/admin/components/Sidebar/NavigationBar.html::navFunc}" th:inline="javascript"></th:block>

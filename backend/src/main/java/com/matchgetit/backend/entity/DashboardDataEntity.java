@@ -1,9 +1,13 @@
 package com.matchgetit.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "DASHBOARD_DATA")
+@Getter @Setter @ToString
 public class DashboardDataEntity {
     @Id
     @Column(name = "dashboard_data_id")
@@ -17,3 +21,4 @@ public class DashboardDataEntity {
     private Integer canceledMatch;
 
 }
+// 병합에 아직 반영되지 않은 파일.

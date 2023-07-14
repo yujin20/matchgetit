@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -84,9 +85,9 @@ public class InquiryRepositoryCustomImpl implements InquiryRepositoryCustom {
         if (regDateStart == null || regDateEnd == null || regDateStart.isEmpty() || regDateEnd.isEmpty())
             return null;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime from = LocalDateTime.parse(regDateStart, formatter);
-        LocalDateTime to = LocalDateTime.parse(regDateEnd, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime from = LocalDate.parse(regDateStart, formatter).atStartOfDay();
+        LocalDateTime to = LocalDate.parse(regDateEnd, formatter).plusDays(1).atStartOfDay();
         return inquiryEntity.regTime.between(from, to);
     }
 

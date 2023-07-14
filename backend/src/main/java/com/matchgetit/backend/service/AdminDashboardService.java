@@ -1,13 +1,11 @@
 package com.matchgetit.backend.service;
 
-import com.matchgetit.backend.constant.AccountState;
-import com.matchgetit.backend.constant.EmploymentStatus;
-import com.matchgetit.backend.constant.Gender;
-import com.matchgetit.backend.constant.LogInType;
+import com.matchgetit.backend.constant.*;
+import com.matchgetit.backend.entity.DashboardDataEntity;
 import com.matchgetit.backend.entity.ManagerEntity;
 import com.matchgetit.backend.entity.MemberEntity;
-import com.matchgetit.backend.repository.ManagerRepository;
-import com.matchgetit.backend.repository.MemberRepository;
+import com.matchgetit.backend.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +21,12 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class AdminDashboardService {
+    private final DashboardDataRepository dashboardRepository;
     private final MemberRepository userRepository;
     private final ManagerRepository managerRepository;
+    private final MatchWaitRepository matchWaitRepository;
+    private final MatchRecRepository matchRecRepository;
+    private final InquiryRepository inquiryRepository;
 
     public void createManagers() {
         for (int i=21; i<=30; i++) {
@@ -56,14 +59,23 @@ public class AdminDashboardService {
         }
     }
 
+    public void createDashboradDataEntity() {
+        DashboardDataEntity dashboardData = new DashboardDataEntity();
+        dashboardData.setCanceledMembership(10);
+        dashboardRepository.save(dashboardData);
+    }
+
 
     @Transactional(readOnly = true)
     public Map<String, Long> getUserCounts() {
         Map<String, Long> userCounts = new HashMap<>();
         userCounts.put("allUsers", userRepository.count());
         userCounts.put("signUpToday", userRepository.countByRegDate(Date.valueOf(LocalDate.now())));
+
 //        long withdrawal = userRepository.countByRegDateBefore(Date.valueOf(LocalDate.now().minusDays(1)));
 //        System.out.println(withdrawal);
+
+        userCounts.put("canceledMembership", dashboardRepository.findCanceledMembership());
         return userCounts;
     }
 
@@ -77,4 +89,33 @@ public class AdminDashboardService {
         managerCounts.put("bannedManagers", managerRepository.countByEmploymentStatusLike(EmploymentStatus.leave));
         return managerCounts;
     }
+
+    @Transactional(readOnly = true)
+    public Map<String, Long> getMatchCounts() {
+        Map<String, Long> matchCounts = new HashMap<>();
+        matchCounts.put("finished", matchRecRepository.countByMatchStateIs(MatchState.COMPLETE));
+        matchCounts.put("canceled", matchRecRepository.countByMatchStateIs(MatchState.CANCEL));
+        matchCounts.put("proceeding", matchWaitRepository.countProceedingMatch());
+        matchCounts.put("allMatchWait", matchWaitRepository.count());
+
+//        matchCounts.put("canceled", Long.valueOf(getDashboardEntity().getCanceledMatch()));
+//        long sum = 0;
+//        for (long l: matchCounts.values()) sum += l;
+//        matchCounts.put("reservedToday", sum);
+
+        return matchCounts;
+    }
+
+    public Map<String, Long> getInquiryCounts() {
+        Map<String, Long> inquiryCounts = new HashMap<>();
+
+        LocalDateTime from = LocalDate.now().atStartOfDay();
+        LocalDateTime to = LocalDate.now().plusDays(1).atStartOfDay();
+        inquiryCounts.put("registeredToday", inquiryRepository.countByRegTimeBetween(from, to));
+
+        inquiryCounts.put("waiting", inquiryRepository.countByStateContains("접수 대기"));
+        inquiryCounts.put("inProgress", inquiryRepository.countByStateContains("처리 중"));
+        return inquiryCounts;
+    }
+
 }
