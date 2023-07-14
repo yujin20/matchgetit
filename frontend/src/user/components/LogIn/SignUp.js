@@ -98,6 +98,31 @@ const SignUp = () => {
                 }, 3000);
             });
     };
+    const handlePhoneNumberChange = (e) => {
+        const inputPhoneNumber = e.target.value;
+        const formattedPhoneNumber = formatPhoneNumber(inputPhoneNumber);
+        setPn(formattedPhoneNumber);
+    };
+
+    const formatPhoneNumber = (phoneNumber) => {
+        const strippedPhoneNumber = phoneNumber.replace(/-/g, ""); // 기존 하이픈 제거
+
+        let formattedNumber = "";
+
+        if (strippedPhoneNumber.length > 0) {
+            formattedNumber += strippedPhoneNumber.substring(0, 3);
+
+            if (strippedPhoneNumber.length > 3) {
+                formattedNumber += "-" + strippedPhoneNumber.substring(3, 7);
+
+                if (strippedPhoneNumber.length > 7) {
+                    formattedNumber += "-" + strippedPhoneNumber.substring(7, 11);
+                }
+            }
+        }
+
+        return formattedNumber;
+    };
 
     const validatePhoneNumber = () => {
         axiosInstance
@@ -190,7 +215,7 @@ const SignUp = () => {
                                 type="tel"
                                 placeholder="전화번호 000-0000-0000"
                                 value={pn}
-                                onChange={(e) => setPn(e.target.value)}
+                                onChange={handlePhoneNumberChange}
                                 required
                             />
                             <button className="duplicateButton" type="button" onClick={validatePhoneNumber}>

@@ -1,10 +1,7 @@
 package com.matchgetit.backend.controller;
 import com.matchgetit.backend.constant.AcceptType;
 import com.matchgetit.backend.constant.GameType;
-import com.matchgetit.backend.dto.MatchDTO;
-import com.matchgetit.backend.dto.MatchWaitDTO;
-import com.matchgetit.backend.dto.MemberDTO;
-import com.matchgetit.backend.dto.PartyDTO;
+import com.matchgetit.backend.dto.*;
 import com.matchgetit.backend.request.MatchRequest;
 import com.matchgetit.backend.request.MemberIdRequest;
 import com.matchgetit.backend.service.*;
@@ -26,6 +23,7 @@ public class MatchController {
     private final PartyAcceptService partyAcceptService;
     private final MatchService matchService;
     private final MatchWaitService matchWaitService;
+    private final MatchRecService matchRecService;
 
     @PostMapping("/start")
     public ResponseEntity<String> startMatching( @RequestBody MatchRequest requestData) {
@@ -220,7 +218,17 @@ public class MatchController {
         }catch(Exception e){
             return new ResponseEntity<>(-1,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }//매칭 결과에 있는 리스트 반환 메소드
+
+    @PostMapping("/matchHistory")
+    public ResponseEntity<List<MatchRecDTO>> getMatchHistory(@RequestParam String userId,@RequestParam String date){
+        try {
+            List<MatchRecDTO> recList =matchRecService.getMatchHistory(userId,date);
+            return new ResponseEntity<>(recList, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(new ArrayList<>(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-}//매칭 결과에 있는 리스트 반환 메소드
+}
 
 

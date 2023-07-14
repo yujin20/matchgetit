@@ -53,22 +53,11 @@ public class ManagerController {
     }
 
     @GetMapping("/managers")
-    public String getManagerList(HttpServletRequest request,
-                                 @RequestParam(defaultValue = "1") int page,
-                                 @RequestParam(required = false) String search) {
-        int pageSize = 12; // 페이지당 표시할 아이템 수
-        Pageable pageable = PageRequest.of(page, pageSize);
-
-        Page<MemberEntity> managerPage;
-        if (search != null && !search.isEmpty()) {
-            managerPage = memberRepository.findByNameContainingIgnoreCaseAndLoginType(search, LogInType.MANAGER, pageable);
-        } else {
-            managerPage = memberRepository.findByLoginType(LogInType.MANAGER, pageable);
-        }
-
-        List<MemberEntity> managerList = managerPage.getContent();
-
+    public String getManagerList(HttpServletRequest request) {
+        List<MemberEntity> managerList = memberRepository.findByLoginType(LogInType.MANAGER);
         List<MemberDTO> memberDTOList = new ArrayList<>();
+
+
         for (MemberEntity memberEntity : managerList) {
             MemberDTO memberDTO = new MemberDTO();
             memberDTO.setUserId(memberEntity.getUserId());
@@ -76,7 +65,7 @@ public class ManagerController {
             memberDTO.setPn(memberEntity.getPn());
 
             ManagerEntity manager = memberEntity.getManagerEntity();
-            if (manager != null) {
+            if(manager != null){
                 String managerImage = manager.getManagerImage();
 
                 ManagerDTO managerDTO = new ManagerDTO();
@@ -87,16 +76,12 @@ public class ManagerController {
             memberDTOList.add(memberDTO);
         }
 
+
+
         request.setAttribute("managerList", memberDTOList);
-
-        int totalPages = managerPage.getTotalPages(); // 전체 페이지 수
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("currentPage", page);
-
         return "admin/pages/Manage/Manager";
     }
 
-    //매니저 삭제
     @PutMapping("/deactivate/{userId}")
     public ResponseEntity<String> deactivateManager(@PathVariable Long userId) {
         MemberEntity memberEntity = memberRepository.findById(userId).orElse(null);

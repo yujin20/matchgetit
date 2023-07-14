@@ -229,7 +229,7 @@ function FriendlyMatch({ session }) {
                     파티 생성
                 </button>
                 {partyopenStatus && (
-                    <div className="party">
+                    <>
                         <div className="inputWithButton">
                             <input
                                 type="text"
@@ -271,7 +271,7 @@ function FriendlyMatch({ session }) {
                             </div>
                         ))}
                     </div>
-                </div>
+                </>
             )}
                 </div>
                     <div className="pointContainer">

@@ -145,7 +145,7 @@ background: transparent;
 }
 .inputMatchData {
   position: relative;
-  width: 70%;
+  width: 90%;
   /*height: 60%;*/
   padding: 1% 2.5%;
   border-radius: 10px;
@@ -269,7 +269,7 @@ background: transparent;
   }
 
   .party {
-    width: 120%;
+    width: 150%;
     white-space: nowrap;
     display: flex;
     justify-content: center;

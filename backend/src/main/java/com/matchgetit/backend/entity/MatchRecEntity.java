@@ -17,6 +17,9 @@ public class MatchRecEntity {
     @Column(name="MATCH_REC_ID")
     private Long matchRecId;
     @ManyToOne
+    @JoinColumn(name="MEMBER_ID")
+    private MemberEntity member;
+    @ManyToOne
     @JoinColumn(name="PARTY_LEADER_ID")
     private MemberEntity partyLeader;
     @ManyToOne

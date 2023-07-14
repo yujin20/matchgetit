@@ -46,7 +46,7 @@ const AddressSearch = ({ onSelect, visible, setVisible}) => {
         <div>
             {visible && (
                 <div>
-                    <button title="닫기" onClick={() => setVisible(false)}>닫기</button>
+                    <button className="button" title="닫기" onClick={() => setVisible(false)}>주소 창 닫기</button>
                     <div>
                         <DaumPostcode onComplete={handleComplete} height={700} />
                     </div>

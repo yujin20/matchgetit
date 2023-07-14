@@ -96,12 +96,15 @@ public class MatchWaitService{
     }
 
     public void matchEnd(List<MatchWaitDTO> match,String score,String etc) {
+        List<Long> partyList = match.stream().map(m->m.getParty().getPartyId()).distinct().toList();
         match.forEach(m->convertMatchRec(modelMapper.map(m,MatchWaitEntity.class),score,etc));
+         partyList.forEach(partyService::deleteParty);
     }
     @Transactional
     public void convertMatchRec(MatchWaitEntity matchWaitEntity,String score,String etc){
         MatchRecEntity matchRecEntity = new MatchRecEntity();
         matchRecEntity.setPartyLeader(matchWaitEntity.getParty().getPartyLeader());
+        matchRecEntity.setMember(matchWaitEntity.getMember());
         matchRecEntity.setMatchScore(score);
         matchRecEntity.setMatchState((score.equals(":"))? MatchState.CANCEL :MatchState.COMPLETE);
         matchRecEntity.setTeam(matchWaitEntity.getTeam());
@@ -115,12 +118,9 @@ public class MatchWaitService{
         matchRecEntity.setApplicationTime(matchWaitEntity.getParty().getApplicationTime());
         matchRecEntity.setEtc(etc);
         MemberEntity member = matchWaitEntity.getMember();
-        Long partyId = member.getParty().getPartyId();
         memberRepository.save(member);
         matchWaitRepository.delete(matchWaitEntity);
-        //파티가 있으면 없애는 작업
         matchRecRepository.save(matchRecEntity);
-        partyService.deleteParty(partyId);
     }
     public void convertReverse(MatchWaitEntity matchWaitEntity) {
         MatchEntity matchEntity = new MatchEntity();

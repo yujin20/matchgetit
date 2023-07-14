@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>추가정보 입력</title>
-  <link href="../css/signUp.css" rel="stylesheet" type="text/css">
+  <link href="../css/GoogleSignUp.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="signUp-wrap">
@@ -62,22 +62,22 @@
           <input
                   type="date"
                   id="birthDay"
-                  class="timeSelect mDate"
-                  name="birthday"
+                  class="timeSelect_mDate"
+                  name="birthdayInput"
           />
         </div>
-        <div className="inputData">
-          <label for="pn">전화번호</label>
+        <div class="phoneNum">
+          <div class="pnLabel">전화번호:</div>
           <input
-                  class="signUpInput"
+                  class="pnInput"
                   type="tel"
-                  placeholder="전화번호 000-0000-0000"
-                  name="pn"
+                  name="pnInput"
                   id="pn"
           />
-          <button class="submitBtn" type="submit">
-            회원가입 완료
-          </button>
+        </div>
+        <button class="submitBtn" type="submit">
+          회원가입 완료
+        </button>
       </form>
     </div>
   </div>

@@ -45,6 +45,7 @@ function ManagerRecruitment({session}) {
                         <label htmlFor="name">성함: </label>
                         <input
                             type="text"
+                            className="managerInput"
                             id="name"
                             name="name"
                             value={userName}
@@ -55,6 +56,7 @@ function ManagerRecruitment({session}) {
                         <label htmlFor="pn">연락처: </label>
                         <input
                             type="text"
+                            className="managerInput"
                             id="pn"
                             name="pn"
                             value={phoneNumber}
@@ -65,6 +67,7 @@ function ManagerRecruitment({session}) {
                         <label htmlFor="gender">성별: </label>
                         <input
                             type="text"
+                            className="managerInput"
                             id="gender"
                             name="gender"
                             value={gender}

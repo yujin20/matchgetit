@@ -231,7 +231,7 @@ const LeagueMatch = ({ session }) => {
                 파티 생성
               </button>
               {partyopenStatus && (
-                  <div className="party">
+                  <>
                     <div className="inputWithButton">
                       <input
                           type="text"
@@ -273,7 +273,7 @@ const LeagueMatch = ({ session }) => {
                           </div>
                       ))}
                     </div>
-                  </div>
+                  </>
               )}
             </div>
             <div className="pointContainer">

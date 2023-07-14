@@ -93,9 +93,8 @@ const ManagerMatchPage = ({session,isMngMenuOpen,handleMngMenuToggle}) => {
                                     tileClassName={tileClassName}
                                     onClickDay={handleDateClick} // 날짜를 클릭했을 때 호출될 함수
                                 />
-                                <hr/>
 
-                                <table className="manager-match">
+                                <table className={`manager-match ${dateData.length>0 ? "fade-in" : "fade-out"}`}>
                                     <colgroup></colgroup>
                                     <thead>
                                     <tr>

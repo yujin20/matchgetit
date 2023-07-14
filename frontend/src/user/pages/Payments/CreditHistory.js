@@ -41,22 +41,23 @@ function CreditHistory({ session }) {
                     className="calendar"
                     onClickDay={handleDateClick} // 날짜를 클릭했을 때 호출될 함수
                 />
-                <hr />
-                {selectedDateContent.length > 0 && (
-                    <>
-                        {selectedDateContent.map((content, index) => (
-                            <div className="CreditHistory" key={index}>
-                                <p>{content.transactionDate}</p>
-                                {content.price > 0 ? (
-                                    <p>포인트 충전</p>
-                                ) : (
-                                    <p>매칭 결제</p>
-                                )}
-                                <h3>{content.price}원</h3>
-                            </div>
-                        ))}
-                    </>
-                )}
+                <div className={`${selectedDateContent.length > 0 ? "fade-in" : "fade-out"}`}>
+                    {selectedDateContent.length > 0 && (
+                        <>
+                            {selectedDateContent.map((content, index) => (
+                                <div className="CreditHistory" key={index}>
+                                    <p>{content.transactionDate}</p>
+                                    {content.price > 0 ? (
+                                        <p>포인트 충전</p>
+                                    ) : (
+                                        <p>매칭 결제</p>
+                                    )}
+                                    <h3>{content.price}원</h3>
+                                </div>
+                            ))}
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );

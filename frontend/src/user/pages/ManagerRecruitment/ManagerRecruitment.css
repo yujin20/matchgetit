@@ -64,7 +64,7 @@
         background-color: #0F59D6;
     }
 
-   [type="text"]{
+.managerInput{
      border: 1px solid #d9e0e6;
      background-color: #f8fafb;
      width: 100%;

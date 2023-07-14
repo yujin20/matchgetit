@@ -53,9 +53,10 @@ public class MemberService {
         else if(proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
         member.setOwnedCrd(0);
+
         member.setRegDate(new Date());
-        member.setLastConnectionDate(new Date());
         member.setAccountState(AccountState.ACTIVE);
+        member.setLastConnectionDate(new Date());
         memberRepository.save(member);
     }
     public void socialSignUp(String email, String name, String pn, String birthDay, Gender gender, Proficiency proficiency,AccountType accountType,LogInType logInType) {
@@ -78,9 +79,10 @@ public class MemberService {
         else if(proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
         member.setOwnedCrd(0);
+
         member.setRegDate(new Date());
-        member.setLastConnectionDate(new Date());
         member.setAccountState(AccountState.ACTIVE);
+        member.setLastConnectionDate(new Date());
         memberRepository.save(member);
     }
     public void googleSignUp(String email, String name,String pn, String birthday, Gender gender, Proficiency proficiency, AccountType accountType, LogInType logInType) {
@@ -98,13 +100,14 @@ public class MemberService {
         member.setAccountType(accountType);
         member.setLoginType(logInType);
         member.setPayState(PayState.POINT);
-        member.setManagerSupportStatus(ManagerSupportStatus.BASIC);
         if (proficiency == Proficiency.ADVANCED) member.setRating(800L);
         else if (proficiency == Proficiency.MIDDLE) member.setRating(500L);
         else member.setRating(300L);
+        member.setOwnedCrd(0);
+
         member.setRegDate(new Date());
-        member.setLastConnectionDate(new Date());
         member.setAccountState(AccountState.ACTIVE);
+        member.setLastConnectionDate(new Date());
         memberRepository.save(member);
     }
 
@@ -223,28 +226,6 @@ public class MemberService {
         memberDTO.setName(memberEntity.getName());
         return memberDTO;
     }
-
-//    public List<MemberDTO> searchMembersByCondition(String searchCondition, String searchKeyword) {
-//        List<MemberDTO> allMembers = getAllMembers(); // getAllMembers() 메서드를 사용하여 모든 회원 데이터를 가져옵니다.
-//        List<MemberDTO> filteredMembers = new ArrayList<>();
-//
-//        // 검색 조건에 따라 회원을 필터링합니다.
-//        for (MemberDTO member : allMembers) {
-//            if ("name".equals(searchCondition) && member.getName().contains(searchKeyword)) {
-//                filteredMembers.add(member);
-//            } else if ("userNumber".equals(searchCondition) && member.getUserId().equals(searchKeyword)) {
-//                filteredMembers.add(member);
-//            } else if ("gameNumber".equals(searchCondition)) {
-//                // MemberDTO에서 PaymentRecordDTO를 얻고, 그 안에서 gameNumber를 확인하여 필터링합니다.
-//                PaymentRecordDTO paymentRecordDTO = (PaymentRecordDTO) member.getPaymentRecordDTO();
-//                if (paymentRecordDTO != null && paymentRecordDTO.getGameNumber().equals(searchKeyword)) {
-//                    filteredMembers.add(member);
-//                }
-//            }
-//        }
-//
-//        return filteredMembers;
-//    }
 
     public MemberDTO findMemberByIdManager(Long userId) {
         MemberEntity memberEntity = memberRepository.findByUserId(userId);

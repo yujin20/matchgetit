@@ -6,9 +6,13 @@
 }
 
 .fButton{
-    background-color:#2c7eff;
+  background-color:#2c7eff;
   border: white 1px;
   }
+.fButton.pointBtn{
+  background-color: #ffffff;
+  border: white 1px;
+}
 
   .fButton:hover{
     background-color: rgb(4, 49, 250);

@@ -19,6 +19,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>, Mem
     MemberEntity findByUserId(Long userId);//대기열에서 회원정보 찾을 시 사용.
     MemberEntity findByPn(String pn);
     Page<MemberEntity> findByLoginType(LogInType loginType, Pageable pageable);
+    List<MemberEntity> findByLoginType(LogInType loginType);
 
     // Dashboard 사용
     Page<MemberEntity> findByNameContainingIgnoreCaseAndLoginType(String name, LogInType loginType, Pageable pageable);

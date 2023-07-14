@@ -154,6 +154,10 @@
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    transition: background-color 1s;
+}
+.my-status_item-cash:hover{
+    background-color: #183b73;
 }
 
 .my-status_item-cash .my-cash{
