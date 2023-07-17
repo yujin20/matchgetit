@@ -227,6 +227,7 @@ public class MemberService {
         return memberDTO;
     }
 
+
     public MemberDTO findMemberByIdManager(Long userId) {
         MemberEntity memberEntity = memberRepository.findByUserId(userId);
 
@@ -245,7 +246,7 @@ public class MemberService {
         }
     }
 
-    public MemberDTO findMemberByIdManagerSupportRecord(Long userId) {
+    public MemberDTO findMemberByIdManagerSupportRecord(Long userId, ModelMapper modelMapper) {
         MemberEntity memberEntity = memberRepository.findByUserId(userId);
 
         if (memberEntity == null) {

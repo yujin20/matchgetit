@@ -13,11 +13,8 @@ import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.repository.MemberRepository;
 import com.matchgetit.backend.service.ManagerService;
 import com.matchgetit.backend.service.MemberService;
-import com.matchgetit.backend.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@RequestMapping("/matchGetIt")
+@RequestMapping("/matchGetIt/apply")
 @Controller
 @AllArgsConstructor
 public class UserController {
@@ -131,7 +128,7 @@ public class UserController {
 
     @GetMapping("/ManagerApplicantDetailsView/{userId}")
     public String viewManagerApplicantDetails(@PathVariable Long userId, Model model) {
-        MemberDTO member = memberService.findMemberByIdManagerSupportRecord(userId);
+        MemberDTO member = memberService.findMemberByIdManagerSupportRecord(userId, modelMapper);
 
         ManagerSupportRecordDTO managerSupportRecordDTO = new ManagerSupportRecordDTO();
         if (managerSupportRecordDTO != null) {

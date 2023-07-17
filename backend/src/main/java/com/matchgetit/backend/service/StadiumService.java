@@ -384,4 +384,8 @@ public class StadiumService {
         stadiumRepository.saveAll(stadiums);
     }
 
+    public StadiumDTO findStadiumByMngId(String mngId){
+        List<StadiumEntity> stadium = stadiumRepository.findByMngId(mngId);
+        return modelMapper.map(stadium.get(0),StadiumDTO.class);
+    }
 }

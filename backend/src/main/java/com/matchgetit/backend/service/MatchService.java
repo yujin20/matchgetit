@@ -179,4 +179,9 @@ public class MatchService{
     public int matchAllCount(){
         return matchRepository.findAll().size();
     }
+
+    public MatchDTO findByMember(MemberDTO member){
+        MatchEntity match = matchRepository.findByMember(modelMapper.map(member,MemberEntity.class));
+        return match!=null? modelMapper.map(match,MatchDTO.class):null;
+    }
 }

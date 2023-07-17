@@ -17,10 +17,25 @@ const ManagerMatchPage = ({session,isMngMenuOpen,handleMngMenuToggle}) => {
     const [marks, setMarks] = useState([]);
     const [selectDate, setSelectDate] = useState('');
     const [isOpenDetails , setIsOpenDetails] = useState(false);
+    const [stadium, setStadium] = useState(null);
+
+    useEffect(() => {
+        getStadium();
+    }, []);
 
     const handlePopupBtnClick = () => {
         setIsSuccess(true);
     };
+    const getStadium = () =>{
+        axiosInstance.post("matchGetIt/manager/getStadium",null,{params:{mngId:session.userId}})
+            .then(res=>{
+                console.log(res.data);
+                if(res.data !==null) setStadium(res.data);
+            })
+            .catch(err=>{
+                console.log(err.data);
+            })
+    }
 
 
     const handleDateClick = (date) => {
@@ -114,7 +129,7 @@ const ManagerMatchPage = ({session,isMngMenuOpen,handleMngMenuToggle}) => {
                                         <td>
                                             <div>
                                                 <button className="view" onClick={handlePopupBtnClick}>상세보기</button>
-                                                <MngViewDetails isSuccess={isSuccess} setIsSuccess={setIsSuccess} selectTime={con} session={session} selectDate={selectDate} handleDetail={handleDetail}/>
+                                                <MngViewDetails isSuccess={isSuccess} setIsSuccess={setIsSuccess} selectTime={con} session={session} selectDate={selectDate} stadium={stadium} handleDetail={handleDetail}/>
                                             </div>
                                         </td>
                                     </tr>

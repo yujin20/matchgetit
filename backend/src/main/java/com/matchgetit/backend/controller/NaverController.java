@@ -57,7 +57,7 @@ public class NaverController {
                 ,(user.getGender().equals("M")? Gender.MALE:Gender.FEMALE)
                 , Proficiency.valueOf(proficiency)
                 , AccountType.NAVER
-                , LogInType.NORMAL
+                , LogInType.ADMIN
         );
         MemberDTO member = memberService.findMemberByEmail(user.getEmail());
         session.setAttribute("member",member);

@@ -5,17 +5,27 @@
     margin: 0 auto;
     background-color: whitesmoke;
     max-width: 900px;
+    min-width: 360px;
 }
 
 .bulletin-board{
     height: 100%;
     width: 100%;
     max-width: 1000px;
+    min-width: 350px;
     margin: 0 auto;
     border: none;
+    align-items: center;
+    text-align: center;
+
 }
 .bulletin-board fieldset{
     border: none;
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+    min-width: 350px;
 }
 
 
@@ -50,6 +60,10 @@
     border: transparent;
 }
 
+
+.QABoardContent{
+    
+}
 
 .QADate{
     width:30%;

@@ -26,8 +26,6 @@ public class QManagerSupportRecordEntity extends EntityPathBase<ManagerSupportRe
 
     public final NumberPath<Long> Id = createNumber("Id", Long.class);
 
-    public final QManagerEntity manager;
-
     public final QMemberEntity managerUser;
 
     public final DateTimePath<java.util.Date> submissionDate = createDateTime("submissionDate", java.util.Date.class);
@@ -50,7 +48,6 @@ public class QManagerSupportRecordEntity extends EntityPathBase<ManagerSupportRe
 
     public QManagerSupportRecordEntity(Class<? extends ManagerSupportRecordEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.manager = inits.isInitialized("manager") ? new QManagerEntity(forProperty("manager"), inits.get("manager")) : null;
         this.managerUser = inits.isInitialized("managerUser") ? new QMemberEntity(forProperty("managerUser"), inits.get("managerUser")) : null;
     }
 

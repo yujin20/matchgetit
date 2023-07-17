@@ -48,9 +48,15 @@ public class MatchController {
                 throw new IllegalArgumentException("1,2,3,6명으로만 신청가능");
             }
             //포인트가 충분한가?(보류: 결제 시스템 미구현)
-            if(matchWaitService.validMatch(x,y,FormatDate.parseDate(selectedDate),selectedTime)){
+//            party.forEach(m->{
+//                MemberDTO member = memberService.findMemberById(Long.valueOf(m.getId()));
+//                if(member.getOwnedCrd()<2000) throw new RuntimeException("금액 부족한 파티원이 있습니다.");
+//            });
+
+
+            if(matchWaitService.validMatch(x,y,FormatDate.parseDate(selectedDate),selectedTime))
                 throw new IllegalArgumentException("신청한 위치나 시간을 변경해주십시오!(이미 잡혀있음)");
-            }
+
 
             //가능 시간인가 판별하는 로직
             partyService.createParty(partyLeaderId,address,x,y, FormatDate.parseDate(selectedDate),selectedTime,gameType);

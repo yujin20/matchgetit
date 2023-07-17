@@ -1,8 +1,12 @@
 package com.matchgetit.backend.controller;
 import com.matchgetit.backend.config.JwtTokenProvider;
 import com.matchgetit.backend.constant.AcceptType;
+import com.matchgetit.backend.dto.MatchDTO;
+import com.matchgetit.backend.dto.MatchWaitDTO;
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.dto.PartyAcceptDTO;
+import com.matchgetit.backend.service.MatchService;
+import com.matchgetit.backend.service.MatchWaitService;
 import com.matchgetit.backend.service.MemberService;
 import com.matchgetit.backend.service.PartyAcceptService;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +24,8 @@ import java.util.List;
 public class PartyAcceptController {
     private final MemberService memberService;
     private final PartyAcceptService partyAcceptService;
+    private final MatchService matchService;
+    private final MatchWaitService matchWaitService;
 
     @PostMapping("/searchId")
     public ResponseEntity<PartyAcceptDTO> findAccount(@RequestParam String id, @RequestParam String partyLeaderId) {
@@ -28,6 +34,10 @@ public class PartyAcceptController {
             System.out.println("받는 id:"+Long.parseLong(id));
             MemberDTO member = memberService.findMemberById(Long.parseLong(id));
             //PartyAcceptTable 할당
+            MatchDTO match= matchService.findByMember(member);
+            MatchWaitDTO matchWait = matchWaitService.findMatchWaitByMemberId(Long.valueOf(id));
+            if(match!=null||matchWait!=null)throw new RuntimeException("이미 매치 중인 유저입니다.");
+
             if(member!=null){
                 partyAcceptService.createPartyAccept(Long.parseLong(partyLeaderId),Long.parseLong(id));
                 PartyAcceptDTO partyAcceptDTO = partyAcceptService.getPartyAcceptByUserIdAndPartyLeaderId(Long.parseLong(id),Long.parseLong(partyLeaderId));

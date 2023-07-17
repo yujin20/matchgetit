@@ -43,6 +43,4 @@ public class MemberDTO {
         private PayState payState;
         private ManagerDTO managerDTO; // 매니저
         private ManagerSupportRecordDTO managerSupportRecordDTO;
-        private ManagerSupportRecordEntity managerSupportRecordEntity;
-
 }

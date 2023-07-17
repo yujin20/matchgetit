@@ -27,7 +27,7 @@ public class AdminMainController {
 //        userService.createUsers();
 //        dashboardService.createManagers();
 //        paymentService.createPayments();
-//        dashboardService.createDashboradDataEntity();
+        dashboardService.createDashboradDataEntity();
     }
 
     @GetMapping("/matchGetIt/admin/gate")

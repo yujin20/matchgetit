@@ -1,18 +1,12 @@
 package com.matchgetit.backend.controller;
 
 import com.matchgetit.backend.constant.*;
-import com.matchgetit.backend.dto.ManagerDTO;
-import com.matchgetit.backend.dto.ManagerSupportRecordDTO;
-import com.matchgetit.backend.dto.MatchWaitDTO;
-import com.matchgetit.backend.dto.MemberDTO;
+import com.matchgetit.backend.dto.*;
 import com.matchgetit.backend.entity.*;
 import com.matchgetit.backend.repository.ManagerRepository;
 import com.matchgetit.backend.repository.ManagerSupportRecordRepository;
 import com.matchgetit.backend.repository.MemberRepository;
-import com.matchgetit.backend.service.ManagerService;
-import com.matchgetit.backend.service.MatchWaitService;
-import com.matchgetit.backend.service.MemberService;
-import com.matchgetit.backend.service.UserService;
+import com.matchgetit.backend.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -38,12 +32,13 @@ import java.util.*;
 public class ManagerController {
     private final ManagerService managerService;
     private final ManagerSupportRecordRepository managerSupportRecordRepository;
-    private final UserService userService; // UserService 인스턴스 추가
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final ManagerRepository managerRepository;
     private final MemberService memberService;
     private final MatchWaitService matchWaitService;
+    private final StadiumService stadiumService;
+
 
 
 
@@ -82,6 +77,7 @@ public class ManagerController {
         return "admin/pages/Manage/Manager";
     }
 
+    //매니저 삭제
     @PutMapping("/deactivate/{userId}")
     public ResponseEntity<String> deactivateManager(@PathVariable Long userId) {
         MemberEntity memberEntity = memberRepository.findById(userId).orElse(null);
@@ -155,13 +151,21 @@ public class ManagerController {
 
     //일반유저가 매니저 신청때 사용되는 메서드
     @PostMapping("/submitForm/{userId}")
-    public ResponseEntity<String> submitForm(@PathVariable("userId") Long userId, @RequestBody ManagerSupportRecordDTO formDTO,HttpServletRequest request) {
+    public ResponseEntity<String> submitForm(@PathVariable("userId") Long userId, @RequestBody ManagerSupportRecordDTO formDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        MemberDTO memberDto = (MemberDTO)session.getAttribute("member");
-        MemberEntity member = modelMapper.map(memberDto,MemberEntity.class);
+        MemberDTO memberDto = (MemberDTO) session.getAttribute("member");
+        MemberEntity member = modelMapper.map(memberDto, MemberEntity.class);
+
         if (member != null) {
             member.setManagerSupportStatus(ManagerSupportStatus.WAITING);
             memberRepository.save(member);
+        }
+
+        // 중복 체크 로직
+        boolean isDuplicate = managerSupportRecordRepository.existsByManagerUserAndIdNot(member, formDTO.getId());
+
+        if (isDuplicate) {
+            return ResponseEntity.badRequest().body("이미 지원된 지원자입니다.");
         }
 
         // 매니저 지원 양식 제출 처리
@@ -173,9 +177,7 @@ public class ManagerController {
         // supportRecord를 DB에 저장
         managerSupportRecordRepository.save(supportRecord);
 
-
-
-        return ResponseEntity.ok("매니저지원이 완료됬습니다.");
+        return ResponseEntity.ok("매니저 지원이 완료되었습니다.");
     }
 
 
@@ -245,6 +247,15 @@ public class ManagerController {
             return new ResponseEntity<>("성공",HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>("실패",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/getStadium")
+    public ResponseEntity<StadiumDTO> getStadium(@RequestParam String mngId){
+        try{
+            StadiumDTO stadium= stadiumService.findStadiumByMngId(mngId);
+            return new ResponseEntity<>(stadium,HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

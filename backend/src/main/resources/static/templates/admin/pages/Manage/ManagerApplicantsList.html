@@ -72,11 +72,31 @@
       </tr>
       </tbody>
     </table>
-    <div class="pagination-container">
-      <ul id="pagingul">
-        <!-- 페이징은 JavaScript로 동적으로 생성됩니다 -->
-      </ul>
+
+    <div class="buttons-container">
+      <div class="pagination">
+        <a th:if="${currentPage > 1}" th:href="@{/matchGetIt/apply/getSupportedUsers(pages=1)}"
+           th:class="${currentPage == 1 ? 'disabled' : ''}" th:disabled="${currentPage == 1}">맨 처음</a>
+        <a th:if="${currentPage > 1}" th:href="@{/matchGetIt/apply/getSupportedUsers(pages=${currentPage - 1})}"
+           th:class="${currentPage == 1 ? 'disabled' : ''}" th:disabled="${currentPage == 1}">이전</a>
+
+        <span th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+          <a th:class="${pageNumber == currentPage ? 'active' : ''}"
+             th:href="@{/matchGetIt/apply/getSupportedUsers(pages=${pageNumber})}"
+             th:if="${pageNumber != currentPage}"
+             th:text="${pageNumber}"></a>
+          <span th:if="${pageNumber == currentPage}" th:text="${pageNumber}"></span>
+        </span>
+
+        <a th:if="${currentPage < totalPages}" th:href="@{/matchGetIt/apply/getSupportedUsers(pages=${currentPage + 1})}"
+           th:class="${currentPage == totalPages ? 'disabled' : ''}">다음</a>
+        <a th:if="${currentPage < totalPages}" th:href="@{/matchGetIt/apply/getSupportedUsers(pages=${totalPages})}"
+           th:class="${currentPage == totalPages ? 'disabled' : ''}">맨 끝</a>
+
+      </div>
     </div>
+
+
   </div>
 </section>
 
@@ -108,7 +128,7 @@
         // 선택한 지원자를 매니저로 등록하는 API 호출
         selectedApplicants.forEach(applicantId => {
           $.ajax({
-            url: `/matchGetIt/registerManager/${applicantId}`,
+            url: `/matchGetIt/apply/registerManager/${applicantId}`,
             type: 'PUT',
             dataType: 'json',
             success: function (response) {
@@ -128,92 +148,48 @@
     }
 
     function viewUserDetails(userId) {
-      const url = '/matchGetIt/ManagerApplicantDetailsView/' + userId;
+      const url = '/matchGetIt/apply/ManagerApplicantDetailsView/' + userId;
       window.location.href = url;
     }
 
     $(document).ready(function () {
-      // 페이지 로드 시 지원자 목록을 가져와서 테이블에 표시
-      loadApplicants();
+  // 페이지 로드 시 지원자 목록을 가져와서 테이블에 표시
+  loadApplicants();
 
-      // 지원자 목록을 가져오고 테이블에 렌더링하는 함수
-      function loadApplicants() {
-        $.ajax({
-          url: '/matchGetIt/getSupportedUsers',
-          type: 'GET',
-          dataType: 'json',
-          success: function (response) {
-            renderApplicants(response);
-          },
-          error: function (error) {
-            console.error(error);
-          }
-        });
+  // 지원자 목록을 가져오고 테이블에 렌더링하는 함수
+  function loadApplicants() {
+    $.ajax({
+      url: '/matchGetIt/apply/getSupportedUsers',
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        renderApplicants(response);
+      },
+      error: function (error) {
+        console.error(error);
       }
+    });
+  }
 
-      // 지원자 목록을 테이블에 렌더링하는 함수
-      function renderApplicants(applicants) {
-        const tbody = $('table tbody');
-        tbody.empty();
+  // 지원자 목록을 테이블에 렌더링하는 함수
+  function renderApplicants(applicants) {
+    const tbody = $('table tbody');
+    tbody.empty();
 
-        const itemsPerPage = 5; // 페이지당 표시할 지원자 수
-        const pageCount = Math.ceil(applicants.length / itemsPerPage); // 전체 페이지 수
+    // 지원자 데이터를 테이블에 추가
+    applicants.forEach(applicant => {
+      const row = $('<tr></tr>');
+      row.append(`<td><input type="checkbox" name="selectedApplicant" value="${applicant.userId}" /></td>`);
+      row.append(`<td>${applicant.userId}</td>`);
+      row.append(`<td>${applicant.name}</td>`);
+      row.append(`<td>${applicant.pn}</td>`);
+      row.append(`<td>${applicant.gender}</td>`);
+      row.append(`<td>${applicant.managerSupportRecordDTO != null ? applicant.managerSupportRecordDTO.activityZone : '-'}</td>`);
+      row.append(`<td><button onclick="viewUserDetails('${applicant.userId}')">상세 정보</button></td>`);
+      tbody.append(row);
+    });
+  }
 
-        let currentPage = 1; // 현재 페이지
-        renderPage(currentPage); // 현재 페이지의 데이터 표시
-
-        // 페이징 번호 동적 생성
-        function createPagingNumbers() {
-          const pagingUl = $('#pagingul');
-          pagingUl.empty();
-
-          for (let i = 1; i <= pageCount; i++) {
-            const li = `<li><a href="#" onclick="renderPage(${i})">${i}</a></li>`;
-            pagingUl.append(li);
-          }
-        }
-
-        // 페이지 이동 함수
-        function renderPage(page) {
-          const start = (page - 1) * itemsPerPage;
-          const end = start + itemsPerPage;
-          const pageApplicants = applicants.slice(start, end);
-
-          tbody.empty();
-
-          for (const applicant of pageApplicants) {
-            const activityZone = applicant.managerSupportRecordDTO ? applicant.managerSupportRecordDTO.activityZone : '-';
-            const row = `
-              <tr>
-                <td><input type="checkbox" name="selectedApplicant" value="${applicant.userId}" /></td>
-                <td>${applicant.userId}</td>
-                <td>${applicant.name}</td>
-                <td>${applicant.pn}</td>
-                <td>${applicant.gender}</td>
-                <td>${activityZone}</td>
-                <td><button onclick="viewUserDetails('${applicant.userId}')">상세 정보</button></td>
-              </tr>
-            `;
-            tbody.append(row);
-          }
-
-          // 현재 페이지 표시
-          createPagingNumbers();
-          highlightCurrentPage(page);
-          currentPage = page;
-        }
-
-        // 현재 페이지 표시
-        function highlightCurrentPage(page) {
-          const pagingLinks = $('#pagingul a');
-          pagingLinks.removeClass('active');
-          $(pagingLinks[page - 1]).addClass('active');
-        }
-
-        if (applicantUserId) {
-          viewUserDetails(applicantUserId);
-        }
-      }
     });
   </script>
 </th:block>

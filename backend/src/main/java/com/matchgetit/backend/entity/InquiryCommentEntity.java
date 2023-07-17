@@ -1,5 +1,6 @@
 package com.matchgetit.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matchgetit.backend.dto.InquiryCommentDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class InquiryCommentEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inquiry_id")
+    @JsonIgnore
     private InquiryEntity inquiry;
 
     @ManyToOne(fetch = FetchType.LAZY)

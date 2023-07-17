@@ -1,5 +1,6 @@
 package com.matchgetit.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class InquiryEntity extends BaseEntity{
     private String state;
 
     @OneToMany(mappedBy = "inquiry", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<InquiryCommentEntity> comments = new ArrayList<>();
 
     private String writerName;

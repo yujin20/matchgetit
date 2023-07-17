@@ -66,6 +66,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_2"
                         name="item"
                         className="radio-gnb"
@@ -80,6 +81,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_3"
                         name="item"
                         className="radio-gnb"
@@ -95,6 +97,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_4"
                         name="item"
                         className="radio-gnb"
@@ -110,6 +113,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_5"
                         name="item"
                         className="radio-gnb"
@@ -124,6 +128,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_6"
                         name="item"
                         className="radio-gnb"
@@ -138,6 +143,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_7"
                         name="item"
                         className="radio-gnb"
@@ -152,6 +158,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_9"
                         name="item"
                         className="radio-gnb"
@@ -167,6 +174,7 @@ const ChargeComponent = ({session}) => {
                   <li className="radio-item radio-item__box">
                     <input
                         type="radio"
+                        classname="charge"
                         id="item_10"
                         name="item"
                         className="radio-gnb"

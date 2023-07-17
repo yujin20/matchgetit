@@ -146,7 +146,7 @@
     text-align: center;
     align-items: center;
 }
-[type="radio"]+label {
+.charge[type="radio"]+label {
     position: relative;
     display: flex;
     align-items: center;

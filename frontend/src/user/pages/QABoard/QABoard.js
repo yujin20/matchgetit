@@ -19,6 +19,7 @@ function QABoard({session}) {
       try {
         const response = await fetch('/matchGetIt/userInquiryList');
         const data = await response.json();
+        console.log(data);
         if (Array.isArray(data)) {
           setTableData(data);
         } else {
@@ -35,9 +36,9 @@ function QABoard({session}) {
     const fetchData2 = async () => {
       try {
         const response2 = await fetch('/matchGetIt/userInquiryCommentList');
-        const comment = await response2.json();
-        if (Array.isArray(comment)) {
-          setComment(comment);
+        const commentData = await response2.json();
+        if (Array.isArray(commentData)) {
+          setComment(commentData);
         } else {
           setComment([]);
         }
@@ -62,9 +63,12 @@ function QABoard({session}) {
     setCurrentPage(pageNumber);
   };
 
-
   const handleRegisterClick = () => {
     setShowQABoardInquiry(true)
+  };
+
+  const handleBackClick = () => {
+    setShowQABoardInquiry(false);
   };
 
   const formatDateTime = (dateTimeString) => {
@@ -72,9 +76,9 @@ function QABoard({session}) {
     return dateTime.toLocaleString('en-US', {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
+      day: '2-digit'
+      //     ,hour: '2-digit',
+      // minute: '2-digit',
     });
   };
 
@@ -102,6 +106,10 @@ function QABoard({session}) {
   //   setComments((prevComments) => [...prevComments, newComment]);
   //   setCommentInput('');
   // };
+
+  const getCommentsByInquiryId = (inquiryId) => {
+    return comment.filter((commentItem) => commentItem.inquiryId === inquiryId);
+  };
 
 
   return (
@@ -131,19 +139,14 @@ function QABoard({session}) {
                 {expandedRowIndex === index && (
                     <tr>
                       <td colSpan="3">
-                        <div>내용: {data.content}</div>
-                        <div>
-                          {comment.map((comment)=>{
-                            if(comment.inquiryId == data.inquiryId) {
-                              return (
-                                <div>
-                                  <p>{comment.content}</p>
-                                </div>
-                              );
-                            } else {
-                              return null;
-                            }
-                          })}
+                        <div className="QABoardContent">{data.content}</div>
+                        <hr />
+                        <div className="QABoardCommentdiv">
+                          {getCommentsByInquiryId(data.inquiryId).map((commentItem, commentIndex)=>(
+                              <div key={commentIndex} className="QABoardComment">
+                                <p>관리자 : {commentItem.content}</p>
+                              </div>
+                          ))}
                         </div>
                         {/*<form onSubmit={(event) => handleCommentSubmit(event, index)}>*/}
                         {/*  <input type="text" value={commentInput} onChange={handleCommentInputChange} />*/}
@@ -171,7 +174,7 @@ function QABoard({session}) {
         </div>
       </div>
       ) : (
-          <QARegisterForm session={session} />
+          <QARegisterForm session={session} onBackClick={handleBackClick} />
       )}
       </fieldset>
 

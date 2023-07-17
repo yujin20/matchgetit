@@ -44,8 +44,8 @@
             <!-- 매니저 지원자 유저 정보를 표시할 부분 -->
             <h2>
                 <span th:text="${member.name}"></span>지원자의 정보
-                <button onclick="registerManager()" style="margin-left: 100px;">등록</button>
-                <button onclick="rejectRegistration()">등록 거절</button>
+                <button id="registerButton" style="margin-left: 100px;">등록</button>
+                <button id="rejectButton">등록 거절</button>
             </h2>
         </div>
         <p>유저 번호: <span th:text="${member.userId}"></span></p><br>
@@ -62,52 +62,49 @@
 
 <th:block layout:fragment="script">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../../components/js/loadAdminNB.js"></script>
     <script>
-    function registerManager() {
-        var userId = [[${member.userId}]];
-        if (confirm("등록하시겠습니까?")) {
-            // 서버로 데이터 전송
-            $.ajax({
-                type: 'PUT',
-                url: `/matchGetIt/registerManager/${userId}`,
-                success: function(response) {
-                    alert(response);
-                    // 등록 완료 메시지 출력
-                    alert("등록이 완료되었습니다.");
-                    // ManagerApplicantsList 페이지로 이동하는 코드 작성
-                    window.location.href = "http://localhost:8081/matchGetIt/getSupportedUsers";
-                },
-                error: function(error) {
-                    console.error(error);
-                    alert("등록 중 오류가 발생했습니다.");
-                }
-            });
-        }
-    }
+    $(document).ready(function() {
+        // 등록 버튼 클릭 이벤트 리스너 추가
+        $('#registerButton').click(function() {
+            var userId = [[${member.userId}]];
+            if (confirm("등록하시겠습니까?")) {
+                $.ajax({
+                    type: 'PUT',
+                    url: `/matchGetIt/apply/registerManager/${userId}`,
+                    success: function(response) {
+                        alert(response);
+                        alert("등록이 완료되었습니다.");
+                        window.location.href = "http://localhost:8081/matchGetIt/apply/getSupportedUsers";
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        alert("등록 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        });
 
-    function rejectRegistration() {
-        var userId = [[${member.userId}]];
-        if (confirm("등록을 거절하시겠습니까?")) {
-            // 서버로 데이터 전송
-            $.ajax({
-                type: 'PUT',
-                url: `/matchGetIt/rejectRegistration/${userId}`,
-                success: function(response) {
-                    alert(response);
-                    // 등록 완료 메시지 출력
-                    alert("등록이 거절되었습니다.");
-                    // ManagerApplicantsList 페이지로 이동하는 코드 작성
-                    window.location.href = "http://localhost:8081/matchGetIt/getSupportedUsers";
-                },
-                error: function(error) {
-                    console.error(error);
-                    alert("등록 중 오류가 발생했습니다.");
-                }
-            });
-        }
-    }
-</script>
+        // 등록 거절 버튼 클릭 이벤트 리스너 추가
+        $('#rejectButton').click(function() {
+            var userId = [[${member.userId}]];
+            if (confirm("등록을 거절하시겠습니까?")) {
+                $.ajax({
+                    type: 'PUT',
+                    url: `/matchGetIt/apply/rejectRegistration/${userId}`,
+                    success: function(response) {
+                        alert(response);
+                        alert("등록이 거절되었습니다.");
+                        window.location.href = "http://localhost:8081/matchGetIt/apply/getSupportedUsers";
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        alert("거절 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        });
+    });
+    </script>
 </th:block>
 
 </html>

@@ -22,6 +22,7 @@
           padding: 10px;
           box-sizing: border-box;
           text-align: center;
+          margin-bottom: 10px; /* 각 card 간의 간격을 설정 */
         }
 
         .card-img-top {
@@ -31,6 +32,31 @@
 
         .card-body {
           padding: 10px;
+        }
+
+        .pagination {
+          margin-top: 10px;
+          text-align: center;
+        }
+
+        .pagination a {
+          display: inline-block;
+          padding: 5px 10px;
+          margin: 0 2px;
+          background-color: #f2f2f2;
+          color: #333;
+          text-decoration: none;
+          border-radius: 4px;
+        }
+
+        .pagination a.active {
+          background-color: #4CAF50;
+          color: white;
+        }
+
+        .pagination a.disabled {
+          pointer-events: none;
+          cursor: default;
         }
     </style>
 
@@ -106,6 +132,12 @@
                 </a>
             </div>
         </div>
+
+
+
+
+
+
     </div>
 </section>
 

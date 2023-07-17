@@ -90,14 +90,4 @@ public class ManagerService {
 
 }
 
-//    public void createManager1(MemberDTO memberDTO){
-//        ManagerEntity managerEntity = new ManagerEntity();
-//        managerEntity.setUser(modelMapper.map(memberDTO,MemberEntity.class));
-//        managerEntity.setManagerImage("http://");
-//        managerEntity.setEmploymentStatus("");
-//        managerEntity.setRegistrationDate(LocalDateTime.now());
-//        managerRepository.save(managerEntity);
-//
-//    }
-
 

@@ -40,7 +40,6 @@ function Mypage({session,logout}) {
                 console.log('서버 오류');
             });
     }, []);
-
     // useEffect(() => {
     //     setIsAdmin(session && session.loginType.toUpperCase() === "ADMIN")
     // }, [session]) 개발 중이라 아직은 주석처리

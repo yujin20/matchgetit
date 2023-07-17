@@ -21,8 +21,9 @@ public class UserInquiryBoardController {
     InquiryRepository inquiryRepository;
 
     @PostMapping("/userInquiry")
-    public String userInquirySave(@RequestParam("category") String category, @RequestParam("QAtitle") String title, @RequestParam("QAcontent") String content,@RequestParam("QAName") String userId) {
+    public String userInquirySave(@RequestParam("category") String category, @RequestParam("QAtitle") String title, @RequestParam("QAcontent") String content,@RequestParam("QAName") String userId, HttpServletRequest request, Model model, HttpServletResponse response) {
 
+        System.out.println("1");
         System.out.println(userId);
         System.out.println(title);
         InquiryEntity inquiry = new InquiryEntity();
@@ -33,7 +34,7 @@ public class UserInquiryBoardController {
 //        inquiry.setRegTime(LocalDateTime.now());
 //        inquiry.setCreatedBy(userId);
 //        inquiry.setModifiedBy(userId);
-//        System.out.println(inquiry.getCreatedBy());
+//        System.out.println("id"+inquiry.getCreatedBy());
         inquiryRepository.save(inquiry);
 
         return "redirect:http://localhost:3000";

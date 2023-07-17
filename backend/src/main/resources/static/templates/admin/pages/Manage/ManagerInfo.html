@@ -79,7 +79,7 @@
             type: 'PUT',
             url: '/matchGetIt/manager/deactivate/' + managerId,
             success: function(response) {
-                if (response === "매니저 등록을 거절하였습니다.") {
+                if (response === "매니저 삭제하였습니다.") {
                 alert("매니저가 성공적으로 탈퇴되었습니다.");
                 window.location.href = "http://localhost:8081/matchGetIt/manager/managers"; // 매니저 목록 페이지로 이동
                 }
