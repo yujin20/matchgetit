@@ -63,7 +63,8 @@ public class AdminUserController {
         for (String userId: users) {
             userService.deleteUser(Long.valueOf(userId));
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+//        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
 

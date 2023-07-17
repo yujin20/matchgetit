@@ -77,14 +77,16 @@ public class PaymentRecordRepositoryCustomImpl implements PaymentRecordRepositor
 
         Date from = Date.valueOf(searchDateStart);
         Date to = Date.valueOf(searchDateEnd);
+        to.setDate(to.getDate()+1);
 
-        if (StringUtils.equals("paidDate", dateType)) {
-            return paymentRecordEntity.transactionDate.between(from, to);
-        }
-        if (StringUtils.equals("canceledDate", dateType)) {
-            return paymentRecordEntity.cancelDate.between(from, to);
-        }
-        else return null;
+//        if (StringUtils.equals("paidDate", dateType)) {
+//            return paymentRecordEntity.transactionDate.between(from, to);
+//        }
+//        if (StringUtils.equals("canceledDate", dateType)) {
+//            return paymentRecordEntity.cancelDate.between(from, to);
+//        }
+//        else return null;
+        return paymentRecordEntity.transactionDate.between(from, to);
     }
 
     private BooleanExpression searchPaymentStatus(SearchPaymentDTO searchPaymentDTO) {

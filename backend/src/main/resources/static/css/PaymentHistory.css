@@ -38,12 +38,8 @@ th, td {
     margin-right: 7px;
 }
 
-.date-range {
-    margin-left: 80px;
-}
 
-
-.search-button, .reset-button {
+.search-button, .reset-button, .payment-header button {
     background-color: #C5E0B4;
     color: #000000;
     font-size: 1rem;

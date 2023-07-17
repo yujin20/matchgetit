@@ -31,7 +31,7 @@ public class AdminInquiryController {
 
     @PostConstruct
     public void createInquiries() {
-//        inquiryService.createInquiries();
+        inquiryService.createInquiries();
     }
 
 

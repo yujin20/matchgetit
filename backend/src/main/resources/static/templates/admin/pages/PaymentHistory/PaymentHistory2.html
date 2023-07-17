@@ -21,6 +21,12 @@
             border: 1px solid lightgray;
             cursor: pointer;
         }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -28,6 +34,9 @@
     <div>
         <div class="payment-header">
             <h2>결제 기록 조회</h2>
+            <div>
+                <button type="button">환불하기</button>
+            </div>
         </div>
 
         <hr>
@@ -37,7 +46,7 @@
                     <div>
                         <div class="condition-group">
                             <span>조회 기간</span>
-                            <select th:field="*{dateType}">
+                            <select th:field="*{dateType}" style="display: none;">
                                 <option value="paidDate">거래일</option>
                                 <option value="canceledDate">취소일</option>
                             </select>
@@ -78,18 +87,18 @@
 
 <!--                        <label class="status-label"></label>-->
                         <div class="condition-group">
-                            <span>거래 상태</span>
+                            <span>거래 종류</span>
                             <label>
                                 <input type="checkbox" name="paymentStatus" value="completed" th:field="*{paymentStatus}">
-                                결제 완료
+                                결제
                             </label>
-                            <label>
-                                <input type="checkbox" name="paymentStatus" value="canceled" th:field="*{paymentStatus}">
-                                결제 취소
-                            </label>
+<!--                            <label>-->
+<!--                                <input type="checkbox" name="paymentStatus" value="canceled" th:field="*{paymentStatus}">-->
+<!--                                결제 취소-->
+<!--                            </label>-->
                             <label>
                                 <input type="checkbox" name="paymentStatus" value="refunded" th:field="*{paymentStatus}">
-                                부분 환불
+                                환불
                             </label>
 <!--                            <label>-->
 <!--                                <input type="checkbox" name="paymentStatus" value="" style="display: none">-->
@@ -115,7 +124,7 @@
 
                 <div class="buttons-container">
                     <button type="submit" class="search-button">검색</button>
-                    <button type="reset" class="reset-button">초기화</button>
+                    <button type="button" class="reset-button">초기화</button>
                 </div>
             </form>
         </div>
@@ -130,13 +139,13 @@
                 <th></th>
                 <th>결제 번호</th>
                 <th>거래 일시</th>
-                <th>취소 일시</th>
+<!--                <th>취소 일시</th>-->
                 <th>결제 금액</th>
-                <th>취소 금액</th>
+<!--                <th>취소 금액</th>-->
                 <th>경기 번호</th>
                 <th>회원 번호</th>
                 <th>회원 이름</th>
-                <th>거래 상태</th>
+                <th>거래 종류</th>
             </tr>
             </thead>
 
@@ -153,9 +162,9 @@
                 </td>
                 <td th:text="${payment.paymentNumber}">123</td>
                 <td th:text="${payment.transactionDate}">2023-00-00</td>
-                <td th:text="${payment.cancelDate != null ? payment.cancelDate : '-'}">2023-00-00</td>
+<!--                <td th:text="${payment.cancelDate != null ? payment.cancelDate : '-'}">2023-00-00</td>-->
                 <td th:text="${payment.price}">10000</td>
-                <td th:text="${payment.canceledPrice}">5000</td>
+<!--                <td th:text="${payment.canceledPrice}">5000</td>-->
                 <td th:text="${payment.gameNumber}">200</td>
                 <td th:text="${payment.member.userId}">10</td>
                 <td th:text="${payment.member.name}">김00</td>
@@ -308,9 +317,9 @@
             // searchPaymentHistory();
         });
 
-        // document.querySelector(".reset-button").addEventListener("click", function() {
-        //     resetForm();
-        // });
+        document.querySelector(".reset-button").addEventListener("click", function() {
+            resetForm();
+        });
     </script>
 
 </th:block>

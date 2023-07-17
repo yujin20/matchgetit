@@ -127,7 +127,7 @@
                     arr.push($(this).val())
                 });
                 console.log(arr)
-                deleteUser(arr);
+                // deleteUser(arr);
             }
         }
 
@@ -172,10 +172,10 @@
     <h2>경기 목록</h2>
 
     <form method="get" onsubmit="confirmDelete(this);" th:object="${userList}">
-        <div>
+<!--        <div>-->
 <!--            <button type="submit">선택한 회원 삭제하기</button>-->
-            <br>
-        </div>
+<!--            <br>-->
+<!--        </div>-->
         <br>
 
         <table>
@@ -183,7 +183,8 @@
             <tr>
 <!--                <td><input type="checkbox" id="checkAll" onclick="checkAllBox(this);" /></td>-->
                 <td>번호</td>
-                <td>경기 시작일 및 시간</td>
+                <td>경기 시작일</td>
+                <td>경기 시간</td>
                 <td>구장</td>
                 <td>배정된 매니저</td>
                 <td>상태</td>
@@ -192,23 +193,24 @@
             </thead>
 
             <tbody>
-            <tr :if="${userList.isEmpty()}">
+            <tr th:if="${matchHistories.isEmpty()}">
                 <td colspan="8" style="text-align: center;">
                     등록된 경기가 없습니다.
                 </td>
             </tr>
 
-            <tr :each="game: ${userList.getContent()}">
+            <tr th:each="game: ${matchHistories}">
 <!--                <td>-->
 <!--                    <input type="checkbox" name="selectedUser" :value="${user.id}">-->
 <!--                </td>-->
-                <td :text="${game.id}">123</td>
-                <td :text="${game.startDate}">2023-00-00 16:00</td>
-                <td :text="${game.stadium}">
+                <td th:text="${game.matchRecId}">123</td>
+                <td th:text="${game.applicationDate}">2023-00-00</td>
+                <td th:text="${game.applicationTime}">A타임 (00:00 ~ 00:00)</td>
+                <td th:text="${game.stadium.stdName}">
                     <a :href="@{'/matchGetIt/stadium/'+${}}">한라 원앤원 구장</a>
                 </td> <!-- 구장 정보 페이지로 링크 시키는 것도 좋을 듯 -->
-                <td :text="${game.manager}">공승환</td>
-                <td :text="${game.state}">대기 중/진행 중/완료/취소</td>
+                <td th:text="${game.manager.name}">공승환</td>
+                <td th:text="${game.matchState}">완료/취소</td>
                 <td>
                     <a href="/matchGetIt/admin/matchInfo?matchId=123" :href="@{/matchGetIt/admin/matchInfo(matchId=${game.id})}">상세보기</a>
                 </td>
@@ -249,11 +251,8 @@
                 <label for="accountState" style="margin-left: 10px">경기 상태</label>
                 <select id="accountState" :field="*{accountState}">
                     <option value="">전체</option>
-<!--                    <option value="ACTIVE">활동 중</option>-->
-<!--                    <option value="BANNED">정지</option>-->
-<!--                    <option value="DORMANT">휴면</option>-->
-                    <option value="대기 중">대기 중</option>
-                    <option value="진행 중">진행 중</option>
+<!--                    <option value="대기 중">대기 중</option>-->
+<!--                    <option value="진행 중">진행 중</option>-->
                     <option value="완료">완료</option>
                     <option value="취소">취소</option>
                 </select>
@@ -263,10 +262,8 @@
             <div id="search-div2">
                 <label for="searchType">검색 유형</label>
                 <select id="searchType" :field="*{searchType}">
-                    <option value="userId">회원 번호</option>
-                    <option value="userName">회원 이름</option>
-                    <option value="email">이메일 주소</option>
-                    <option value="phoneNum">연락처</option>
+                    <option value="userId">경기 번호</option>
+                    <option value="userName">구장 이름</option>
                 </select>
 
                 <label for="searchValue">검색어</label>

@@ -2,9 +2,7 @@ package com.matchgetit.backend.controller;
 
 import com.matchgetit.backend.constant.LogInType;
 import com.matchgetit.backend.dto.MemberDTO;
-import com.matchgetit.backend.service.AdminDashboardService;
-import com.matchgetit.backend.service.AdminPageUserService;
-import com.matchgetit.backend.service.PaymentHistoryService;
+import com.matchgetit.backend.service.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,13 +19,17 @@ public class AdminMainController {
     private final AdminDashboardService dashboardService;
     private final AdminPageUserService userService;
     private final PaymentHistoryService paymentService;
+    private final StadiumService stadiumService;
 
     @PostConstruct
     public void createUsers() {
-//        userService.createUsers();
-//        dashboardService.createManagers();
-//        paymentService.createPayments();
         dashboardService.createDashboradDataEntity();
+        userService.createUsers();
+        dashboardService.createManagers();
+        paymentService.createPayments();
+        stadiumService.insertStadium();
+        dashboardService.createMatches();
+        dashboardService.createManagerApplicants();
     }
 
     @GetMapping("/matchGetIt/admin/gate")

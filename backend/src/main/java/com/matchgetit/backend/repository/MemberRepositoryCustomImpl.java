@@ -93,6 +93,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
             return null;
         Date from = Date.valueOf(regDateStart);
         Date to = Date.valueOf(regDateEnd);
+        to.setDate(to.getDate()+1);
         return memberEntity.regDate.between(from, to);
     }
 
