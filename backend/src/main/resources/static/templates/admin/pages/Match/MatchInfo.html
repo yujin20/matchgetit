@@ -81,6 +81,27 @@
             justify-content: center;
             justify-items: center;
         }
+
+        .score {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .score div:last-child {
+            font-size: 2rem;
+        }
+
+        .match-note {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .match-note div:last-child {
+            width: 50%;
+            border: 1px solid #eaeaea;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -91,7 +112,7 @@
             <div class="match-manager">
                 <span class="match-info-label">매니저:</span>
                 <span>공승환</span>
-                <button>매니저 변경</button>
+<!--                <button>매니저 변경</button>-->
             </div>
             <div>
                 <div class="match-info-item">
@@ -104,8 +125,12 @@
                 </div>
                 <div class="match-info-item">
                     <span class="match-info-label">상태:</span>
-                    <span>대기 중</span>
+                    <span>완료</span>
                 </div>
+            </div>
+            <div class="score">
+                <div>스코어</div>
+                <div>4 : 3</div>
             </div>
             <div class="match-team">
                 <table>
@@ -131,6 +156,14 @@
                         <td>테스터11</td><td>테스터12</td>
                     </tr>
                 </table>
+            </div>
+            <div class="match-note">
+                <div style="width: fit-content; padding-bottom: 5px">
+                    <span>특이사항/취소 사유</span>
+                </div>
+                <div>
+                    <span style="white-space: pre-line;" :text="${user.banReason}">테스트</span>
+                </div>
             </div>
         </div>
 

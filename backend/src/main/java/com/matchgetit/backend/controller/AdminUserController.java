@@ -2,6 +2,7 @@ package com.matchgetit.backend.controller;
 
 import com.matchgetit.backend.dto.AdminPageSearchUserDTO;
 import com.matchgetit.backend.dto.AdminPageUserDTO;
+import com.matchgetit.backend.dto.AdminPaymentUserDTO;
 import com.matchgetit.backend.service.AdminPageUserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.WebContext;
 
 import java.sql.Date;
 import java.util.HashMap;
@@ -164,4 +166,44 @@ public class AdminUserController {
         userService.cancelBan(userId);
         return "redirect:/matchGetIt/admin/userInfo?userId="+userId;
     }
+
+
+
+    // 결제 기록 페이지에서 환불할 때 쓰이는 메소드
+
+    @GetMapping({"/searchUser", "/searchUser/{page}"})
+    public String searchUserForRefund(Model model, @PathVariable("page") Optional<Integer> page, AdminPageSearchUserDTO searchUserDTO) {
+        Pageable pageable = PageRequest.of(page.orElse(0), 10);
+        Page<AdminPageUserDTO> userList = userService.getPageableUserList(searchUserDTO, pageable);
+
+//        List<UserEntity> userList = userService.getUserList();
+        model.addAttribute("userList", userList);
+        model.addAttribute("currPageNum", pageable.getPageNumber());
+        model.addAttribute("searchUserDTO", searchUserDTO);
+
+        return "admin/pages/PaymentHistory/SearchUser";
+    }
+
+
+    @GetMapping("/refund/{userId}")
+    public String refundPage(Model model, @PathVariable Long userId) {
+        try {
+            AdminPaymentUserDTO userDto = userService.getPaymentUserInfo(userId);
+            model.addAttribute("user", userDto);
+            return "admin/pages/PaymentHistory/Refund";
+        }
+        catch (EntityNotFoundException e) {
+            model.addAttribute("msg", "존재하지 않는 회원입니다.");
+            model.addAttribute("url", "/matchGetIt/admin/searchUser");
+            return alertViewPath;
+        }
+    }
+
+    @PostMapping("/refund/{userId}")
+    @ResponseBody
+    public ResponseEntity<String> refund(@PathVariable Long userId, @RequestParam Long refundPrice) {
+        System.out.println(">>>>>>>>>>"+refundPrice);
+        return ResponseEntity.ok(null);
+    }
+
 }

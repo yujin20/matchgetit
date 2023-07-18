@@ -36,7 +36,8 @@ public class InquiryRepositoryCustomImpl implements InquiryRepositoryCustom {
                         inquiryEntity.category,
                         inquiryEntity.state,
                         inquiryEntity.createdBy.as("writedBy"),
-                        inquiryEntity.regTime))
+                        inquiryEntity.regTime,
+                        inquiryEntity.comments.size().as("commentCount")))
                 .from(inquiryEntity)
                 .where(
                         searchWithCondition(searchInquiryDTO.getSearchType(), searchInquiryDTO.getSearchValue()),

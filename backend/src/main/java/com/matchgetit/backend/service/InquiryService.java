@@ -29,8 +29,8 @@ public class InquiryService {
             InquiryEntity inquiry = new InquiryEntity();
             inquiry.setTitle("테스트 문의"+i);
             inquiry.setContent("테스트 문의 내용"+i);
-            inquiry.setCategory("테스트");
-            inquiry.setState("처리 중");
+            inquiry.setCategory("기타");
+            inquiry.setState("접수 대기");
             inquiryRepository.save(inquiry);
         }
     }
@@ -77,10 +77,23 @@ public class InquiryService {
         inquiryRepository.save(inquiry);
     }
 
+    public void changeInquiryState(Long inquiryId, String mode) {
+        InquiryEntity inquiry = inquiryRepository.findById(inquiryId).orElseThrow(EntityNotFoundException::new);
+        if (mode.equals("toInProgress")) {
+            inquiry.setState("처리 중");
+        }
+        else if (mode.equals("toComplete")) {
+            inquiry.setState("처리 완료");
+        }
+    }
+
 
 
     public void writeComment(InquiryCommentDTO commentDTO, Long inquiryId) {
         InquiryEntity inquiry = inquiryRepository.findById(inquiryId).orElseThrow(EntityNotFoundException::new);
+        if (inquiry.getState().equals("접수 대기")){
+            inquiry.setState("처리 중");
+        }
         InquiryCommentEntity comment = commentDTO.toEntity();
         comment.setInquiry(inquiry);
         commentRepository.save(comment);

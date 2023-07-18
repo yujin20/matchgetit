@@ -124,18 +124,22 @@ public class PaymentHistoryService {
             payment.setGameNumber("200");
             payment.setTransactionStatus(PaymentStatus.COMPLETED);
 
-            if (i<5) {
+
+            if (i>5) {
                 payment.setTransactionDate(java.sql.Date.valueOf("2023-07-01"));
                 payment.setCancelDate(new Date());
                 payment.setCanceledPrice(5000);
+                payment.setPrice(-5000);
                 payment.setTransactionStatus(PaymentStatus.REFUNDED);
             }
+            /*
             if (i==5) {
                 payment.setTransactionDate(java.sql.Date.valueOf("2023-06-23"));
                 payment.setCancelDate(new Date());
                 payment.setCanceledPrice(10000);
                 payment.setTransactionStatus(PaymentStatus.CANCELED);
             }
+            */
 
             MemberEntity member = memberRepository.findByUserId((long) i);
             payment.setMember(member);

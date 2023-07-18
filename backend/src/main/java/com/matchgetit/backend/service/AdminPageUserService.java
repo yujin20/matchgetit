@@ -5,6 +5,7 @@ import com.matchgetit.backend.constant.Gender;
 import com.matchgetit.backend.constant.LogInType;
 import com.matchgetit.backend.dto.AdminPageSearchUserDTO;
 import com.matchgetit.backend.dto.AdminPageUserDTO;
+import com.matchgetit.backend.dto.AdminPaymentUserDTO;
 import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.repository.ManagerRepository;
 import com.matchgetit.backend.repository.ManagerSupportRecordRepository;
@@ -123,6 +124,13 @@ public class AdminPageUserService {
     public void cancelBan(Long userId) {
         MemberEntity member = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         member.cancelBan();
+    }
+
+
+    @Transactional(readOnly = true)
+    public AdminPaymentUserDTO getPaymentUserInfo(Long id) {
+        MemberEntity member = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return AdminPaymentUserDTO.of(member);
     }
 
 }

@@ -24,6 +24,7 @@ public class InquiryDTO {
     private String createdBy;
 
     private List<InquiryCommentDTO> commentList = new ArrayList<>();
+    private Integer commentCount;
 
 
     private static ModelMapper modelMapper = new ModelMapper();

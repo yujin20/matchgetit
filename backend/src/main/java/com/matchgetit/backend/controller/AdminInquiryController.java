@@ -31,7 +31,7 @@ public class AdminInquiryController {
 
     @PostConstruct
     public void createInquiries() {
-        inquiryService.createInquiries();
+//        inquiryService.createInquiries();
     }
 
 
@@ -90,13 +90,22 @@ public class AdminInquiryController {
         return alertViewPath;
     }
 
+    @GetMapping("/changeInquiryState")
+    public String changeState(@RequestParam Long inquiryId, @RequestParam String mode) {
+        inquiryService.changeInquiryState(inquiryId, mode);
+        return "redirect:/matchGetIt/admin/inquiry/"+inquiryId;
+    }
+
 
 
     // 댓글 작성
     @PostMapping("/inquiry/{inquiryId}")
     public String writeComment(InquiryCommentDTO commentDTO, @PathVariable Long inquiryId, HttpSession session) {
 //        System.out.println(">>>>>>>>>>>>"+commentDTO);
-        commentDTO.setWritedBy(((MemberDTO) session.getAttribute("member")).getName());
+        if (session.getAttribute("member") != null)
+            commentDTO.setWritedBy(((MemberDTO) session.getAttribute("member")).getName());
+        else
+            commentDTO.setWritedBy("관리자");
         inquiryService.writeComment(commentDTO, inquiryId);
         return "redirect:/matchGetIt/admin/inquiry/"+inquiryId;
     }

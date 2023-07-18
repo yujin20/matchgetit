@@ -7,10 +7,16 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.context.WebContext;
 
+import java.net.URI;
 import java.util.Map;
 
 @Controller
@@ -23,13 +29,13 @@ public class AdminMainController {
 
     @PostConstruct
     public void createUsers() {
-        dashboardService.createDashboradDataEntity();
-        userService.createUsers();
-        dashboardService.createManagers();
-        paymentService.createPayments();
-        stadiumService.insertStadium();
-        dashboardService.createMatches();
-        dashboardService.createManagerApplicants();
+//        dashboardService.createDashboradDataEntity();
+//        userService.createUsers();
+//        dashboardService.createManagers();
+//        paymentService.createPayments();
+//        stadiumService.insertStadium();
+//        dashboardService.createMatches();
+//        dashboardService.createManagerApplicants();
     }
 
     @GetMapping("/matchGetIt/admin/gate")
@@ -64,6 +70,15 @@ public class AdminMainController {
         model.addAttribute("inquiryCounts", inquiryCounts);
 
         return "admin/pages/Dashboard/Dashboard";
+    }
+
+
+    @GetMapping("/matchGetIt/admin/logout")
+    public String adminLogout() {
+        RequestEntity<String> request = RequestEntity.post("http://localhost:8081/matchGetIt/auth/logout").body("");
+        ResponseEntity<String> response = new RestTemplate().exchange(request, String.class);
+        System.out.println(">>>>>>>>>"+response.getBody());
+        return "redirect:http://localhost:3000";
     }
 
 }

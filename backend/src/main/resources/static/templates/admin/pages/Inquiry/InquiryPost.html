@@ -96,7 +96,7 @@
             cursor: pointer;
         }
 
-        .comment-button, #delete-post {
+        .comment-button, .btn-container button {
             padding: 5px 10px;
         }
 
@@ -243,6 +243,28 @@
                 }
             });
         }
+
+        function changeState(cd) {
+            let inquiryId = [[${post.id}]]
+            // let res = false;
+            // if (cd === 2) {
+            //     res = confirm('처리 완료하시겠습니까?');
+            //     if (!res) {
+            //         return;
+            //     }
+            //     console.log()
+            // }
+            let mode = '';
+            switch (cd) {
+                case 1:
+                    mode = 'toInProgress'
+                    break;
+                case 2:
+                    mode = 'toComplete'
+                    break;
+            }
+            location.href = '/matchGetIt/admin/changeInquiryState?inquiryId='+inquiryId+'&mode='+mode;
+        }
     </script>
 </head>
 
@@ -268,7 +290,10 @@
                     <span class="post-info-value" th:text="${post.regDate}">2023-06-14 14:30</span>
                 </div>
             </div>
-            <div>
+            <div class="btn-container">
+                <button th:if="${post.state == '접수 대기'}" onclick="changeState(1)">문의 접수</button>
+                <button th:if="${post.state == '처리 중'}" onclick="changeState(2)">처리 완료</button>
+                <button th:if="${post.state == '처리 완료'}" onclick="changeState(1)">재접수</button>
                 <button id="delete-post">삭제</button>
             </div>
         </div>
@@ -363,21 +388,23 @@
                 </div>
 
                 <!-- 대댓글 -->
-<!--                <div class="comment sub-comment">-->
-<!--                    <div class="comment-header">-->
-<!--                        <span class="comment-author">관리자</span>-->
-<!--                        <div class="header-buttons">-->
-<!--                            <button type="button">수정</button>-->
-<!--                            <button type="button">삭제</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="comment-content">-->
-<!--                        <p>대댓글 내용</p>-->
-<!--                    </div>-->
-<!--                    <div class="comment-date">-->
-<!--                        <span>2023-06-16 11:30</span>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--
+                <div class="comment sub-comment">
+                    <div class="comment-header">
+                        <span class="comment-author">관리자</span>
+                        <div class="header-buttons">
+                            <button type="button">수정</button>
+                            <button type="button">삭제</button>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        <p>대댓글 내용</p>
+                    </div>
+                    <div class="comment-date">
+                        <span>2023-06-16 11:30</span>
+                    </div>
+                </div>
+                -->
             </div>
         </div>
 
@@ -386,7 +413,7 @@
             <form method="post" th:object="${commentDTO}" th:action>
                 <!--            <input type="text" class="comment-input" placeholder="댓글을 입력하세요">-->
                 <label>
-                    <textarea class="comment-input" placeholder="댓글을 입력하세요" rows="6" th:field="${commentDTO.content}" required></textarea>
+                    <textarea class="comment-input" placeholder="답변을 입력하세요" rows="6" th:field="${commentDTO.content}" required></textarea>
                 </label>
                 <button class="comment-button" style="margin: 0 5px">답변</button>
                 <button class="comment-button" type="button" onclick="location.href='/matchGetIt/admin/inquiryBoard';">뒤로 가기</button>
