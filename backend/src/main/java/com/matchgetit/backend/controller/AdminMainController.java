@@ -34,8 +34,8 @@ public class AdminMainController {
 //        dashboardService.createManagers();
 //        paymentService.createPayments();
 //        stadiumService.insertStadium();
-//        dashboardService.createMatches();
 //        dashboardService.createManagerApplicants();
+//        dashboardService.createMatches();
     }
 
     @GetMapping("/matchGetIt/admin/gate")

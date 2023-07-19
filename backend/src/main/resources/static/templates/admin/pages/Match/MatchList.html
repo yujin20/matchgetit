@@ -203,16 +203,23 @@
 <!--                <td>-->
 <!--                    <input type="checkbox" name="selectedUser" :value="${user.id}">-->
 <!--                </td>-->
-                <td th:text="${game.matchRecId}">123</td>
+                <td :text="${game.matchRecId}">123</td>
                 <td th:text="${game.applicationDate}">2023-00-00</td>
-                <td th:text="${game.applicationTime}">A타임 (00:00 ~ 00:00)</td>
-                <td th:text="${game.stadium.stdName}">
+                <td><span th:text="${game.applicationTime}">A</span>타임 <span th:text="${'('+game.matchTime+')'}">(00:00 ~ 00:00)</span></td>
+                <td th:text="${game.stadiumName}">
                     <a :href="@{'/matchGetIt/stadium/'+${}}">한라 원앤원 구장</a>
                 </td> <!-- 구장 정보 페이지로 링크 시키는 것도 좋을 듯 -->
-                <td th:text="${game.manager.name}">공승환</td>
-                <td th:text="${game.matchState}">완료/취소</td>
+                <td th:text="${game.managerName}">공승환</td>
                 <td>
-                    <a href="/matchGetIt/admin/matchInfo?matchId=123" :href="@{/matchGetIt/admin/matchInfo(matchId=${game.id})}">상세보기</a>
+                    <span th:if="${game.matchState.name() == 'COMPLETE'}">완료</span>
+                    <span th:if="${game.matchState.name() == 'CANCELED'}">취소</span>
+                </td>
+                <td>
+                    <a th:href="@{/matchGetIt/admin/matchInfo(
+                        matchDate=${game.applicationDate},
+                        matchTime=${game.applicationTime},
+                        stadiumId=${game.stadiumId}
+                    )}">상세보기</a>
                 </td>
             </tr>
             </tbody>
