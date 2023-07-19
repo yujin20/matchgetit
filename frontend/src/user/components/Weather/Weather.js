@@ -85,7 +85,7 @@ const Weather = ({handleWeather, weather}) => {
             return "☔︎이슬비";
         } else if (weatherCode >= 500 && weatherCode < 600) {
             handleWeather('rainy');
-            return "☔︎비";
+            return "☔︎흐림";
         } else if (weatherCode >= 600 && weatherCode < 700) {
             handleWeather('snowy');
             return "❄︎눈";
@@ -96,8 +96,8 @@ const Weather = ({handleWeather, weather}) => {
             handleWeather('sunny');
             return "☀맑음";
         } else if (weatherCode > 800) {
-            handleWeather('rainy');
-            return "☁️흐림";
+            handleWeather('fog');
+            return "☁️구름 많음";
         } else {
             return "날씨 정보 없음";
         }

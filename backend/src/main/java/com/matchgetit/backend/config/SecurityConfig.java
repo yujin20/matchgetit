@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .requestMatchers(("/matchGetIt/kakao/**")).permitAll()
                 .requestMatchers("/matchGetIt/stadium/**").permitAll()
                 .requestMatchers(("/matchGetIt/rank/**")).permitAll()
+                .requestMatchers(("/matchGetIt/apply/**")).permitAll()
                 .requestMatchers("/css/**").permitAll()//예외 페이지 구성
 //                .anyRequest().access("@securityConfig.hasValidToken(request)");
                 .anyRequest().permitAll();

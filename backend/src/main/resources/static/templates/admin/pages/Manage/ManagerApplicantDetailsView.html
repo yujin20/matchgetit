@@ -73,7 +73,7 @@
                     url: `/matchGetIt/apply/registerManager/${userId}`,
                     success: function(response) {
                         alert(response);
-                        alert("등록이 완료되었습니다.");
+                        // alert("등록이 완료되었습니다.");
                         window.location.href = "http://localhost:8081/matchGetIt/apply/getSupportedUsers";
                     },
                     error: function(error) {
@@ -93,7 +93,7 @@
                     url: `/matchGetIt/apply/rejectRegistration/${userId}`,
                     success: function(response) {
                         alert(response);
-                        alert("등록이 거절되었습니다.");
+                        // alert("등록이 거절되었습니다.");
                         window.location.href = "http://localhost:8081/matchGetIt/apply/getSupportedUsers";
                     },
                     error: function(error) {

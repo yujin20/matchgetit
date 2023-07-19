@@ -1,9 +1,6 @@
 package com.matchgetit.backend.controller;
 
-import com.matchgetit.backend.constant.AccountType;
-import com.matchgetit.backend.constant.Gender;
-import com.matchgetit.backend.constant.LogInType;
-import com.matchgetit.backend.constant.Proficiency;
+import com.matchgetit.backend.constant.*;
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.loginAPI.GoogleUser;
 import com.matchgetit.backend.service.GoogleService;
@@ -15,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 
 @Controller
 @RequestMapping("/matchGetIt")
@@ -31,6 +27,11 @@ public class GoogleController {
         MemberDTO member = memberService.findMemberByEmail(user.getEmail());
         System.out.println(member);
         if(member!=null){
+            if (member.getAccountState() == AccountState.BANNED) {
+                request.setAttribute("msg", "정지된 계정입니다.");
+                request.setAttribute("url", "http://localhost:3000");
+                return "admin/components/Utils/alert";
+            }
             session.setAttribute("member",member);
             return "redirect:http://localhost:3000";
         }else {

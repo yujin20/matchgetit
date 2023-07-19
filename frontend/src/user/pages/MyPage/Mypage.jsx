@@ -19,8 +19,9 @@ function Mypage({session,logout}) {
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [isChargeOpen, setChargeOpen] = useState(true);
     // const [isAdmin, setIsAdmin] = useState(session && session.loginType.toUpperCase() === "ADMIN");
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [isMng, setIsMng] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(true
+    );
+    const [isMng, setIsMng] = useState(true);
 
     //임의로 매니저 true로 해놨음 원래로직대로면 매니저신청 >> 관리자 등록 >> role체크 후 true로 바뀌어야 함
     const [isApplyManager, setApplyManager] = useState(false);
@@ -40,10 +41,6 @@ function Mypage({session,logout}) {
                 console.log('서버 오류');
             });
     }, []);
-    useEffect(() => {
-        setIsAdmin(session && session.loginType.toUpperCase() === "ADMIN");
-        setIsMng(session && session.loginType.toUpperCase() === "MANAGER");
-    }, [session])
 
     const handleApplyManagerToggle = () => {
         setApplyManager(!isApplyManager);
@@ -68,6 +65,19 @@ function Mypage({session,logout}) {
     const handleMngMenuToggle = () => {
         setIsMngMenuOpen(!isMngMenuOpen);
     };
+    const getRole = () => {
+        axiosInstance.post("matchGetIt/auth/getRole")
+            .then(res=>{
+                if(res.data=='manager')setIsMng(true);
+                else if(res.data=='admin')setIsAdmin(true);
+                else{
+                    setIsMng(false);
+                    setIsAdmin(false);
+                }
+            }).catch(err=>{
+            console.log('서버 오류');
+        })//해당 유저의 권한을 가져오는 함수
+    }
 
     const renderGradeImage = ()=>{
         let iconUrl='';
@@ -131,10 +141,12 @@ function Mypage({session,logout}) {
                         <div className="my-status_content">
                             <div>{renderState()}</div>
                         </div>
+                        {/*</a>*/}
                     </li>
                     <li className="my-status_item my-status_item-double">
                         <div className="my-status_label">
-                            <p style={{ fontSize: '12px' }}>숙련도</p>
+                            <a href="/magazine/1/" style={{ fontSize: '12px' }}>숙련도</a>
+                            <img src="https://plab-football.s3.amazonaws.com/static/img/ic_level_show.svg" alt="레벨" />
                         </div>
                         <div className="my-status_content">
                             <div className="lv-system_title">
@@ -145,6 +157,7 @@ function Mypage({session,logout}) {
                                     <img className="myPageIcon" src={renderGradeImage()} alt="레벨" />
                                 </div>
                                 <div>
+                                    {/* Additional content */}
                                 </div>
                             </div>
                         </div>

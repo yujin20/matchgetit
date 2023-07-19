@@ -1,5 +1,7 @@
 package com.matchgetit.backend.controller;
+
 import com.matchgetit.backend.config.JwtTokenProvider;
+import com.matchgetit.backend.constant.AccountState;
 import com.matchgetit.backend.constant.AccountType;
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.request.SignUpRequest;
@@ -19,6 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/matchGetIt/auth")
 @AllArgsConstructor
@@ -50,6 +53,9 @@ public class AuthController {
                     loginRequest.getPassword()
             );
             if(member!=null){
+                if (member.getAccountState() == AccountState.BANNED) {
+                    return new ResponseEntity<>("정지된 계정입니다.", HttpStatus.UNAUTHORIZED);
+                }
                 String token = jwtTokenProvider.generateToken(member.getEmail());
                 System.out.println("토큰>>>>>>>"+token);
                 session.setAttribute("token",token);

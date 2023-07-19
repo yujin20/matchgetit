@@ -1,9 +1,6 @@
 package com.matchgetit.backend.controller;
 
-import com.matchgetit.backend.constant.AccountType;
-import com.matchgetit.backend.constant.Gender;
-import com.matchgetit.backend.constant.LogInType;
-import com.matchgetit.backend.constant.Proficiency;
+import com.matchgetit.backend.constant.*;
 import com.matchgetit.backend.dto.MemberDTO;
 import com.matchgetit.backend.entity.MemberEntity;
 import com.matchgetit.backend.request.LoginRequest;
@@ -43,6 +40,11 @@ public class KakaoController {
         System.out.println("gender : " + userInfo.get("gender"));
         MemberDTO member = memberService.findMemberByEmail(String.valueOf(userInfo.get("email")));
         if(member!=null) {
+            if (member.getAccountState() == AccountState.BANNED) {
+                request.setAttribute("msg", "정지된 계정입니다.");
+                request.setAttribute("url", "http://localhost:3000");
+                return "admin/components/Utils/alert";
+            }
             session.setAttribute("member",member);
             return "redirect:http://localhost:3000";
         } else {
