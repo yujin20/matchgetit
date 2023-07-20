@@ -3,12 +3,16 @@ package com.matchgetit.backend.service;
 import com.matchgetit.backend.dto.AdminMatchRecDTO;
 import com.matchgetit.backend.dto.AdminMatchInfoDTO;
 import com.matchgetit.backend.dto.AdminMatchListDTO;
+import com.matchgetit.backend.dto.AdminSearchMatchDTO;
 import com.matchgetit.backend.repository.MatchRecRepository;
 import com.matchgetit.backend.repository.MatchRepository;
 import com.matchgetit.backend.repository.MatchWaitRepository;
 import com.matchgetit.backend.util.FormatDate;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +30,10 @@ public class AdminPageMatchService {
     private final ModelMapper modelMapper;
 
 
-    public List<AdminMatchListDTO> getMatchList() {
-        return matchRecRepository.getMatchListBy();
+    public Page<AdminMatchListDTO> getMatchList(AdminSearchMatchDTO searchMatchDTO, Pageable pageable) {
+        List<AdminMatchListDTO> matchList = matchRecRepository.getMatchListBy(searchMatchDTO, pageable);
+        Long total = matchRecRepository.getMatchCountBy(searchMatchDTO);
+        return new PageImpl<>(matchList, pageable, total);
     }
 
     public AdminMatchInfoDTO getMatchInfo(String matchDate, String matchTime, Long stadiumId) {

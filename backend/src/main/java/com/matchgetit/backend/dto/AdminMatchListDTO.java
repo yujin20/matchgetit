@@ -43,8 +43,8 @@ public class AdminMatchListDTO {
         this.managerName = managerName;
     }
 
-    public AdminMatchListDTO(Long matchRecId, String matchTime, Date matchDate, Long stadiumId) {
-        this.matchRecId = matchRecId;
+    public AdminMatchListDTO(String matchTime, Date matchDate, Long stadiumId) {
+//        this.matchRecId = matchRecId;
         this.applicationTime = matchTime;
         this.applicationDate = matchDate;
         this.stadiumId = stadiumId;

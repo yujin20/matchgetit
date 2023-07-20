@@ -34,5 +34,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>, Mem
     // Dashboard 사용
     long countByRegDateBetween(Date from, Date to);
     long countByRegDateAfter(Date regDate);
+    long countByPartyIsNotNull();
 }
 

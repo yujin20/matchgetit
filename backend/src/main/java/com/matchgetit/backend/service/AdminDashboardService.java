@@ -157,6 +157,8 @@ public class AdminDashboardService {
         java.util.Date to = Date.valueOf(LocalDate.now().plusDays(1));
         userCounts.put("signUpToday", userRepository.countByRegDateBetween(from, to));
 
+        userCounts.put("matchingUsers", userRepository.countByPartyIsNotNull());
+
 //        long withdrawal = userRepository.countByRegDateBefore(Date.valueOf(LocalDate.now().minusDays(1)));
 //        System.out.println(withdrawal);
 
