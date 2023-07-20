@@ -41,7 +41,7 @@ public class MatchRecRepositoryCustomImpl implements MatchRecRepositoryCustom {
         }
 
         List<AdminMatchListDTO> content = queryFactory
-                .select(new QAdminMatchListDTO(
+                .selectDistinct(new QAdminMatchListDTO(
 //                        matchRecEntity.matchRecId,
                         matchRecEntity.applicationTime,
                         matchRecEntity.applicationDate,
@@ -82,7 +82,7 @@ public class MatchRecRepositoryCustomImpl implements MatchRecRepositoryCustom {
         }
 
         List<AdminMatchListDTO> content = queryFactory
-                .select(Projections.constructor(AdminMatchListDTO.class,
+                .selectDistinct(Projections.constructor(AdminMatchListDTO.class,
                         matchRecEntity.applicationTime,
                         matchRecEntity.applicationDate,
                         matchRecEntity.stadium.stdId))
