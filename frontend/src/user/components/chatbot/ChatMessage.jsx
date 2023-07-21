@@ -18,7 +18,7 @@ const ChatMessageContainer = styled.div`
 `;
 
 function ChatMessage({ message, bot }) {
-    return <ChatMessageContainer >{message}</ChatMessageContainer>;
+    return <ChatMessageContainer isBot={bot}>{message}</ChatMessageContainer>;
 }
 
 export default ChatMessage;

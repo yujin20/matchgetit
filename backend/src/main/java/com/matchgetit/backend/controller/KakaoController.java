@@ -24,10 +24,8 @@ import java.util.HashMap;
 @Controller
 @RequestMapping(value="/matchGetIt")
 public class KakaoController {
-    @Autowired
-    private KakaoService kakaoService;
-    @Autowired
-    private MemberService memberService;
+    private final KakaoService kakaoService;
+    private final MemberService memberService;
 
     @GetMapping("/kakao")
     public String kakaoCallback(@RequestParam(name = "code") String code, HttpSession session, HttpServletRequest request, HttpServletResponse response){

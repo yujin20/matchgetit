@@ -8,6 +8,7 @@ const AddressSearch = ({ onSelect, visible, setVisible}) => {
     const handleComplete = (data) => {
         let fullAddress = data.address;
         let extraAddress = '';
+        const clientId =process.env.REACT_APP_KAKAO_MAP_CLIENT_ID;
 
         if (data.addressType === 'R') {
             if (data.bname !== '') {
@@ -21,13 +22,12 @@ const AddressSearch = ({ onSelect, visible, setVisible}) => {
 
         setVisible(false);
 
-        // Here is the part where we call the Kakao Map API
         axios.get(`https://dapi.kakao.com/v2/local/search/address.json`, {
             params: {
                 query: fullAddress
             },
             headers: {
-                'Authorization': `KakaoAK 04076bec2077f5bf9e3ea19dbea286d2`
+                'Authorization': `KakaoAK ${clientId}`
             }
         }).then(response => {
             const { data } = response;

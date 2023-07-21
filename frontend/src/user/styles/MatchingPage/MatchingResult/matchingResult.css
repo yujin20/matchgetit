@@ -54,4 +54,7 @@
     .resultContainer{
         font-size:65%;
     }
+    .result{
+        width:80%;
+    }
 }

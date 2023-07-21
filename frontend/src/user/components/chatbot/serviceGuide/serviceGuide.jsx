@@ -12,15 +12,15 @@ const ServiceGuide = (props) => {
             handler: props.actionProvider.handleFootballGuide,
             id: 2,
         },
-        // {
-        //     text: "고객 센터 문의",
-        //     handler: props.actionProvider.handleServiceCenter,
-        //     id: 3,
-        // },
+        {
+            text: "고객 센터 문의",
+            handler: props.actionProvider.handleServiceCenter,
+            id: 3,
+        },
         {
             text: "처음으로 돌아가기",
             handler: props.actionProvider.handleHello,
-            id: 3,
+            id: 4,
         },
     ];
 

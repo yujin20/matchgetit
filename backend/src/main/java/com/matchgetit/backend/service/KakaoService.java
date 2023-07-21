@@ -8,15 +8,19 @@ import java.util.HashMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.matchgetit.backend.config.SocialEnv;
+import lombok.AllArgsConstructor;
 import org.apache.coyote.ProtocolException;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class KakaoService {
+    private final SocialEnv socialEnv;
     public String getAccessToken (String code) {
         String access_Token = "";
         String refresh_Token = "";
-        String reqURL = "https://kauth.kakao.com/oauth/token";
+        String reqURL = socialEnv.getKakaoTokenUrl();
 
         try {
             URL url = new URL(reqURL);
@@ -32,11 +36,11 @@ public class KakaoService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
 
-            sb.append("&client_id=04076bec2077f5bf9e3ea19dbea286d2"); //본인이 발급받은 key
+            sb.append("&client_id="+socialEnv.getKakaoClientId()); //본인이 발급받은 key
             sb.append("&redirect_uri=http://localhost:8081/matchGetIt/kakao"); // 본인이 설정한 주소
 
             sb.append("&code=" + code);
-            sb.append("&client_secret=BXFrDzvzuwcWL0kKMvGkWhgP30eGkqBK" );
+            sb.append("&client_secret="+socialEnv.getKakaoSecret());
             bw.write(sb.toString());
             bw.flush();
 
@@ -80,7 +84,7 @@ public class KakaoService {
 
         // 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> userInfo = new HashMap<String, Object>();
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        String reqURL = socialEnv.getKakaoInfo();
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

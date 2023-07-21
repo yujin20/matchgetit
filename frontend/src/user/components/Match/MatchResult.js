@@ -87,7 +87,7 @@ const MatchResult = ({ session, matchWaitData, setIsMatch, setMatchWaitData, par
                 <div className="resultStatiumimg">
                     {/*<img src={matchWaitData.stadium.stdImgUrl} alt="Stadium" />*/}
                 </div>
-                <div className="result resultTime">매칭된 시간:{applicationTimeText}</div>
+                <div className="result resultTime">매칭된 시간: {matchWaitData[0].party?.applicationDate} <br/> {applicationTimeText}</div>
                 <div className="result resultStadium">매칭 구장: {matchWaitData[0].stadium.stdName}</div>
                 <div className="result lineUp">Line Up</div>
                 <div className="teamView">

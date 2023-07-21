@@ -5,8 +5,8 @@ const Weather = ({handleWeather, weather}) => {
     let [currentCity, setCurrentCity] = useState('');
     const [weatherInfo, setWeatherInfo] = useState('');
 
-    const openWeatherApiKey = '8f9a2d78e4ced421ff43d888eb8eaebd';
-    const kakaoMapApiKey = '04076bec2077f5bf9e3ea19dbea286d2';
+    const openWeatherApiKey = process.env.REACT_APP_OPEN_WEATHER_CLIENT_ID;
+    const kakaoMapApiKey = process.env.REACT_APP_KAKAO_MAP_CLIENT_ID;
 
     useEffect(() => {
         const fetchWeatherData = async () => {

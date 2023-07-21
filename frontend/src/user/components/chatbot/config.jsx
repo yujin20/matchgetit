@@ -16,11 +16,8 @@ const config = {
     initialMessages: [
         createChatBotMessage(
             `안녕하세요 ${botName}입니다!`,{
-            }, ),
-        createChatBotMessage(
-            `챗봇을 종료하시려면 아이콘을 한 번 더 클릭해주세요!`,{
                 widget: "general",
-            }, ),
+            } ),
     ],
     customComponents: {
         // Replaces the default header

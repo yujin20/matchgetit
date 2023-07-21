@@ -36,16 +36,16 @@ public class FindController {
     }
     @PostMapping("/sendMail")
     public String sendMail(@RequestBody FindRequest findRequest) throws IOException {
-
+        String content;
         String tempPassword = findService.temporaryPw();
-        findService.issuedTempPw(findRequest.getEmail(), tempPassword);
-
-        String recipientEmail = findRequest.getTemporaryPw();
-        String subject = "Match Get It 임시비밀번호 입니다.";
-        String content = "고객님의 임시비밀번호는" + tempPassword + "입니다. 프로필 설정란에서 비밀번호를 재설정 해주세요!" ;
-        sendEmail(recipientEmail, subject, content);
-
-//        findService.issuedTempPw(id)
+        content=findService.issuedTempPw(findRequest.getEmail(), tempPassword);
+        if(content.equals("성공")){
+            String recipientEmail = findRequest.getTemporaryPw();
+            String subject = "Match Get It 임시비밀번호 입니다.";
+            String mailContent = "고객님의 임시비밀번호는" + tempPassword + "입니다. 프로필 설정란에서 비밀번호를 재설정 해주세요!" ;
+            content = "임시비밀번호를 메일로 전송했습니다.";
+            sendEmail(recipientEmail, subject, mailContent);
+        }
         return content;
     }
 

@@ -5,7 +5,7 @@ import axios from "axios";
 function FindPw({session}) {
     const [email, setEmail] = useState('');
     const [temporaryPw, setTemporaryPw] = useState('');
-    const [receivedCode, setReceivedCode] = useState('');
+    const [errMsg , setErrMsg]=useState('');
     const handleConfirmationClick = () => {
         if (!email) {
             alert("이메일을 입력해주세요.");
@@ -18,12 +18,12 @@ function FindPw({session}) {
             })
             .then((response) => {
                 console.log(response.data);
-                setReceivedCode(response.data);
-                alert("임시 비밀번호가 발송되었습니다.");
+                window.alert(response.data);
                 // 인증번호 확인 성공시 처리
             })
             .catch((error) => {
-                console.error(error.response.data);
+                setErrMsg(error.message);
+                console.log(errMsg);
                 // 인증번호 확인 실패시 처리
             });
     };
@@ -52,6 +52,7 @@ function FindPw({session}) {
             <button type="button" value="인증번호 발급" className="button_check" onClick={handleConfirmationClick}>임시비밀번호
                 발급
             </button>
+            <p>{errMsg}</p>
         </div>
     )
 }

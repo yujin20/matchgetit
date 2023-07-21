@@ -32,7 +32,7 @@ public class NaverController {
     private final NaverService naverService;
 
     @GetMapping("/naver")
-    public String naverCallback(@RequestParam(name = "code") String code, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+    public String naverCallback(@RequestParam(name = "code") String code, HttpSession session, HttpServletRequest request) {
 
         NaverUser user = naverService.getNaverUserInfo(code);
         MemberDTO member = memberService.findMemberByEmail(user.getEmail());
@@ -60,7 +60,7 @@ public class NaverController {
                 ,(user.getGender().equals("M")? Gender.MALE:Gender.FEMALE)
                 , Proficiency.valueOf(proficiency)
                 , AccountType.NAVER
-                , LogInType.ADMIN
+                , LogInType.MANAGER
         );
         MemberDTO member = memberService.findMemberByEmail(user.getEmail());
         session.setAttribute("member",member);

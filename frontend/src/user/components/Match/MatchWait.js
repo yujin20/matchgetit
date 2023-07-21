@@ -173,7 +173,7 @@ const MatchWait = ({ session, party,setParty,setIsParty,findMatch }) => {
                     }
                     <div className="waitingData">
                         <div className="waitAddress">{partyData?.address}</div>
-                        <div className="waitTime">{applicationTimeText}</div>
+                        <div className="waitTime">{partyData?.applicationDate} {applicationTimeText}</div>
                     </div>
                     <div className="TeamTitle">👥 Team </div>
                     {renderMembers()}

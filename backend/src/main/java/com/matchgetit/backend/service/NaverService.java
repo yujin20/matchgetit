@@ -3,6 +3,7 @@ package com.matchgetit.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.matchgetit.backend.config.SocialEnv;
 import com.matchgetit.backend.loginAPI.NaverUser;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -16,10 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @AllArgsConstructor
 public class NaverService {
-
-    private static final String NAVER_TOKEN_URL = "https://nid.naver.com/oauth2.0/token";
-    private static final String NAVER_USER_INFO_URL = "https://openapi.naver.com/v1/nid/me";
-
+    private final SocialEnv socialEnv;
     private final WebClient webClient;
 
     public NaverUser getNaverUserInfo(String code) {
@@ -33,12 +31,12 @@ public class NaverService {
     private String getAccessToken(String code) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "QMzZCB86eMc75Lc6X1y7");
-        body.add("client_secret", "YY456xpdpH");
+        body.add("client_id", socialEnv.getNaverClientId());
+        body.add("client_secret", socialEnv.getNaverSecret());
         body.add("code", code);
 
         return webClient.post()
-                .uri(NAVER_TOKEN_URL)
+                .uri(socialEnv.getNaverTokenUrl())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(body))
                 .retrieve()
@@ -58,7 +56,7 @@ public class NaverService {
 
     private NaverUser requestUserInfo(String accessToken) {
         return webClient.get()
-                .uri(NAVER_USER_INFO_URL)
+                .uri(socialEnv.getNaverInfoUrl())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(String.class)

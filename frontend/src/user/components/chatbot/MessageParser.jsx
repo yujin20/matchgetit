@@ -43,15 +43,15 @@ class MessageParser {
             this.actionProvider.handlePaymentGuide();
         }
         //고객센터 문의
-        // else if (lowercase.includes("고객센터") || lowercase.includes("상담원") || lowercase.includes("사람") ||
-        //     lowercase.includes("몰라") || lowercase.includes("모르겠어") || lowercase.includes("뭔데") || lowercase.includes("뭐지") ||
-        //     lowercase.includes("몰라?") || lowercase.includes("모르겠는데") || lowercase.includes("뭐") || lowercase.includes("뭘까") ||
-        //     lowercase.includes("어떻게해") || lowercase.includes("어떻게 해") || lowercase.includes("어떻게해?") || lowercase.includes("어떻게 해?") ||
-        //     lowercase.includes("어떡해?") || lowercase.includes("어떡해") || lowercase.includes("어떡하지") || lowercase.includes("어떡하지?") ||
-        //     lowercase.includes("사람") || lowercase.includes("사람불러줘") || lowercase.includes("고객센터") || lowercase.includes("어떻해") || lowercase.includes("어떻해?")
-        // ) {
-        //     this.actionProvider.handleServiceCenter();
-        // }
+        else if (lowercase.includes("고객센터") || lowercase.includes("상담원") || lowercase.includes("사람") ||
+            lowercase.includes("몰라") || lowercase.includes("모르겠어") || lowercase.includes("뭔데") || lowercase.includes("뭐지") ||
+            lowercase.includes("몰라?") || lowercase.includes("모르겠는데") || lowercase.includes("뭐") || lowercase.includes("뭘까") ||
+            lowercase.includes("어떻게해") || lowercase.includes("어떻게 해") || lowercase.includes("어떻게해?") || lowercase.includes("어떻게 해?") ||
+            lowercase.includes("어떡해?") || lowercase.includes("어떡해") || lowercase.includes("어떡하지") || lowercase.includes("어떡하지?") ||
+            lowercase.includes("사람") || lowercase.includes("사람불러줘") || lowercase.includes("고객센터") || lowercase.includes("어떻해") || lowercase.includes("어떻해?")
+        ) {
+            this.actionProvider.handleServiceCenter();
+        }
         else{
             this.actionProvider.handleHello();
         }

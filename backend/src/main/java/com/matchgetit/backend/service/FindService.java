@@ -26,16 +26,17 @@ public class FindService {
     }
 
     @Transactional
-    public void issuedTempPw(String email, String password){
+    public String issuedTempPw(String email, String password){
         MemberEntity member = memberRepository.findByEmail(email);
-        System.out.println(member.getName());
+        if (!member.getAccountType().equals(AccountType.NORMAL))
+            return "실패: 소셜로그인 계정입니다";
         if (member != null){
             String pw = passwordEncoder.encode(password);
-            System.out.println(pw);
             member.setPw(pw);
-            System.out.println(pw);
             memberRepository.save(member);
+            return "성공";
         }
+        return "실패: 없는 계정입니다.";
     }
 
     public String temporaryPw() {

@@ -18,6 +18,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private MemberService memberService;
     private final StadiumService stadiumService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/insert")
     @ResponseBody
@@ -113,29 +116,22 @@ public class AuthController {
     @PostMapping("/token")
     public ResponseEntity<String> getUserToken(HttpSession session) {
         try{
+            String token = (String)session.getAttribute("token");
+            if(token==null) {
+                MemberDTO member = (MemberDTO) session.getAttribute("member");
+                MemberDTO auth = memberService.findMemberByEmail(member.getEmail());
+                if (auth != null) {
+                    token = jwtTokenProvider.generateToken(member.getEmail());
+                    session.setAttribute("token", token);
+                    System.out.println("인증 성공! 토큰 발급>>>>" + token);
+                    return ResponseEntity.ok(token);
+                } else {
+                    return new ResponseEntity<>("비로그인 상태", HttpStatus.OK);
+                }
+            }else return ResponseEntity.ok(token);
 
-            MemberDTO member = (MemberDTO) session.getAttribute("member");
-            MemberDTO auth;
-            if(member.getAccountType().equals(AccountType.NORMAL)){
-                auth = memberService.login(
-                        member.getEmail(),
-                        member.getPw()
-                );//한번 더 확인
-            }else if(!(member.getAccountType().equals(AccountType.NORMAL))){
-                auth =memberService.findMemberByEmail(member.getEmail());
-            }else{
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
-            if (auth != null) {
-                String token = jwtTokenProvider.generateToken(member.getEmail());
-                session.setAttribute("token",token);
-                System.out.println("인증 성공! 토큰 발급>>>>"+token);
-                return ResponseEntity.ok(token);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
         }catch(Exception e){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
     @PostMapping("/vaildateEmail")

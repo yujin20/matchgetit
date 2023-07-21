@@ -3,6 +3,7 @@ package com.matchgetit.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.matchgetit.backend.config.SocialEnv;
 import com.matchgetit.backend.loginAPI.GoogleUser;
 import com.nimbusds.jose.shaded.gson.Gson;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @AllArgsConstructor
 public class GoogleService {
-
-    private static final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-    private static final String GOOGLE_USER_INFO_URL = "https://www.googleapis.com/userinfo/v2/me";
+    private final SocialEnv socialEnv;
 
     private final WebClient webClient;
 
@@ -36,13 +35,13 @@ public class GoogleService {
     private String getAccessToken(String code) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "710934810063-hlhppmpgo4bl0s9suosn1o7p2jbsamc3.apps.googleusercontent.com");
-        body.add("client_secret", "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");
+        body.add("client_id", socialEnv.getGoogleClientId());
+        body.add("client_secret", socialEnv.getGoogleSecret());
         body.add("redirect_uri", "http://localhost:8081/matchGetIt/google");
         body.add("code", code);
 
         return webClient.post()
-                .uri(GOOGLE_TOKEN_URL)
+                .uri(socialEnv.getGoogleTokenUrl())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(body))
                 .retrieve()
@@ -64,7 +63,7 @@ public class GoogleService {
     private GoogleUser requestUserInfo(String accessToken) {
         System.out.println(accessToken);
         String responseJson = webClient.get()
-                .uri(GOOGLE_USER_INFO_URL)
+                .uri(socialEnv.getGoogleInfo())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(String.class)

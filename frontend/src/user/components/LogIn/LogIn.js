@@ -3,7 +3,7 @@ import '../../styles/LogIn/logInPage.css';
 import '../../styles/LogIn/logInButton.css';
 import SignUp from './SignUp';
 import SocialLogIn from './SocialLogIn/SocialLogIn';
-import FindType from "../FindAcconts/FindType";
+import FindType from "../FindAccounts/FindType";
 
 
 

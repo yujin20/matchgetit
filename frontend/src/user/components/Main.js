@@ -59,20 +59,18 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
         }).catch(error=>{
             console.log('삽입 실패');
         })
-
+        getSession();
         if (isLoggedIn) {
             renewPartyAcceptData();
             findPartyMembers();
             findMatch();
         } else {
-            setIsLoginSlide(false);
             if(isLoginSlide){
                 getSession();
                 getToken();
             }
         }
         initSwiper();
-
         console.log(token);
         return () => {
 
@@ -132,7 +130,6 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
             .then(response => {
                 if (response.data!=null) {
                     onLogin();
-                    setIsLoginSlide(false);
                     setSession(response.data);
                     console.log(response.data);
                 } else {
@@ -158,9 +155,7 @@ function Main({ onLogin, onLogout, isLoggedIn }) {
         axiosInstance
             .post('/matchGetIt/auth/login', { email, password })
             .then((response) => {
-                getSession();
                 onLogin();
-                setIsLoginSlide(false);
                 if (swiperRef.current) {
                     swiperRef.current.slideTo(0);
                     swiperRef.current.update();
